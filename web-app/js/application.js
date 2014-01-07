@@ -213,12 +213,13 @@ function bookAppointment(){
 	var password = $('#password').val();
 	var firstName = $('#firstName').val();
 	var lastName = $('#lastName').val();
+	var phoneNumber = $('#phoneNumber').val();
 	$('#loginButton .label').hide();
 	$('#loginButton .spinner').show();
 	$.ajax({
 		type: "POST",
 		url: "./site/bookAppointment",
-		data: {e: email, hp: email2, p: password, f: firstName, l: lastName}
+		data: {e: email, hp: email2, p: password, f: firstName, l: lastName, ph: phoneNumber}
 	}).done(function(confirmation) {
 		var success = confirmation.search('"success":false');
 		if (success === -1){

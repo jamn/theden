@@ -88,19 +88,21 @@ class SiteController {
 
 		if (requestedDate && stylist && service){
 
-
-			def stylistStartTime = dateService.get24HourTimeValues(stylist.startTime)
-			def stylistEndTime = dateService.get24HourTimeValues(stylist.endTime)
-
 			Calendar startDate = new GregorianCalendar()
 			startDate.setTime(requestedDate)
+			Calendar endDate = new GregorianCalendar()
+			endDate.setTime(requestedDate)
+			
+			def stylistDayOfTheWeek = stylist?.daysOfTheWeek?.find{it.dayOfTheWeek == startDate.get(Calendar.DAY_OF_WEEK)}
+
+			def stylistStartTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.startTime)
+			def stylistEndTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.endTime)
+
 			startDate.set(Calendar.HOUR_OF_DAY, stylistStartTime.hour.intValue())
 			startDate.set(Calendar.MINUTE, stylistStartTime.minute.intValue())
 			startDate.set(Calendar.SECOND, 0)
 			startDate.set(Calendar.MILLISECOND, 0)
 
-			Calendar endDate = new GregorianCalendar()
-			endDate.setTime(requestedDate)
 			endDate.set(Calendar.HOUR_OF_DAY, stylistEndTime.hour.intValue())
 			endDate.set(Calendar.MINUTE, stylistEndTime.minute.intValue())
 			endDate.set(Calendar.SECOND, 0)
@@ -148,8 +150,11 @@ class SiteController {
 						timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
 						existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
 					}
+
+
 					def dayOfWeek = timeSlotEnd.get(Calendar.DAY_OF_WEEK)
-					if (timeSlotEnd <= endDate && dayOfWeek != 1 && dayOfWeek != 7){ // BLOCK OFF SATURDAY AND SUNDAY
+					if (timeSlotEnd <= endDate && stylistDayOfTheWeek.available){ // BLOCK OFF SATURDAY AND SUNDAY
+					//if (timeSlotEnd <= endDate && dayOfWeek != 1 && dayOfWeek != 7){ // BLOCK OFF SATURDAY AND SUNDAY
 					//if (timeSlotEnd <= endDate){
 						def timeSlot = timeSlotStart.getTime().format('h:mma').replace(':00', '') + " / " + timeSlotEnd.getTime().format('h:mma').replace(':00', '')
 						if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 11){
@@ -303,6 +308,7 @@ class SiteController {
 					client.lastName = params.l
 					client.email = params.e
 					client.password = params.p
+					client.phone = params.ph
 					client.code = client.firstName.substring(0,1).toLowerCase() + client.lastName.substring(0,1).toLowerCase() + new Date().getTime()
 					client.save(flush:true)
 					if (client.hasErrors()){

@@ -103,7 +103,6 @@ $(document).ready(function(){
 	});
 
 	$('#fourteenDayViewLink').click(function(e) {
-		e.preventDefault();
 		var text = $("#fourteenDayViewLink").html()
 		if (text === "14 day view"){
 			$('#fourteenDayView-week1').fadeIn();
@@ -114,6 +113,11 @@ $(document).ready(function(){
 			$('#fourteenDayView-week2').fadeOut();
 			$("#fourteenDayViewLink").html("14 day view");
 		}
+	});
+
+	$('.appointment-data').click(function(e) {
+		$(".edit-appointment").fadeOut();
+		$(".edit-appointment-"+e.currentTarget.id).fadeIn();
 	});
 
 

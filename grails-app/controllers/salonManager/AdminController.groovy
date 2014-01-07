@@ -13,11 +13,20 @@ class AdminController {
 	def dateService
 
 	def testEmail = {
-		sendMail {     
-			to "bjacobi@gmail.com"     
-			subject "New Appointment [Tomorrow]"     
-			html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> Me</p>"
+		println "sending email"
+		try {	
+			sendMail {     
+				to "bjacobi@gmail.com"     
+				subject "New Appointment [Tomorrow]"     
+				html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> Me</p>"
+			}
 		}
+		catch(Exception e) {
+			println "ERROR"
+			println e
+		}
+		println "finished"
+		
 	}
 
     def index() { 

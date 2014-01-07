@@ -197,8 +197,17 @@ textarea{
 	cursor: pointer;
 }
 
+.appointment-data:hover{
+	background-color: #9B9605;
+	cursor: pointer;
+	color: #fff;
+}
 
-
+.edit-appointment{
+	display: none;
+	background-color: #E9E9E9;
+	color: #494949;
+}
 
 
 

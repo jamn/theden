@@ -7,6 +7,7 @@ class User extends CoreObject {
 	String firstName
 	String lastName
 	String email
+    String phone
 	String type = "001"		// [admin/stylist/client] -- 1 or 0 for each field, fields can be combined
 							// 001 = client
 							// 010 = sylist
@@ -16,14 +17,15 @@ class User extends CoreObject {
 	Long startTime
 	Long endTime
 
-	static hasMany = [services:Service]
+	static hasMany = [services:Service, daysOfTheWeek:DayOfTheWeek]
 
     static constraints = {
     	username(nullable:true)
 		password(nullable:true)
 		firstName(nullable:true)
 		lastName(nullable:true)
-		email(nullable:true)
+        email(nullable:true)
+		phone(nullable:true)
 		startTime(nullable:true)
 		endTime(nullable:true)
     }

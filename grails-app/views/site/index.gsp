@@ -18,8 +18,8 @@
            |   |
  -->
 
- <!-- 1.2.1 -->
  <!-- Made by Ben Jacobi | benjacobi.com -->
+ <!-- v0.3 -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -111,10 +111,8 @@
 		<div class="google-map" style="display:none;">
 			<img src="./images/map.png">
 		</div>
-		<div class="footer">
-			<p>Thank you for being an awesome customer :)</p>
-		</div>
 
+		<div class="footer">&nbsp;</div>
 		
 
     <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>

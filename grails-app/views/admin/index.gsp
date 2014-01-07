@@ -101,25 +101,47 @@
 		<div class="fourteenDayViewLink"><a id="fourteenDayViewLink" href="#">14 day view</a></div>
 	</div>
 	<g:render template="fourteenDayView" collection="${appointments}" />
-
-
-	<table>
+	<table class="appointments">
 		<tr>
 			<td width="120px"><h2>Name:</h2></td>
 			<td><h2>Service:</h2></td>
 			<td width="120px"><h2>Date:</h2></td>
 			<td><h2>Notes:</h2></td>
 		</tr>
-		<g:each in="${appointments}">	
-			<tr>
-				<td>${it.client.fullName}</td>
-				<td>${it.service.description}</td>
-				<td>${it.appointmentDate.format('MM/dd/yy hh:mm a')}</td>
-				<td>${it.notes}</td>
-			</tr>
+		<g:each in="${appointments}">
+			<%if (it.service.description != 'Blocked Off Time'){%>
+				<tr class="appointment-data" id="${it.id}">
+					<td>
+						<%if (it.client.code == 'kp'){%>
+							From Old System
+						<%}else{%>
+							${it.client.fullName}
+						<%}%>
+					</td>
+					<td>${it.service.description}</td>
+					<td>${it.appointmentDate.format('MM/dd/yy hh:mm a')}</td>
+					<td>
+						<%if (it.notes){%>
+							${it.notes}
+						<%}else{%>
+							<b>PHONE:</b> ${it.client.phone}  | <b>EMAIL:</b> ${it.client.email}
+						<%}%>
+					</td>
+				</tr>
+				<tr class="edit-appointment edit-appointment-${it.id}">
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>(x) <a href="${createLink(controller:'site',action:'cancelAppointment',params:[c:it.code])}" onclick="return confirm('Cancel appointment?')">cancel</a> | (~) <a href="${createLink(controller:'site',action:'modifyAppointment',params:[a:it.id,cc:it.client.code])}">reschedule</a></td>
+				</tr>
+			<%}%>
 		</g:each>
 	</table>
+
+
+
 <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
 <script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
 <script src="${resource(dir:'js', file:'a.min.js')}" type="text/javascript"></script>
+
 </body></html>
