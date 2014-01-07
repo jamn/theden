@@ -1,0 +1,73 @@
+<!-- 
+           .-"-.
+         .'     '.
+         |       |
+          \     /
+         [_______]
+          |##' ,|
+          |#' ,#|
+          |' ,##|
+          | ,###|      SHAVE AND A HAIRCUT, A HAIR MORE THAN 2 BITS
+          |,###'|
+          |###' |
+          |##' ,|
+          |#' ,#|
+          |'_,##|
+         [_______]
+          \     /
+           |   |
+ -->
+
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>:: The Den Barbershop ::</title>
+<meta name="viewport" content="width=device-width, initial-scale=.9">
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'animate.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.9.2.custom.min.css')}" />
+</head><body>
+	<div class="content-wrapper">
+		<div class="logo-small" style="background-image:url(${resource(dir:'images',file:'logo.png')});"></div>
+		<div class="grey-box">
+			<div class="message-board-backing">
+				<div class="message-board">${message}</div>
+			</div>
+			<div class="logo-large" style="background-image:url(${resource(dir:'images',file:'logo-large.png')});"></div>
+		</div>
+		<div class="main-content-area">
+			<div class="pictures">
+				<img src="${resource(dir:'images',file:'shop.jpg')}">
+			</div>
+			<div class="book-now-button">Book Now</div>
+		</div>
+
+		<!-- <div class="start-over"><</div> -->
+
+		<div class="select-a-service"></div>
+		<div class="choose-a-time">
+			<h1 id="dateText">Today</h1>
+			<label id="chooseDateText" for="chooseDate">Choose a date:</label>
+			<input id="chooseDate" name="chooseDate" type="text">
+			<ul id="timeSlots">
+
+			</ul>
+		</div>
+
+		<div class="login"></div>
+
+		<div class="confirmation"></div>
+
+		<div class="address">1013 W 47th Street &bull; KCMO, 64112</div>
+		<div class="google-map" style="display:none;">
+			<img src="./images/map.png">
+		</div>
+		<div class="footer">
+			<p>Copyright &copy; 2013 The Den Barbershop</p>
+			<p>Site Developed by <span id="ben-jacobi-dot-com-link">Ben Jacobi</span></p>
+		</div>
+	</div>
+    <script src="${resource(dir:'js', file:'jquery-1.10.2.js')}" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'jquery-ui-1.9.2.custom.min.js')}" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'application.js')}" type="text/javascript"></script>
+</body></html>

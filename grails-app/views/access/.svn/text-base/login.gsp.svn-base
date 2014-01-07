@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>Salon Manager | Login</title>
+<r:require module="jquery"/>
+<r:script>
+	$(document).ready(function(){
+		console.log("READY");
+	});
+
+	$(document).on("click", "#loginButton", function(e) {
+		window.location.href = "./login?u=admin&p=password"
+	});
+
+</r:script>
+<r:layoutResources/>
+</head><body>
+	<div class="content-wrapper">
+		<div class="login-box">
+			<input type="text" name="username" id="username">
+			<input type="text" name="password" id="password">
+			<div id="loginButton">Login</div>
+		</div>
+	</div>
+<r:layoutResources/>
+</body></html>

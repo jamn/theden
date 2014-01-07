@@ -1,0 +1,36 @@
+package salonManager
+
+import grails.converters.JSON
+
+class AccessController {
+
+    def index() {
+        render(view:'login')
+    }
+
+    def login = {
+    	def user = User.findWhere(
+    		username: params.u,
+    		password: params.p,
+    		deleted: false
+    	)
+
+        println "user: " + user
+
+    	if (user){
+    		session.user = user
+    		//redirect(controller:'site', action:'index')
+            render ([success:true]) as JSON
+    	}
+    	else{
+    		render ([success:false]) as JSON
+    	}
+    }
+
+    def logout = {
+    	if (session.user){
+    		session.invalidate()
+    	}
+        render(view:'login')
+    }
+}

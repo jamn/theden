@@ -1,0 +1,218 @@
+var weekday=new Array(7);
+weekday[0]="Sunday";
+weekday[1]="Monday";
+weekday[2]="Tuesday";
+weekday[3]="Wednesday";
+weekday[4]="Thursday";
+weekday[5]="Friday";
+weekday[6]="Saturday";
+
+$(document).ready(function(){
+	$('.pictures').click(function(e) {
+		$(".google-map").slideUp();
+	});
+
+	$('.logo-small').click(function(e) {
+		$('.main-content-area').slideDown();
+		$('.main-content-area').removeClass('animated fadeOut');
+		$('.main-content-area').addClass('animated fadeIn');
+
+		$('.select-a-service').empty();
+		$('.select-a-service').slideUp();
+		$('.select-a-service').removeClass('animated fadeOut fadeInRightBig');
+
+		$('.choose-a-time').empty();
+		$('.choose-a-time').slideUp();
+		$('.choose-a-time').removeClass('animated fadeOut fadeInRightBig');
+
+		$('.login').empty();
+		$('.login').slideUp();
+		$('.login').removeClass('animated fadeOut fadeInRightBig');
+
+		$('.confirmation').empty();
+		$('.confirmation').slideUp();
+		$('.confirmation').removeClass('animated fadeInRightBig');
+		$.ajax({
+			type: "POST",
+			url: "./site/resetSession"
+		}).done(function( ) {
+			console.log("** SESSION RESET **")
+		});
+
+	});
+
+	$('#chooseDate').datepicker( {
+		onSelect: function(date) {
+			var date = $('#chooseDate').val();
+			$.ajax({
+				type: "POST",
+				url: "./site/getAvailableTimes",
+				data: {d: date}
+			}).done(function(timeSlots) {
+				var success = timeSlots.search('"success":false');
+				if (success === -1){
+					var d = new Date(date);
+					$('#dateText').empty();
+					$('#dateText').append(weekday[d.getDay()]);
+					$('#timeSlots').empty();
+					$('#timeSlots').append(timeSlots);
+				}
+				else{
+					console.log("success:false");
+				}
+			});
+		},
+		minDate: 0 
+	});
+
+	$('.address').click(function(e) {
+		$(".google-map").slideDown();
+	});
+	$('.google-map').click(function(e) {
+		var url = "https://local.google.com/maps/ms?msid=203990239811952052030.0004de4cdb5c11e4fc186&msa=0";
+		var windowName = "Directions to The Den";
+		window.open(url, windowName, "height=600,width=900");
+	});
+
+	$('#ben-jacobi-dot-com-link').click(function(e) {
+		window.location.assign("http://www.benjacobi.com")
+	});
+});
+
+$(document).on("click touchstart", ".book-now-button", function(e) {
+	console.log("CLICKED BOOK NOW BUTTON");
+	$.ajax({
+		type: "POST",
+		url: "./site/getServices",
+		data: { u: "kp" }
+	}).done(function(services) {
+		var success = services.search('"success":false');
+		if (success === -1){
+			$('.main-content-area').removeClass('fadeIn');
+			$('.main-content-area').addClass('animated animated fadeOut');
+			$('.main-content-area').slideUp()
+			$('.select-a-service').append(services);
+			$('.select-a-service').slideDown();
+			$('.select-a-service').removeClass('animated fadeOut');
+			$('.select-a-service').addClass('animated fadeInRightBig');
+		}
+		else{
+			console.log("success:false");
+			$('.book-now-button').addClass('errorButton animated fadeIn');
+			$('.book-now-button').removeClass('errorButton animated fadeIn');
+		}
+	});
+
+});
+
+$(document).on("click touchstart", ".service", function(e) {
+	console.log("CLICKED A SERVICE");
+	var service = e.currentTarget.getAttribute("service");
+	var serviceButton = e.currentTarget;
+	var date = $('#chooseDate').val();
+	$.ajax({
+		type: "POST",
+		url: "./site/getAvailableTimes",
+		data: {s: service, d: date}
+	}).done(function(timeSlots) {
+		var success = timeSlots.search('"success":false');
+		if (success === -1){
+			$('.select-a-service').removeClass('animated fadeInRightBig');
+			$('.select-a-service').addClass('animated animated fadeOut');
+			$('.select-a-service').slideUp();
+			$('#timeSlots').append(timeSlots);
+			$('.choose-a-time').slideDown();
+			$('.choose-a-time').removeClass('animated fadeOut');
+			$('.choose-a-time').addClass('animated fadeInRightBig');
+		}
+		else{
+			console.log("success:false");
+			$(serviceButton).addClass('errorButton');
+		}
+	});
+});
+
+$(document).on("click touchstart", ".time-slot", function(e) {
+	console.log("CLICKED TIME SLOT");
+	var date = e.currentTarget.getAttribute("starttime");
+	var timeSlot = e.currentTarget;
+	$.ajax({
+		type: "POST",
+		url: "./site/saveDate",
+		data: {d: date}
+	}).done(function(loginForm) {
+		var success = loginForm.search('"success":false');
+		console.log(success);
+		if (success === -1){
+			// DONE
+			$('.choose-a-time').removeClass('animated fadeInRightBig');
+			$('.choose-a-time').addClass('animated fadeOut');
+			$('.choose-a-time').slideUp();
+			$('.login').append(loginForm);
+			$('.login').slideDown();
+			$('.login').removeClass('animated fadeOut');
+			$('.login').addClass('animated fadeInRightBig');
+		}
+		else{
+			console.log("success:false");
+			$(timeSlot).addClass('errorButton');
+			$(timeSlot).text("No longer available...");
+			$(timeSlot).addClass('animated fadeOut');
+		}
+	});
+});
+
+$(document).on("click touchstart", "#registerLink", function(e) {
+	$('.new-user').slideDown();
+	$('.new-user').addClass('animated fadeIn');
+	$('#registerLink').hide();
+	$('#loginButton').text("Register & Book");
+});
+
+$(document).on("click touchstart", "#loginButton", function(e) {
+	console.log("CLICKED BOOK BUTTON");
+	bookAppointment();
+});
+
+$(document).on("keypress", "#password", function(e) {
+	if (event.keyCode == 13) {
+		console.log("HIT ENTER IN PASSWORD FIELD");
+		bookAppointment();
+	}
+});
+
+function getAvailableTimes(){
+	var date = $('#chooseDate').val();
+	
+}
+
+function bookAppointment(){
+	var email = $('#email').val();
+	var email2 = $('#email2').val();
+	var password = $('#password').val();
+	var firstName = $('#firstName').val();
+	var lastName = $('#lastName').val();
+	$.ajax({
+		type: "POST",
+		url: "./site/bookAppointment",
+		data: {e: email, hp: email2, p: password, f: firstName, l: lastName}
+	}).done(function(confirmation) {
+		console.log(confirmation);
+		var success = confirmation.search('"success":false');
+		if (success === -1){
+			$('.login').removeClass('animated fadeInRightBig');
+			$('.login').addClass('animated fadeOut');
+			$('.login').slideUp();
+			$('.confirmation').append(confirmation);
+			$('.confirmation').slideDown();
+			$('.confirmation').removeClass('animated fadeOut');
+			$('.confirmation').addClass('animated fadeInRightBig');
+		}
+		else{
+			console.log("success:false");
+			$('#loginButton').addClass('errorButton animated fadeIn');
+			// $('#loginButton').removeClass('errorButton animated fadeIn');
+		}
+	});
+}
+

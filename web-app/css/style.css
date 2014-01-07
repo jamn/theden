@@ -1,0 +1,415 @@
+/* FONT STACK */
+body,
+input, select, textarea {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	line-height: 1.1;
+}
+
+/* BASE LAYOUT */
+
+html {
+	background-color: #ddd;
+	background-image: -moz-linear-gradient(center top, #aaa, #ddd);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #aaa), color-stop(1, #ddd));
+	background-image: linear-gradient(top, #aaa, #ddd);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#aaaaaa', EndColorStr = '#dddddd');
+	background-repeat: no-repeat;
+	height: 100%;
+	/* change the box model to exclude the padding from the calculation of 100% height (IE8+) */
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+}
+
+html.no-cssgradients {
+	background-color: #aaa;
+}
+
+.ie6 html {
+	height: 100%;
+}
+
+html * {
+	margin: 0;
+}
+
+body {
+	outline: none;
+	background: #ffffff;
+	color: #333333;
+	/*width: 900px;*/
+	position: relative;
+	overflow-x: hidden; /* prevents box-shadow causing a horizontal scrollbar in firefox when viewport < 960px wide */
+	   -moz-box-shadow: 0 0 0.3em #222;
+	-webkit-box-shadow: 0 0 0.3em #222;
+	        box-shadow: 0 0 0.3em #222;
+}
+
+.ui-loading .ui-loader { display: block; }
+.ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
+
+/* responsive page widths */
+.ui-mobile-viewport { margin: 0 auto; overflow-x: visible; -webkit-text-size-adjust: 100%; -ms-text-size-adjust:none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+/* Issue #2066 */
+body.ui-mobile-viewport,
+div.ui-mobile-viewport { overflow-x: hidden; }
+/* "page" containers - full-screen views, one should always be in view post-pageload */
+/*.ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page { top: 0; left: 0; width: 100%; min-height: 100%; position: absolute; display: none; border: 0; }*/
+.ui-mobile .ui-page-active { display: block; overflow: visible; }
+/* on ios4, setting focus on the page element causes flashing during transitions when there is an outline, so we turn off outlines */
+.ui-page { outline: none; }
+/*orientations from js are available */
+@media screen and (orientation: portrait){
+.ui-mobile .ui-page { min-height: 420px; }
+}
+@media screen and (orientation: landscape){
+.ui-mobile .ui-page { min-height: 300px; }
+}
+
+.header{
+	padding: 18px;
+	margin: 0 auto;
+	width: 308px;
+}
+#logoPlain{
+	cursor: pointer;
+}
+#newAddress{
+	opacity: 0.4;
+	cursor: pointer;
+	text-align: center;
+	font-size: 1.4em;
+	margin-top: 7px;
+}
+#newAddress:hover{
+	opacity: .8;
+}
+
+.grey-box{
+	background-color: #58585a;
+	padding: 20px;
+}
+.grey-box ul {
+	width: 621px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.grey-box ul li {
+	display: inline-block;
+}
+
+
+.message-board-backing{
+	background-color: #a8a8a8;
+	border-top: 1px solid #d0d0d0;
+	border-left: 1px solid #d0d0d0;
+	border-bottom: 1px solid #4a4a4c;
+	border-right: 1px solid #4a4a4c;
+	-webkit-box-shadow: 1px 1px 6px #363636, 1px 1px 2px #CCC inset;
+	-moz-box-shadow: 1px 1px 6px #363636, 1px 1px 2px #CCC inset;
+	box-shadow: 1px 1px 6px #363636, 1px 1px 2px #CCC inset;
+	width: 400px;
+	padding: 10px;
+	height: 144px;
+	position: relative;
+	top: -9px;
+	left: -5px;
+}
+
+.message-board-backing,
+.message-board/*,
+.book-now-button,
+.service,
+.time-slot*/{
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+}
+
+.message-board{
+	background-color: #FFF;
+	padding: 20px;
+	line-height: 18px;
+	overflow-y: scroll;
+	height: 104px;
+}
+
+#logoLarge{
+	position: relative;
+	left: 14px;
+	top: 8px;
+}
+
+.book-now-button, .service, .time-slot, #loginButton{
+	background-color: #827D00;
+	background: -moz-linear-gradient(top,  rgba(130,125,0,0.9) 0%, rgba(130,125,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(130,125,0,0.9)), color-stop(100%,rgba(130,125,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6827d00', endColorstr='#827d00',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #777200;
+	box-shadow: 1px 1px 2px #B9B300 inset;
+	width: 344px;
+	color: #FFF;
+	font-size: 1.8em;
+	vertical-align: middle;
+	text-align: center;
+	padding: 20px;
+	margin: 50px auto;
+}
+
+.book-now-button:hover,
+#ben-jacobi-dot-com-link:hover,
+.address:hover,
+.google-map:hover,
+.service:hover,
+.time-slot:hover{
+	color: #fff;
+	background-color: #8D8800;
+	cursor: pointer;
+}
+
+.address{
+	margin: 20px auto;
+	padding: 4px;
+	text-align: center;
+	font-size: 2em;
+}
+
+.google-map img{
+	width: 100%;
+}
+
+.footer{
+	text-align: center;
+	padding: 20px;
+	font-family: "Lucida Console", Monaco, monospace;
+	line-height: 16px;
+	font-size: .7em;
+}
+
+#ben-jacobi-dot-com-link{
+	padding: 2px;
+}
+
+.select-a-service,
+.choose-a-time,
+.login,
+.confirmation{
+	z-index: 10;
+	display: none;
+	position: relative;
+	margin: 12px auto;
+	/*width: 750px;*/
+}
+
+.select-a-service h1,
+.choose-a-time h1{
+	text-align: center;
+	margin-bottom: 38px;
+	font-size: 2.8em;
+	font-weight: normal;
+	top: 14px;
+	position: relative;
+}
+
+#chooseDate{
+	position: relative;
+	top: -4px;
+	right: 0px;
+	font-size: 1.2em;
+	width: 105px;
+	text-align: center;
+	margin-bottom: 12px;
+}
+
+#chooseDateText{
+	position: relative;
+	top: -6px;
+	width: 200px;
+	left: -43px;
+}
+#chooseDateText,
+#recurringAppointmentText{
+	font-size: .9em;
+	letter-spacing: 1px;
+}
+
+.service,
+.time-slot{
+	font-size: .9em;
+	margin: 4px auto;
+	height: 18px;
+}
+
+.choose-a-time{
+	text-align: center;
+}
+
+.choose-a-time .ui-icon{
+	background-image: none;
+}
+
+.choose-a-time ul{
+	list-style-type: none;
+	padding: 0;
+}
+
+.choose-a-time ul li{
+	display: inline-block;
+	vertical-align: top;
+}
+
+#recurringAppointment{
+	font-size: 1em;
+	padding: 0px;
+	display: block;
+	margin: auto;
+	position: relative;
+	top: -15px;
+	cursor: pointer;
+}
+#recurringAppointmentOptions{
+	display: none;
+}
+#recurringAppointmentOptions ul li{
+	display: inline-block;
+}
+#recurringAppointmentOptions ul li .ui-select{
+	height: 26px;
+}
+#recurringAppointmentOptions ul li select{
+	top: -37px;
+	position: relative;
+	cursor: pointer;
+}
+
+.noTimesAvailableMessage{
+	font-size: 1.2em;
+	padding: 22px 0;
+	font-style: oblique;
+	margin-bottom: 26px;
+	text-decoration: underline;
+}
+
+.time-slot{
+	width: 165px;
+	z-index: 100;
+}
+
+.time-slots-h2{
+	text-align: center;
+	font-weight: normal;
+	margin: 7px;
+}
+
+.login-box{
+	border: 1px solid #A2A2A2;
+	margin: auto;
+	margin-top: 84px;
+	width: 304px;
+	border-radius: 4px;
+	padding: 40px; 
+}
+
+#registerLink{
+	position: relative;
+	left: 104px;
+	top: 6px;
+	text-decoration: underline;
+	color: blue;
+	cursor: pointer;
+}
+
+#loginButton{
+	margin-top: 10px;
+	cursor: pointer;
+}
+
+label{
+	display: inline-block;
+	width: 87px;
+	text-align: right;
+	font-size: 1.2em;
+	padding-right: 4px;
+}
+
+.new-user{
+	display: none;
+}
+
+.confirmation{
+	height: 150px;
+	text-align: center;
+	padding-top: 98px !important;
+}
+
+#existingAppointments{
+	margin: auto;
+	font-size: .8em;
+	width: 428px;
+	margin-top: 10px;
+	text-align: left;
+	color: #5F5F5F;
+	padding-left: 4px;
+}
+.existing-appointments-text{
+	font-style: italic;
+	color: #5F5F5F;
+}
+.existing-appointments{
+	margin: 10px;
+	color: #CF2323;
+	margin-left: 140px;
+}
+
+.errorButton{
+	background: rgb(196,3,3) !important; /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(196,3,3,1) 0%, rgba(160,3,3,1) 44%, rgba(132,0,0,1) 100%) !important; /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(196,3,3,1)), color-stop(44%,rgba(160,3,3,1)), color-stop(100%,rgba(132,0,0,1))) !important; /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c40303', endColorstr='#840000',GradientType=0 ) !important; /* IE6-9 */
+	border-color: #630000 !important;
+	box-shadow: 1px 1px 2px #E2466C inset !important;
+}
+
+.errorInput{
+	border: 1px solid #C00B0B;
+	box-shadow: 0px 0px 8px #D64444;
+}
+
+.spinner{
+	background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 50%; /* Rounds out the halo */
+    opacity: .9;
+}
+
+.existingAppointmentInfo{
+	width: 100%;
+	text-align: center;
+	font-size: 1.1em;
+	padding: 20px 0;
+	background-color: #858117;
+	z-index: 10000;
+	position: fixed;
+	clear: both;
+	color: #E4E4E4;
+	letter-spacing: 1px;
+	border-bottom: 1px solid #707555;
+	box-shadow: 0px 2px 5px rgba(78, 82, 65, 0.69);
+}
+
+.cancel-appointment-confirmation{
+	margin: 106px auto;
+	text-align: center;
+}

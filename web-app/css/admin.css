@@ -1,0 +1,215 @@
+body{
+	padding: 20px;
+	width: 900px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: .8em;
+	margin: auto;
+	top: 18px;
+}
+
+#logout{
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	font-size: 1.3em;
+	text-decoration: underline;
+	color: #013BA3;
+	cursor: pointer;
+}
+
+.logo-small{
+	margin: auto;
+	width: 216px;
+	top: 20px;
+	position: relative;
+	text-align: center;
+	left: -16px;
+}
+.header{
+	margin:0;
+	padding: 0;
+	width: 240px;
+	height: 240px;
+}
+
+.login-box {
+	border: 1px solid #A2A2A2;
+	margin: auto;
+	margin-top: 40px;
+	width: 304px;
+	border-radius: 4px;
+	padding: 40px;
+	margin-bottom: 120px;
+}
+
+.login-box input{
+	width: 134px;
+	font-size: 1.4em;
+	padding: 4px;
+}
+
+#loginButton{
+	margin: 10px 0;
+	width: 254px;
+	font-size: 1.7em;
+}
+
+h1{
+	margin-bottom: 20px;
+}
+
+b {
+	color: #333;
+}
+
+hr{
+	margin: 10px 0;
+}
+
+ul li{
+	display: inline-block;
+}
+
+table tr td {
+	padding: 2px;
+	vertical-align: top;
+}
+
+textarea{
+	font-size: 1em;
+}
+
+#homepageText{
+	padding: 10px;
+}
+
+#saveTextButton,
+#blockOffTimeButton,
+#blockOffDaysButton {
+	background-color: #827D00;
+	background: -moz-linear-gradient(top,  rgba(130,125,0,0.9) 0%, rgba(130,125,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(130,125,0,0.9)), color-stop(100%,rgba(130,125,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6827d00', endColorstr='#827d00',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #777200;
+	box-shadow: 1px 1px 2px #B9B300 inset;
+	color: #FFF;
+	font-size: 1.2em;
+	vertical-align: middle;
+	text-align: center;
+	padding: 10px;
+	cursor: pointer;
+	width: 200px;
+}
+
+#homepageText,
+#saveTextButton,
+#blockOffTimeButton,
+#blockOffDaysButton{
+	position: relative;
+	left: 18px;
+ 	margin-top: 17px;
+	top: -5px;
+	margin-left: 22px;
+}
+
+#chooseDateToBlockOffText{
+	margin-left: 6px;
+}
+
+.fourteenDayViewLink{
+	position: absolute;
+	top: 5px;
+	left: 324px;
+	font-size: 1.3em;
+}
+
+#fourteenDayView-week1,
+#fourteenDayView-week2{
+	width: 100%;
+	text-align: center;
+	margin-bottom: 20px;
+	border: 1px solid #A0A0A0;
+	box-shadow: 2px 2px 3px #EEE;
+	border-spacing: 1px;
+	display: none;
+}
+
+#fourteenDayView-week1 tr,
+#fourteenDayView-week2 tr{
+	height: 20px;
+}
+
+#fourteenDayView-week1 tr td,
+#fourteenDayView-week2 tr td{
+	position: relative;
+}
+
+.dateHeader{
+	background-color: #333;
+	color: #fff;
+}
+
+.time{
+	vertical-align: middle;
+}
+
+.appointmentDetailsCallOut{
+	display: none;
+	background-color: #EEE;
+	position: absolute;
+	width: 95px;
+	border-radius: 4px;
+	margin-top: 13px;
+	padding: 5px;
+	z-index: 100;
+	margin-left: -8px;
+}
+
+.booked:hover .appointmentDetailsCallOut{
+	display: block;
+}
+
+.halfHour td{
+	border-top: 1px solid #f0f0f0;
+}
+
+.unavailable,
+.available,
+.booked{
+	width: 90px;
+}
+
+.unavailable{
+	background-color: #ccc;
+}
+
+.available{
+	background-color: #858003;
+}
+
+.booked{
+	background-color: #971111;
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,4 @@
+<h1>Select A Service</h1>
+<g:each in="${services}" var="service">
+	<div onclick="funtion(){}" service="${service.description}" class="service">${service.description} (${service.duration})</div>
+</g:each>

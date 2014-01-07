@@ -1,0 +1,276 @@
+package salonManager
+
+import java.text.SimpleDateFormat
+import grails.converters.JSON
+
+class SiteController {
+
+	static Long HOUR = 3600000
+	static Long MINUTE = 60000
+
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd")
+	SimpleDateFormat dateFormatter2 = new SimpleDateFormat("MM/dd/yyyy HH:mm")
+	SimpleDateFormat dateFormatter3 = new SimpleDateFormat("MM/dd/yyyy")
+
+	def dateService
+	def emailService
+
+	def index() {
+		def appointment = Appointment.get(session?.appointmentId)
+		if (appointment){
+			appointment.delete()
+		}
+		session?.appointmentId = null
+		session?.serviceId = null
+		session?.stylistId = null
+		println "** SESSION RESET **"
+		println "session: " + session
+
+		def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
+		return [message:message]
+	}
+
+	def getServices(){
+		println "\n---- GET SERVICES ----"
+		println "params.u: " + params.u
+		def stylist = User.findByCode(params?.u)
+		if (stylist){
+			session.stylistId = stylist.id
+			println "stylist: " + stylist
+		}
+		def services = Service.executeQuery("FROM Service s WHERE s.stylist = :stylist ORDER BY s.displayOrder", [stylist:stylist])
+		println "services: " + services
+		def serviceList = []
+		services?.each(){
+			def duration = dateService.getTimeString(it.duration)
+			def description = it.description
+			serviceList.add([duration:duration, description:description])
+		}
+		if (serviceList.size() > 0){
+			println "serviceList: " + serviceList
+			render (template: "services", model: [services:serviceList])
+		}
+		else
+		{
+			println "ERROR: unable to locate services for stylist: " + params
+			render ('{"success":false}') as JSON
+		}
+	}
+
+	def getAvailableTimes() {
+		println "\n---- GET AVAILABLE TIMES ----"
+		def timeSlotsMap = [:]
+		def requestedDate
+		def service
+		def stylist
+		try {
+			if (params?.d){
+				requestedDate = dateFormatter3.parse(params?.d)
+			}
+			else{
+				requestedDate =  new Date()
+			}
+			println "requestedDate: " + requestedDate
+			stylist = User.get(session.stylistId)
+			println "stylist: " + stylist
+			if (params?.s){
+				service = Service.findWhere(stylist:stylist, description:params?.s)
+				session.serviceId = service.id
+			}
+			else{
+				service = Service.get(session?.serviceId)
+			}
+			println "service: " + service
+		}
+		catch(Exception e) {
+			println "ERROR: " + e
+		}
+
+		if (requestedDate && stylist && service){
+
+			def stylistStartTime = dateService.get24HourTimeValues(stylist.startTime)
+			def stylistEndTime = dateService.get24HourTimeValues(stylist.endTime)
+
+			Calendar startDate = new GregorianCalendar()
+			startDate.setTime(requestedDate)
+			startDate.set(Calendar.HOUR_OF_DAY, stylistStartTime.hour.intValue())
+			startDate.set(Calendar.MINUTE, stylistStartTime.minute.intValue())
+
+			Calendar endDate = new GregorianCalendar()
+			endDate.setTime(requestedDate)
+			endDate.set(Calendar.HOUR_OF_DAY, stylistEndTime.hour.intValue())
+			endDate.set(Calendar.MINUTE, stylistEndTime.minute.intValue())
+
+			println "startDate: " + startDate.getTime()
+			println "endDate: " + endDate.getTime()
+
+			def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
+
+			println "appointments: " + appointments
+
+			Calendar currentTime = new GregorianCalendar()
+			currentTime.setTime(startDate.getTime())
+			
+			def durationInMinutes = service.duration / MINUTE
+			println "durationInMinutes: " + durationInMinutes
+
+			while(currentTime < endDate) {
+				Calendar timeSlotStart = new GregorianCalendar()
+				timeSlotStart.setTime(currentTime.getTime())
+				Calendar timeSlotEnd = new GregorianCalendar()
+				timeSlotEnd.setTime(timeSlotStart.getTime())
+				timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
+
+				// DOES AN EXISTING APPOINTMENT FALL IN THIS TIME RANGE?
+				def existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
+				while (existingAppointment){
+					timeSlotStart.setTime(existingAppointment.appointmentDate)
+					def existingAppointmentDurationInMinutes = existingAppointment.service.duration / MINUTE
+					timeSlotStart.add(Calendar.MINUTE, existingAppointmentDurationInMinutes.intValue())
+					timeSlotEnd.setTime(timeSlotStart.getTime())
+					timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
+					existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
+				}
+
+				if (timeSlotEnd <= endDate){
+					def timeSlot = timeSlotStart.getTime().format('h:mma').replace(':00', '') + " / " + timeSlotEnd.getTime().format('h:mma').replace(':00', '')
+					if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 11){
+						List morning = timeSlotsMap.get("morning") ?: []
+						morning.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot])
+						timeSlotsMap.put("morning", morning)
+					}
+					else if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 14){
+						List lunch = timeSlotsMap.get("lunch") ?: []
+						lunch.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot])
+						timeSlotsMap.put("lunch", lunch)
+					}
+					else{
+						List afternoon = timeSlotsMap.get("afternoon") ?: []
+						afternoon.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot])
+						timeSlotsMap.put("afternoon", afternoon)
+						timeSlotsMap.put("afternoon", afternoon)
+					}
+				}
+
+				currentTime.setTime(timeSlotStart.getTime())
+				currentTime.add(Calendar.MINUTE, 15)
+			}
+
+			//println "timeSlotsMap: " + timeSlotsMap
+
+		}
+		else {
+			println "ERROR: unable to process params -> " + params
+		}
+
+		if (timeSlotsMap.size() > 0){
+			render (template: "timeSlots", model: [timeSlotsMap:timeSlotsMap])
+		}
+		else{
+			println "ERROR: no time slots available for given date"
+			render ('{"success":false}') as JSON
+		}
+
+	}
+
+	def saveDate(){
+		println "\n---- SAVE DATE ----"
+		def appointmentDate = dateFormatter2.parse(params?.d)
+		def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
+		if (!existingAppointment && appointmentDate){
+			def stylist = User.get(session.stylistId)
+			def service = Service.get(session.serviceId)
+			def appointment = new Appointment()
+			appointment.appointmentDate = appointmentDate
+			appointment.stylist = stylist
+			appointment.service = service
+			appointment.save(flush:true)
+			session.appointmentId = appointment.id
+			println "session: " + session
+			render (template: "login", model: [appointment:appointment])
+		}else{
+			println "existingAppointment: " + existingAppointment
+			render ('{"success":false}') as JSON
+		}
+	}
+
+
+	def bookAppointment(){
+		println "\n---- BOOK APPOINTMENT ----"
+		println "params: " + params
+		if (params?.hp?.size() > 0){ // HONEYPOT -- check value of hidden field to see if a spambot is submitting the form
+			render ('{"success":false}') as JSON
+		}
+		else{
+			def client
+			def service = Service.get(session.serviceId)
+			def stylist = User.get(session.stylistId)
+			def appointment = Appointment.get(session.appointmentId)
+			if (params?.f?.size() > 1 && params?.l?.size() > 1 && params?.e?.size() > 1 && params?.p?.size() > 1){
+				def existingUser = User.findByEmail(params.e)
+				if (existingUser && existingUser.password == params.p){
+					println "USER LOGGED IN CORRECTLY BY ACCIDENT"
+					client = existingUser
+				}
+				else if (existingUser){
+					println "ERROR: Email already in use: " + existingUser
+				}
+				else{
+					println "CREATING NEW USER"
+					client = new User()
+					client.firstName = params.f
+					client.lastName = params.l
+					client.email = params.e
+					client.password = params.p
+					client.code = client.firstName.substring(0,1).toLowerCase() + client.lastName.substring(0,1).toLowerCase() + new Date().getTime()
+					client.save(flush:true)
+					if (client.hasErrors()){
+						println "ERROR: " + client.errors
+						render ('{"success":false}') as JSON
+					}
+				}
+			}
+			else if (params?.e?.size() > 1 && params?.p?.size() > 1){
+				println "Attempting to log in user..."
+				client = User.findWhere(email:params.e, password:params.p)
+			}
+
+			println "client: " + client
+			println "service: " + service
+			println "stylist: " + stylist
+			println "appointment: " + appointment
+
+			if (client && service && stylist && appointment){
+				appointment.client = client
+				appointment.booked = true
+				appointment.save(flush:true)
+			}
+			if (appointment.hasErrors() || appointment.booked == false){
+				println "ERROR: appointment.booked("+appointment.booked+") | " + appointment?.errors
+				render ('{"success":false}') as JSON
+			}
+			else{
+				println "saved appointment"
+				runAsync {
+					emailService.sendEmailConfirmation(appointment)
+				}
+				render (template: "confirmation", model: [appointment:appointment])
+			}
+		}
+	}
+
+
+
+	def resetSession(){
+		def appointment = Appointment.get(session?.appointmentId)
+		if (appointment){
+			appointment.delete()
+		}
+		session?.appointmentId = null
+		session?.serviceId = null
+		session?.stylistId = null
+		println "** SESSION RESET **"
+		println "session: " + session
+		render ('{"success":true}') as JSON
+	}
+}

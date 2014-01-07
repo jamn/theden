@@ -1,0 +1,15 @@
+package salonManager
+
+class Appointment extends CoreObject {
+
+	Date appointmentDate
+	User stylist
+	User client
+	Service service
+	Boolean booked = false
+
+	static constraints = {
+    	client(nullable:true)
+    }
+
+}

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/the-den-barbershop/!svn/ver/2/trunk/web-app/WEB-INF/tld
+END
+c.tld
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/the-den-barbershop/!svn/ver/2/trunk/web-app/WEB-INF/tld/c.tld
+END
+grails.tld
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/the-den-barbershop/!svn/ver/2/trunk/web-app/WEB-INF/tld/grails.tld
+END
+fmt.tld
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/the-den-barbershop/!svn/ver/2/trunk/web-app/WEB-INF/tld/fmt.tld
+END
+spring.tld
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/the-den-barbershop/!svn/ver/2/trunk/web-app/WEB-INF/tld/spring.tld
+END
