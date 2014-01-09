@@ -180,7 +180,8 @@ textarea{
 
 .unavailable,
 .available,
-.booked{
+.booked,
+.blocked-off{
 	width: 90px;
 }
 
@@ -195,6 +196,10 @@ textarea{
 .booked{
 	background-color: #971111;
 	cursor: pointer;
+}
+
+.blocked-off{
+	background-color: #505050;
 }
 
 .appointment-data:hover{

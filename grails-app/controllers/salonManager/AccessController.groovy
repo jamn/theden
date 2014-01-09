@@ -20,6 +20,7 @@ class AccessController {
 
     	if (user?.hasPermission('admin')){
     		session.adminUser = user
+            session.setMaxInactiveInterval(1080) // set timeout to one week
             redirect (controller:'admin', action:'index')
     	}
     	else{

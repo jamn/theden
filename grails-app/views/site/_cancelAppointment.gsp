@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
-</head><body>
+</head><body baseUrl="${createLink()}">
 
 
 		<div class="header">

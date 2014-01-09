@@ -120,9 +120,8 @@ class SiteController {
 			//requestedDateCalObject.set(Calendar.MILLISECOND, 0)
 			//Boolean requestedDateIsOnADayOff = daysOff.find{it.dayOffDate == requestedDateCalObject.getTime()} ? true : false
 			//if (!requestedDateIsOnADayOff){
-				def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
 
-				println "appointments: " + appointments
+				def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
 
 				Calendar currentTime = new GregorianCalendar()
 				currentTime.setTime(startDate.getTime())
@@ -286,14 +285,14 @@ class SiteController {
 			def appointment = Appointment.get(session.appointmentId)
 			if (session.existingAppointmentId && params?.e?.size() > 1 && params?.p?.size() > 1){
 				println "Attempting to log in user (existing appointment)..."
-				def tempClient = User.findWhere(email:params.e, password:params.p) ?: null
+				def tempClient = User.findWhere(email:params.e.toLowerCase(), password:params.p) ?: null
 				def existingAppointment = Appointment.get(session.existingAppointmentId)
 				if (tempClient && existingAppointment.client == tempClient){
 					client = tempClient
 				}
 			}
 			else if (params?.f?.size() > 1 && params?.l?.size() > 1 && params?.e?.size() > 1 && params?.p?.size() > 1){
-				def existingUser = User.findByEmail(params.e)
+				def existingUser = User.findByEmail(params.e.toLowerCase())
 				if (existingUser && existingUser.password == params.p){
 					println "USER LOGGED IN CORRECTLY BY ACCIDENT"
 					client = existingUser
@@ -306,7 +305,7 @@ class SiteController {
 					client = new User()
 					client.firstName = params.f
 					client.lastName = params.l
-					client.email = params.e
+					client.email = params.e.toLowerCase()
 					client.password = params.p
 					client.phone = params.ph
 					client.code = client.firstName.substring(0,1).toLowerCase() + client.lastName.substring(0,1).toLowerCase() + new Date().getTime()
@@ -319,7 +318,7 @@ class SiteController {
 			}
 			else if (params?.e?.size() > 1 && params?.p?.size() > 1){
 				println "Attempting to log in user..."
-				client = User.findWhere(email:params.e, password:params.p) ?: null
+				client = User.findWhere(email:params.e.toLowerCase(), password:params.p) ?: null
 			}
 
 			println "client: " + client
@@ -400,8 +399,8 @@ class SiteController {
 	}
 
 	private deleteStaleAppointments(){
-		def con = AH.application.mainContext.sessionFactory.currentSession.connection();
-		def sql = new groovy.sql.Sql(con);
+		def con = AH.application.mainContext.sessionFactory.currentSession.connection()
+		def sql = new groovy.sql.Sql(con)
 		Calendar now = new GregorianCalendar()
 		now.add(Calendar.MINUTE, -10)
 		def tenMinutesAgo = now.getTime().format('yyyy-MM-dd HH:mm:ss')

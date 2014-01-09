@@ -8,7 +8,7 @@
 	<div class="content-wrapper">
 		<div class="logo-small"><img id="logoSmall" src="${resource(dir:'images',file:'logo.png')}"></div>
 		<div class="login-box">
-			<input type="text" name="username" id="username" placeholder="username">
+			<input type="text" name="username" id="username" placeholder="username" autofocus="autofocus">
 			<input type="password" name="password" id="password" placeholder="password">
 			<div id="loginButton">Login</div>
 		</div>

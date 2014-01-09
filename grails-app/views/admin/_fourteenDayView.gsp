@@ -19,7 +19,9 @@ daySix.add(Calendar.DAY_OF_WEEK, 5)
 Calendar daySeven = new GregorianCalendar()
 daySeven.setTime(startTime.getTime())
 daySeven.add(Calendar.DAY_OF_WEEK, 6)
+def now = new Date()
 %>
+<%System.out.println("Rendering template at: " + now)%>
 <table id="fourteenDayView-week1">
 <tr class="dateHeader">
 	<td></td>

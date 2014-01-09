@@ -29,9 +29,10 @@ $(document).ready(function(){
 	$('#chooseDate').datepicker( {
 		onSelect: function(date) {
 			var date = $('#chooseDate').val();
+			var baseUrl = $('body').attr('baseUrl');
 			$.ajax({
 				type: "POST",
-				url: "./site/getAvailableTimes",
+				url: baseUrl+"site/getAvailableTimes",
 				data: {d: date}
 			}).done(function(timeSlots) {
 				var success = timeSlots.search('"success":false');
@@ -84,9 +85,10 @@ $(document).on("tap", ".book-now-button", function() {
 		$(this).attr("disabled", "disabled");
 		$('.book-now-button .label').hide();
 		$('.book-now-button .spinner').show();
+		var baseUrl = $('body').attr('baseUrl');
 		$.ajax({
 			type: "POST",
-			url: "./site/getServices",
+			url: baseUrl+"site/getServices",
 			data: { u: "kp" }
 		}).done(function(services) {
 			var success = services.search('"success":false');
@@ -119,9 +121,10 @@ $(document).on("tap", ".service", function() {
 		var service = this.getAttribute("service");
 		var serviceButton = this;
 		var date = $('#chooseDate').val();
+		var baseUrl = $('body').attr('baseUrl');
 		$.ajax({
 			type: "POST",
-			url: "./site/getAvailableTimes",
+			url: baseUrl+"site/getAvailableTimes",
 			data: {s: service, d: date}
 		}).done(function(timeSlots) {
 			var success = timeSlots.search('"success":false');
@@ -154,9 +157,10 @@ $(document).on("tap", ".time-slot", function() {
 		var recurringAppointment = $('#recurringAppointment').is(':checked');
 		var repeatDuration = $('#repeatDuration').val();
 		var repeatNumberOfAppointments = $('#repeatNumberOfAppointments').val();
+		var baseUrl = $('body').attr('baseUrl');
 		$.ajax({
 			type: "POST",
-			url: "./site/saveDate",
+			url: baseUrl+"site/saveDate",
 			data: {d: date, r: recurringAppointment, dur: repeatDuration, num: repeatNumberOfAppointments}
 		}).done(function(loginForm) {
 			var success = loginForm.search('"success":false');
@@ -216,9 +220,10 @@ function bookAppointment(){
 	var phoneNumber = $('#phoneNumber').val();
 	$('#loginButton .label').hide();
 	$('#loginButton .spinner').show();
+	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
-		url: "./site/bookAppointment",
+		url: baseUrl+"site/bookAppointment",
 		data: {e: email, hp: email2, p: password, f: firstName, l: lastName, ph: phoneNumber}
 	}).done(function(confirmation) {
 		var success = confirmation.search('"success":false');

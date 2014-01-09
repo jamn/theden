@@ -4,7 +4,7 @@ class EmailService {
 
 	public sendEmailConfirmation(Appointment appointment){
 		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Your appointment is set for <b>${appointment.appointmentDate.format('MMMM dd, yyyy')}</b> @ <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>-Kalin</p>"
-		try {
+		/*try {
 			sendMail {
 				to "${appointment.client.email}"
 				from "info@thedenbarbershop-kc.com"  
@@ -27,11 +27,11 @@ class EmailService {
 		catch(Exception e) {
 			println "ERROR"
 			println e
-		}
+		}*/
 	}
 
 	public sendCancellationNotice(Appointment appointment){
-		try {
+		/*try {
 			sendMail {     
 				to "info@thedenbarbershop-kc.com"  
 				from "info@thedenbarbershop-kc.com"  
@@ -42,6 +42,6 @@ class EmailService {
 		catch(Exception e) {
 			println "ERROR"
 			println e
-		}
+		}*/
 	}
 }

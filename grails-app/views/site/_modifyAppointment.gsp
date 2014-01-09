@@ -10,7 +10,7 @@
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
-</head><body>
+</head><body baseUrl="${createLink()}">
 
 		<div class="existingAppointmentInfo"><b>Existing Appointment:</b> ${appointment.service.description} | ${appointment.appointmentDate.format('EEEE MMMM dd, yyyy')} @ ${appointment.appointmentDate.format('hh:mm a')}</div>
 
@@ -19,10 +19,16 @@
 			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
 		</div>
 		<div class="grey-box">
-			<div class="message-board-backing">
-				<div class="message-board">${message}</div>
-			</div>
-			<div class="logo-large"><img id="logoLarge" src="${resource(dir:'images',file:'logo-large.png')}"></div>
+			<ul>
+				<li>
+					<div class="message-board-backing">
+						<div class="message-board">${message}</div>
+					</div>
+				</li>
+				<li>
+					<img id="logoLarge" src="${resource(dir:'images',file:'logo-large.png')}">
+				</li>
+			</ul>
 		</div>
 		
 		<div class="main-content-area"></div>

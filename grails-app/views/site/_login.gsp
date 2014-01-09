@@ -1,10 +1,10 @@
 <form class="login-box">
 	<label for="email">Email:</label>
-	<input type="text" name="email" id="email" style="font-size:1em;padding:4px;margin:4px;">
+	<input type="text" name="email" id="email" style="font-size:1em;padding:4px;margin:4px;" value="${client?.email}" autofocus="autofocus">
 	<input type="text" name="email2" id="email2" style="display:none;">
 
 	<label for="password">Password:</label>
-	<input type="password" name="password" id="password" style="font-size:1em;padding:4px;margin:4px;">
+	<input type="password" name="password" id="password" style="font-size:1em;padding:4px;margin:4px;" value="${client?.password}">
 
 	<label for="first-name" class="new-user">First Name:</label>
 	<input type="text" name="first-name" id="firstName" class="new-user" style="font-size:1em;padding:4px;margin:4px;">

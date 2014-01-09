@@ -32,13 +32,17 @@ class AdminController {
     def index() { 
     	if (session.adminUser){
     		Calendar now = new GregorianCalendar()
+    		def now2 = new Date()
     		now.set(Calendar.HOUR_OF_DAY, 0)
 			now.set(Calendar.MINUTE, 0)
 			now.set(Calendar.SECOND, 0)
 			now.set(Calendar.MILLISECOND, 0)
 	    	def appointments = Appointment.findAllWhere(booked:true)?.findAll{it.appointmentDate > now.getTime()}?.sort{it.appointmentDate}
+	    	now2 = new Date()
 	    	def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "ERROR: HOMEPAGE_MESSAGE record not found in the database. Tell Ben."
+	    	now2 = new Date()
 	    	def stylist = User.findByCode("kp")
+	    	now2 = new Date()
 	    	homepageText = homepageText.replace("<br>","\r")
 
 	    	def stylistStartTime = dateService.get24HourTimeValues(stylist.startTime)
@@ -55,6 +59,8 @@ class AdminController {
 			endTime.set(Calendar.MINUTE, stylistEndTime.minute.intValue())
 			endTime.set(Calendar.SECOND, 0)
 			endTime.set(Calendar.MILLISECOND, 0)
+
+			now2 = new Date()
 
 	    	return [appointments:appointments, homepageText:homepageText, stylist:stylist, startTime:startTime, endTime:endTime]
     	}
@@ -181,6 +187,17 @@ class AdminController {
 				currentDate.add(Calendar.DAY_OF_YEAR, 1)
 			}
 			render ('{"success":true}') as JSON
+		}
+	}
+
+	def bookForClient(){
+		if (session.adminUser){
+			println "params: " + params
+			def client = User.get(new Long(params?.cId))
+			if (client){
+				session.adminClient = client
+				redirect (controller: "site", action: "index")
+			}
 		}
 	}
 

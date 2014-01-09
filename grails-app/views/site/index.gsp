@@ -33,7 +33,7 @@
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
-</head><body>
+</head><body  baseUrl="${createLink()}">
 
 		<div class="header">
 			<img id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
