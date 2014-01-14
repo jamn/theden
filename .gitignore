@@ -4,3 +4,7 @@
 *.class
 
 target/ROOT.war
+
+*.data
+
+*.war
