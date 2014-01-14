@@ -8,3 +8,5 @@ target/ROOT.war
 *.data
 
 *.war
+
+target
