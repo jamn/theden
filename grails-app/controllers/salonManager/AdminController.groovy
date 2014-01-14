@@ -11,6 +11,8 @@ class AdminController {
 	SimpleDateFormat dateFormatter3 = new SimpleDateFormat("MM/dd/yyyy")
 
 	def dateService
+	def schedulerService
+	def emailService
 
 	def testEmail = {
 		println "sending email"
@@ -30,6 +32,7 @@ class AdminController {
 	}
 
     def index() { 
+    	println "params: " + params
     	if (session.adminUser){
     		Calendar now = new GregorianCalendar()
     		def now2 = new Date()
@@ -44,6 +47,23 @@ class AdminController {
 	    	def stylist = User.findByCode("kp")
 	    	now2 = new Date()
 	    	homepageText = homepageText.replace("<br>","\r")
+
+	    	def clients = []
+	    	User.list()?.each(){
+	    		if (it.hasPermission("client")){
+	    			clients.add(it)
+	    		}
+	    	}
+	    	clients.sort{it.lastName}
+
+	    	def services = Service.list().sort{it.displayOrder}.findAll{it.description != "Blocked Off Time"}
+
+	    	def requestedDate = new Date()
+	    	def service = services[0]
+	    	def timeSlots = []
+	    	schedulerService.getTimeSlotsAvailableMap(requestedDate, stylist, service)?.each(){ k,v ->
+	    		timeSlots += v
+	    	}
 
 	    	def stylistStartTime = dateService.get24HourTimeValues(stylist.startTime)
 			def stylistEndTime = dateService.get24HourTimeValues(stylist.endTime)
@@ -62,7 +82,7 @@ class AdminController {
 
 			now2 = new Date()
 
-	    	return [appointments:appointments, homepageText:homepageText, stylist:stylist, startTime:startTime, endTime:endTime]
+	    	return [appointments:appointments, homepageText:homepageText, stylist:stylist, startTime:startTime, endTime:endTime, clients:clients, services:services, timeSlots:timeSlots]
     	}
     }
 
@@ -191,13 +211,97 @@ class AdminController {
 	}
 
 	def bookForClient(){
-		if (session.adminUser){
-			println "params: " + params
-			def client = User.get(new Long(params?.cId))
-			if (client){
-				session.adminClient = client
-				redirect (controller: "site", action: "index")
+		println new Date()
+		println "params: " + params
+		Boolean success = false
+		if (session.adminUser && params?.cId && params?.sId && params?.aDate && params?.sTime){
+			def client = User.get(new Long(params.cId))
+			def stylist = User.findByCode("kp")
+			def service = Service.get(new Long(params.sId))
+
+			def startTimeString = params.sTime
+			def amIndex = startTimeString.indexOf("AM")
+			def pmIndex = startTimeString.indexOf("PM")
+			def minutesIndex = startTimeString.indexOf(":")
+			Long hour = 0
+			Long minute = 0
+
+			if (amIndex > -1){
+				startTimeString = startTimeString.substring(0,amIndex)
 			}
+			else if (pmIndex > -1){
+				startTimeString = startTimeString.substring(0,pmIndex)
+			}
+			
+			if (minutesIndex > -1){
+				minute = new Long(startTimeString.substring(minutesIndex+1))
+			}
+			def tempHour
+			if (minutesIndex > -1){
+				tempHour = startTimeString.substring(0,minutesIndex)?.padLeft(2, "0")
+			}
+			else if (amIndex > -1){
+				tempHour = startTimeString.substring(0,amIndex)?.padLeft(2, "0")
+			}else if (pmIndex > -1){
+				tempHour = startTimeString.substring(0,pmIndex)?.padLeft(2, "0")
+			}
+			hour = new Long(tempHour)
+			if (pmIndex > -1 && hour != 12){
+				hour = hour + 12
+			}
+
+			Calendar tempDate = new GregorianCalendar()
+			tempDate.setTime(dateFormatter3.parse(params.aDate))
+			tempDate.set(Calendar.HOUR_OF_DAY, hour.intValue())
+			tempDate.set(Calendar.MINUTE, minute.intValue())
+			tempDate.set(Calendar.SECOND, 0)
+			tempDate.set(Calendar.MILLISECOND, 0)
+
+			def appointmentDate = tempDate.getTime()
+			println "appointmentDate: " + appointmentDate
+
+			if (client && stylist && service && appointmentDate){
+				def appointment = new Appointment()
+				appointment.appointmentDate = appointmentDate
+				appointment.stylist = stylist
+				appointment.service = service
+				appointment.client = client
+				appointment.code = RandomStringUtils.random(14, true, true)
+				appointment.booked = true
+				appointment.save(flush:true)
+				if (appointment.hasErrors()){
+					println "ERROR!"
+					println appointment.errors
+				}
+				else{
+					success = true
+					runAsync {
+						emailService.sendEmailConfirmation(appointment)
+					}
+				}
+			}
+		}
+		if (success){
+			render ('{"success":true}') as JSON
+		}
+		else{
+			render ('{"success":false}') as JSON
+		}
+	}
+
+	def getTimeSlotOptions(){
+		println "params: " + params
+		def requestedDate = dateFormatter3.parse(params.aDate)
+		def service = Service.get(new Long(params.sId))
+		def stylist = User.findByCode("kp")
+		def timeSlots = []
+		schedulerService.getTimeSlotsAvailableMap(requestedDate, stylist, service)?.each(){ k,v ->
+			timeSlots += v
+		}
+		if (timeSlots.size() > 0){
+			render (template: "timeSlotOptions", model: [timeSlots:timeSlots])
+		}else{
+			render "ERROR"
 		}
 	}
 

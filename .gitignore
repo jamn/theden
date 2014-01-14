@@ -1,0 +1,6 @@
+
+*.war
+
+*.class
+
+target/ROOT.war

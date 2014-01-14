@@ -49,6 +49,11 @@ $(document).ready(function(){
 		minDate: 0
 	});
 
+	$('#dateOfAppointment').datepicker( {
+		minDate: 0
+	});
+	$('#dateOfAppointment').datepicker("setDate", new Date());
+
 	$('#blockOffTimeButton').click(function(e) {
 		var date = $('#chooseDateToBlockOff').val();
 		var fromHour = $('#fromHour').val();
@@ -71,10 +76,12 @@ $(document).ready(function(){
 			if (jsonResponse.success === true){
 				console.log("success:true");
 				$('#blockOffTimeButton').html("Success");
+				$('#blockOffTimeButton').removeClass('errorButton animated fadeIn');
 			}
 			else{
 				console.log("success:false");
 				$('#blockOffTimeButton').html("Error");
+				$('#blockOffTimeButton').addClass('errorButton animated fadeIn');
 			}
 		});
 	});
@@ -94,13 +101,70 @@ $(document).ready(function(){
 			if (jsonResponse.success === true){
 				console.log("success:true");
 				$('#blockOffDaysButton').html("Success");
+				$('#blockOffDaysButton').removeClass('errorButton animated fadeIn');
 			}
 			else{
 				console.log("success:false");
 				$('#blockOffDaysButton').html("Error");
+				$('#blockOffDaysButton').addClass('errorButton animated fadeIn');
 			}
 		});
 	});
+
+	$('#bookForClientButton').click(function(e) {
+		var cId = $('#clients').val();
+		var sId = $('#services').val();
+		var aDate = $('#dateOfAppointment').val();
+		var sTime = $('#timeSlots').val();
+
+		$('#bookForClientButton').html($('#waitingSpinner').html());
+
+		$.ajax({
+			type: "POST",
+			url: "./bookForClient",
+			data: { cId:cId, sId:sId, aDate:aDate, sTime:sTime}
+		}).done(function(response) {
+			var jsonResponse = JSON.parse(response);
+			if (jsonResponse.success === true){
+				$('#bookForClientButton').html("Success");
+				$('#bookForClientButton').removeClass('errorButton animated fadeIn');
+			}
+			else{
+				$('#bookForClientButton').html("Error");
+				$('#bookForClientButton').addClass('errorButton animated fadeIn');
+			}
+		});
+	});
+
+	$('#services').on('change', function() {
+		getTimeSlotOptions();
+	});
+
+	$('#dateOfAppointment').on('change', function() {
+		getTimeSlotOptions();
+	});
+
+
+	function getTimeSlotOptions(){
+		var cId = $('#clients').val();
+		var sId = $('#services').val();
+		var aDate = $('#dateOfAppointment').val();
+		$.ajax({
+			type: "POST",
+			url: "./getTimeSlotOptions",
+			data: { cId:cId, sId:sId, aDate:aDate}
+		}).done(function(response) {
+			if (response.indexOf("ERROR") > -1){
+				$('#bookForClientButton').html("Error");
+				$('#bookForClientButton').addClass('errorButton animated fadeIn');
+			}else{
+				$('#timeSlots').html(response);
+				$('#bookForClientButton').html("Book Appointment");
+				$('#bookForClientButton').removeClass('errorButton animated fadeIn');
+			}
+		});
+	}
+
 
 	$('#fourteenDayViewLink').click(function(e) {
 		var text = $("#fourteenDayViewLink").html()

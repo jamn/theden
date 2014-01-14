@@ -86,7 +86,8 @@ textarea{
 
 #saveTextButton,
 #blockOffTimeButton,
-#blockOffDaysButton {
+#blockOffDaysButton,
+#bookForClientButton {
 	background-color: #827D00;
 	background: -moz-linear-gradient(top,  rgba(130,125,0,0.9) 0%, rgba(130,125,0,1) 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(130,125,0,0.9)), color-stop(100%,rgba(130,125,0,1))); /* Chrome,Safari4+ */
@@ -106,25 +107,54 @@ textarea{
 	width: 200px;
 }
 
+.errorButton{
+	background: rgb(196,3,3) !important; /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(196,3,3,1) 0%, rgba(160,3,3,1) 44%, rgba(132,0,0,1) 100%) !important; /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(196,3,3,1)), color-stop(44%,rgba(160,3,3,1)), color-stop(100%,rgba(132,0,0,1))) !important; /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(196,3,3,1) 0%,rgba(160,3,3,1) 44%,rgba(132,0,0,1) 100%) !important; /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c40303', endColorstr='#840000',GradientType=0 ) !important; /* IE6-9 */
+	border-color: #630000 !important;
+	box-shadow: 1px 1px 2px #E2466C inset !important;
+}
+
 #homepageText,
 #saveTextButton,
 #blockOffTimeButton,
-#blockOffDaysButton{
+#blockOffDaysButton,
+#bookForClientButton,
+#clients,
+#services,
+#timeSlots,
+#dateOfAppointment,
+#dateOfAppointmentLabel{
 	position: relative;
 	left: 18px;
  	margin-top: 17px;
 	top: -5px;
-	margin-left: 22px;
+	margin-left: 10px;
+}
+
+#dateOfAppointmentLabel{
+	width: 20px;
 }
 
 #chooseDateToBlockOffText{
 	margin-left: 6px;
 }
 
+#clients,
+#services,
+#timeSlots{
+	font-size: 1.4em;
+}
+
 .fourteenDayViewLink{
 	position: absolute;
 	top: 5px;
-	left: 324px;
+	left: 330px;
 	font-size: 1.3em;
 }
 

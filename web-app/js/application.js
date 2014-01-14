@@ -54,6 +54,7 @@ $(document).ready(function(){
 		 	return [(day != 6 && day != 0)];
 		}
 	});
+	$('#chooseDate').datepicker("setDate", new Date());
 
 	$('#recurringAppointment').click(function() {
 		if ($(this).is(':checked')){

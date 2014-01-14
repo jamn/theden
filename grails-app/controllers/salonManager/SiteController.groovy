@@ -16,6 +16,7 @@ class SiteController {
 
 	def dateService
 	def emailService
+	def schedulerService
 
 	def index() {
 		resetSession()
@@ -53,7 +54,6 @@ class SiteController {
 		def requestedDate
 		def service
 		def stylist
-		def count = 0
 		Boolean dontRenderTemplate = false
 		try {
 			if (params?.d){
@@ -87,103 +87,7 @@ class SiteController {
 		}
 
 		if (requestedDate && stylist && service){
-
-			Calendar startDate = new GregorianCalendar()
-			startDate.setTime(requestedDate)
-			Calendar endDate = new GregorianCalendar()
-			endDate.setTime(requestedDate)
-			
-			def stylistDayOfTheWeek = stylist?.daysOfTheWeek?.find{it.dayOfTheWeek == startDate.get(Calendar.DAY_OF_WEEK)}
-
-			def stylistStartTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.startTime)
-			def stylistEndTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.endTime)
-
-			startDate.set(Calendar.HOUR_OF_DAY, stylistStartTime.hour.intValue())
-			startDate.set(Calendar.MINUTE, stylistStartTime.minute.intValue())
-			startDate.set(Calendar.SECOND, 0)
-			startDate.set(Calendar.MILLISECOND, 0)
-
-			endDate.set(Calendar.HOUR_OF_DAY, stylistEndTime.hour.intValue())
-			endDate.set(Calendar.MINUTE, stylistEndTime.minute.intValue())
-			endDate.set(Calendar.SECOND, 0)
-			endDate.set(Calendar.MILLISECOND, 0)
-
-			println "startDate: " + startDate.getTime()
-			println "endDate: " + endDate.getTime()
-
-			//def daysOff = DayOff.list()
-			//Calendar requestedDateCalObject = new GregorianCalendar()
-			//requestedDateCalObject.setTime(requestedDate)
-			//requestedDateCalObject.set(Calendar.HOUR_OF_DAY, 0)
-			//requestedDateCalObject.set(Calendar.MINUTE, 0)
-			//requestedDateCalObject.set(Calendar.SECOND, 0)
-			//requestedDateCalObject.set(Calendar.MILLISECOND, 0)
-			//Boolean requestedDateIsOnADayOff = daysOff.find{it.dayOffDate == requestedDateCalObject.getTime()} ? true : false
-			//if (!requestedDateIsOnADayOff){
-
-				def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
-
-				Calendar currentTime = new GregorianCalendar()
-				currentTime.setTime(startDate.getTime())
-				
-				def durationInMinutes = service.duration / MINUTE
-				println "durationInMinutes: " + durationInMinutes
-
-				while(currentTime < endDate) {
-					count++
-					Calendar timeSlotStart = new GregorianCalendar()
-					timeSlotStart.setTime(currentTime.getTime())
-					Calendar timeSlotEnd = new GregorianCalendar()
-					timeSlotEnd.setTime(timeSlotStart.getTime())
-					timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
-
-					// DOES AN EXISTING APPOINTMENT FALL IN THIS TIME RANGE?
-					def existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
-					//println "timeSlotStart: " + timeSlotStart.getTime().format("yyyy-MM-dd HH:mm:ss")
-					//println "existingAppointment: " + existingAppointment?.appointmentDate?.format("yyyy-MM-dd HH:mm:ss")
-					while (existingAppointment){
-						timeSlotStart.setTime(existingAppointment.appointmentDate)
-						def existingAppointmentDurationInMinutes = existingAppointment.service.duration / MINUTE
-						timeSlotStart.add(Calendar.MINUTE, existingAppointmentDurationInMinutes.intValue())
-						timeSlotEnd.setTime(timeSlotStart.getTime())
-						timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
-						existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
-					}
-
-
-					def dayOfWeek = timeSlotEnd.get(Calendar.DAY_OF_WEEK)
-					if (timeSlotEnd <= endDate && stylistDayOfTheWeek.available){ // BLOCK OFF SATURDAY AND SUNDAY
-					//if (timeSlotEnd <= endDate && dayOfWeek != 1 && dayOfWeek != 7){ // BLOCK OFF SATURDAY AND SUNDAY
-					//if (timeSlotEnd <= endDate){
-						def timeSlot = timeSlotStart.getTime().format('h:mma').replace(':00', '') + " / " + timeSlotEnd.getTime().format('h:mma').replace(':00', '')
-						if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 11){
-							List morning = timeSlotsMap.get("morning") ?: []
-							morning.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
-							timeSlotsMap.put("morning", morning)
-						}
-						else if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 14){
-							List lunch = timeSlotsMap.get("lunch") ?: []
-							lunch.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
-							timeSlotsMap.put("lunch", lunch)
-						}
-						else{
-							List afternoon = timeSlotsMap.get("afternoon") ?: []
-							afternoon.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
-							timeSlotsMap.put("afternoon", afternoon)
-							timeSlotsMap.put("afternoon", afternoon)
-						}
-					}
-
-					currentTime.setTime(timeSlotStart.getTime())
-					currentTime.add(Calendar.MINUTE, 15)
-				}
-
-				println "timeSlotsMap.size(): " + timeSlotsMap.size()
-			//}
-			//else{
-				//println "REQUESTED DATE IS ON A DAY OFF!"
-			//}
-
+			timeSlotsMap = schedulerService.getTimeSlotsAvailableMap(requestedDate, stylist, service)
 		}
 		else {
 			println "ERROR: unable to process params -> " + params
@@ -248,26 +152,6 @@ class SiteController {
 		session.appointmentId = nextAppointment.id
 		session.existingAppointments = existingAppointments
 		render (template: "login", model: [appointment:nextAppointment])
-			
-
-		/*def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
-		println "existingAppointment: " + existingAppointment
-		if (appointmentDate && !existingAppointment){
-			def stylist = User.get(session.stylistId)
-			def service = Service.get(session.serviceId)
-			def appointment = new Appointment()
-			appointment.appointmentDate = appointmentDate
-			appointment.stylist = stylist
-			appointment.service = service
-			appointment.code = RandomStringUtils.random(14, true, true)
-			appointment.save(flush:true)
-			session.appointmentId = appointment.id
-			println "session: " + session
-			render (template: "login", model: [appointment:appointment])
-		}else{
-			println "existingAppointment: " + existingAppointment
-			render ('{"success":false}') as JSON
-		}*/
 	}
 
 

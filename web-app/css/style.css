@@ -83,6 +83,7 @@ div.ui-mobile-viewport { overflow-x: hidden; }
 	text-align: center;
 	font-size: 1.4em;
 	margin-top: 7px;
+	margin-left: 2px;
 }
 #newAddress:hover{
 	opacity: .8;

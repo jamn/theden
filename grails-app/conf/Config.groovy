@@ -73,11 +73,11 @@ grails.views.javascript.library="jquery"
 
 grails {
    mail {
-		host = "smtpout.secureserver.net"
 		//host = "smtp.gmail.com"
 		//username = "bjacobi@gmail.com"
 		//password = "pznsyddawtypbkhl"
 		port = 465
+		host = "smtpout.secureserver.net"
 		username = "info@thedenbarbershop-kc.com"
 		password = "!atlantis3"
 		props = ["mail.smtp.auth":"true",             

@@ -7,6 +7,11 @@
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
+
+<link rel="apple-touch-icon" sizes="57x57" href="${resource(dir:'images', file:'apple-icon-57x57.png')}" />
+<link rel="apple-touch-icon" sizes="72x72" href="${resource(dir:'images', file:'apple-icon-72x72.png')}" />
+<link rel="apple-touch-icon" sizes="114x114" href="${resource(dir:'images', file:'apple-icon-114x114.png')}" />
+<link rel="apple-touch-icon" sizes="144x144" href="${resource(dir:'images', file:'apple-icon-144x144.png')}" />
 </head><body>
 
 	<div id="logout">logout</div>
@@ -76,8 +81,6 @@
 		<option value="pm">PM</option>
 	</select>
 	<div id="blockOffTimeButton">Block Off Time</div>
-	<div id="waitingSpinner" style="display:none;"><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" class="spinner"></div>
-
 
 
 
@@ -90,9 +93,25 @@
 	<input id="toWholeDay" name="toWholeDay" type="text">
 
 	<div id="blockOffDaysButton">Block Off Days</div>
-	<div id="waitingSpinner" style="display:none;"><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" class="spinner"></div>
 
-
+	<hr>
+	<h1>Book for Client</h1>
+	<select id="clients">
+		<g:each in="${clients}">
+			<option value="${it?.id}">${it?.lastName}, ${it?.firstName}</option>
+		</g:each>
+	</select>
+	<select id="services">
+		<g:each in="${services}">
+			<option value="${it?.id}">${it?.description}</option>
+		</g:each>
+	</select>
+	<select id="timeSlots">
+		<g:render template="timeSlotOptions" collection="${timeSlots}" />
+	</select>
+	<label id="dateOfAppointmentLabel" for="dateOfAppointment">Date:</label>
+	<input id="dateOfAppointment" name="dateOfAppointment" type="text">
+	<div id="bookForClientButton">Book Appointment</div>
 
 
 	<hr>
@@ -721,7 +740,7 @@
 		<tr>
 			<td width="120px"><h2>Name:</h2></td>
 			<td><h2>Service:</h2></td>
-			<td width="120px"><h2>Date:</h2></td>
+			<td width="150px"><h2>Date:</h2></td>
 			<td><h2>Notes:</h2></td>
 		</tr>
 		<g:each in="${appointments}">
@@ -735,7 +754,7 @@
 						<%}%>
 					</td>
 					<td>${it.service.description}</td>
-					<td>${it.appointmentDate.format('MM/dd/yy hh:mm a')}</td>
+					<td>${it.appointmentDate.format('MM/dd @ hh:mm a [E]')}</td>
 					<td>
 						<%if (it.notes){%>
 							${it.notes}
@@ -753,6 +772,9 @@
 			<%}%>
 		</g:each>
 	</table>
+
+
+	<div id="waitingSpinner" style="display:none;"><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" class="spinner"></div>
 
 
 

@@ -3,6 +3,7 @@ package salonManager
 class EmailService {
 
 	public sendEmailConfirmation(Appointment appointment){
+		println "Sending email confirmation for appointment: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
 		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Your appointment is set for <b>${appointment.appointmentDate.format('MMMM dd, yyyy')}</b> @ <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>-Kalin</p>"
 		try {
 			sendMail {
@@ -31,6 +32,7 @@ class EmailService {
 	}
 
 	public sendCancellationNotice(Appointment appointment){
+		println "Sending cancellation notice: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
 		try {
 			sendMail {     
 				to "info@thedenbarbershop-kc.com"  

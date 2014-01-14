@@ -45,6 +45,8 @@
 	}
 	.header{
 		width: 290px;
+		position: relative;
+		left: -5px;
 	}
 }
 @media screen and (max-width: 630px) {
