@@ -195,7 +195,7 @@ class SchedulerService {
 				}
 				else{
 					runAsync {
-						emailService.sendEmailConfirmation(appointment)
+						emailService.sendEmailConfirmation([appointment])
 					}
 				}
 			}

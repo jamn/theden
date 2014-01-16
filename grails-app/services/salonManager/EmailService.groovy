@@ -15,7 +15,7 @@ class EmailService {
 
 		try {
 			sendMail {
-				to "${appointment.client.email}"
+				to "${appointments[0].client.email}"
 				from "info@thedenbarbershop-kc.com"  
 				subject "Appointment Booked @ The Den Barbershop"     
 				html emailBody
