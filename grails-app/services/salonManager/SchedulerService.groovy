@@ -1,11 +1,40 @@
 package salonManager
 
+import java.text.SimpleDateFormat
+import org.apache.commons.lang.RandomStringUtils
+import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+
 class SchedulerService {
 
 	static Long HOUR = 3600000
 	static Long MINUTE = 60000
 
 	def dateService
+	def emailService
+
+	SimpleDateFormat dateFormatter3 = new SimpleDateFormat("MM/dd/yyyy")
+
+	public deleteAppointment(id, sql = null){
+		println "Deleting appointment: " + id
+		if (!sql){
+			def con = AH.application.mainContext.sessionFactory.currentSession.connection()
+			sql = new groovy.sql.Sql(con)
+		}
+		def query1 = "DELETE FROM appointment WHERE id = ${id};"
+		def query2 = "DELETE FROM core_object WHERE id = ${id};"
+		try {
+			sql.executeUpdate(query1)
+		}
+		catch(Exception e) {
+			println "ERROR: " + e
+		}
+		try {
+			sql.executeUpdate(query2)
+		}
+		catch(Exception e) {
+			println "ERROR: " + e
+		}
+	}
 
 	public Map getTimeSlotsAvailableMap(Date requestedDate, User stylist, Service service){
 		def timeSlotsMap = [:]
@@ -96,6 +125,82 @@ class SchedulerService {
 		}
 
 		return timeSlotsMap
+	}
+
+	public Boolean bookForClient(Map params = [:]){
+		Boolean success = false
+		def client = User.get(new Long(params.cId))
+		def stylist = User.findByCode("kp")
+		def service = Service.get(new Long(params.sId))
+
+		def startTimeString = params.sTime
+		def amIndex = startTimeString.indexOf("AM")
+		def pmIndex = startTimeString.indexOf("PM")
+		def minutesIndex = startTimeString.indexOf(":")
+		Long hour = 0
+		Long minute = 0
+
+		if (amIndex > -1){
+			startTimeString = startTimeString.substring(0,amIndex)
+		}
+		else if (pmIndex > -1){
+			startTimeString = startTimeString.substring(0,pmIndex)
+		}
+		
+		if (minutesIndex > -1){
+			minute = new Long(startTimeString.substring(minutesIndex+1))
+		}
+		def tempHour
+		if (minutesIndex > -1){
+			tempHour = startTimeString.substring(0,minutesIndex)?.padLeft(2, "0")
+		}
+		else if (amIndex > -1){
+			tempHour = startTimeString.substring(0,amIndex)?.padLeft(2, "0")
+		}else if (pmIndex > -1){
+			tempHour = startTimeString.substring(0,pmIndex)?.padLeft(2, "0")
+		}
+		hour = new Long(tempHour)
+		if (pmIndex > -1 && hour != 12){
+			hour = hour + 12
+		}
+
+		Calendar tempDate = new GregorianCalendar()
+		tempDate.setTime(dateFormatter3.parse(params.aDate))
+		tempDate.set(Calendar.HOUR_OF_DAY, hour.intValue())
+		tempDate.set(Calendar.MINUTE, minute.intValue())
+		tempDate.set(Calendar.SECOND, 0)
+		tempDate.set(Calendar.MILLISECOND, 0)
+
+		def appointmentDate = tempDate.getTime()
+
+		if (client && stylist && service && appointmentDate){
+			def appointment = new Appointment()
+			appointment.appointmentDate = appointmentDate
+			appointment.stylist = stylist
+			appointment.service = service
+			appointment.client = client
+			appointment.code = RandomStringUtils.random(14, true, true)
+			appointment.booked = true
+			appointment.save(flush:true)
+			if (appointment.hasErrors()){
+				println "ERROR!"
+				println appointment.errors
+			}
+			else{
+				success = true
+				if (params?.rescheduledAppointment?.toString()?.toUpperCase() == "TRUE"){
+					runAsync {
+						emailService.sendRescheduledConfirmation(appointment)
+					}
+				}
+				else{
+					runAsync {
+						emailService.sendEmailConfirmation(appointment)
+					}
+				}
+			}
+		}
+		return success
 	}
 
 }

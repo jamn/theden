@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery.confirmon.css')}" />
 
 <link rel="apple-touch-icon" sizes="57x57" href="${resource(dir:'images', file:'apple-icon-57x57.png')}" />
 <link rel="apple-touch-icon" sizes="72x72" href="${resource(dir:'images', file:'apple-icon-72x72.png')}" />
@@ -97,18 +98,18 @@
 	<hr>
 	<h1>Book for Client</h1>
 	<select id="clients">
+		<option selected="selected">Choose a client...</option>
 		<g:each in="${clients}">
 			<option value="${it?.id}">${it?.lastName}, ${it?.firstName}</option>
 		</g:each>
 	</select>
 	<select id="services">
+		<option selected="selected">Choose a service...</option>
 		<g:each in="${services}">
 			<option value="${it?.id}">${it?.description}</option>
 		</g:each>
 	</select>
-	<select id="timeSlots">
-		<g:render template="timeSlotOptions" collection="${timeSlots}" />
-	</select>
+	<select id="timeSlots"></select>
 	<label id="dateOfAppointmentLabel" for="dateOfAppointment">Date:</label>
 	<input id="dateOfAppointment" name="dateOfAppointment" type="text">
 	<div id="bookForClientButton">Book Appointment</div>
@@ -745,7 +746,7 @@
 		</tr>
 		<g:each in="${appointments}">
 			<%if (it.service.description != 'Blocked Off Time'){%>
-				<tr class="appointment-data" id="${it.id}">
+				<tr class="appointment-data appointment-data-${it.id}" id="${it.id}">
 					<td>
 						<%if (it.client.code == 'kp'){%>
 							From Old System
@@ -765,9 +766,7 @@
 				</tr>
 				<tr class="edit-appointment edit-appointment-${it.id}">
 					<td></td>
-					<td></td>
-					<td></td>
-					<td>(x) <a href="${createLink(controller:'site',action:'cancelAppointment',params:[c:it.code])}" onclick="return confirm('Cancel appointment?')">cancel</a> | (~) <a href="${createLink(controller:'site',action:'modifyAppointment',params:[a:it.id,cc:it.client.code])}">reschedule</a></td>
+					<td colspan="3">(x) <a href="${createLink(controller:'site',action:'cancelAppointment',params:[c:it.code])}" onclick="return confirm('Cancel appointment?')">cancel</a> | Reschedule: <span id="edit-appointment-options-${it.id}"></span> <img src="${resource(dir:'images', file:'spinner-gray.gif')}" class="spinner-${it.id}" style="display:none;"></td>
 				</tr>
 			<%}%>
 		</g:each>
@@ -780,6 +779,7 @@
 
 <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
 <script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
+<script src="${resource(dir:'js', file:'jquery.confirmon.js')}"></script>
 <script src="${resource(dir:'js', file:'a.min.js')}" type="text/javascript"></script>
 
 </body></html>

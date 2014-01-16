@@ -111,6 +111,7 @@ class SiteController {
 		def repeatNumberOfAppointments = 1
 
 		if (params?.r?.toLowerCase() == "true"){ // r = recurringAppointment
+			println "Recurring Appointment"
 			repeatDuration = new Integer(params?.dur)
 			repeatNumberOfAppointments = new Integer(params?.num)
 		}
@@ -141,6 +142,8 @@ class SiteController {
 				appointment.save(flush:true)
 				if (count == 1){
 					nextAppointment = appointment
+				}else{
+					session.multipleAppointmentsScheduled = true
 				}
 				println "saved appointment: " + appointment
 			}
@@ -159,14 +162,15 @@ class SiteController {
 		println "\n---- BOOK APPOINTMENT ----"
 		println new Date()
 		println "params: " + params
+		Boolean errorOccurred = false
+		def appointments = []
 		if (params?.hp?.size() > 0){ // HONEYPOT -- check value of hidden field to see if a spambot is submitting the form
-			render ('{"success":false}') as JSON
+			errorOccurred = true
 		}
 		else{
 			def client
 			def service = Service.get(session.serviceId)
 			def stylist = User.get(session.stylistId)
-			def appointment = Appointment.get(session.appointmentId)
 			if (session.existingAppointmentId && params?.e?.size() > 1 && params?.p?.size() > 1){
 				println "Attempting to log in user (existing appointment)..."
 				def tempClient = User.findWhere(email:params.e.toLowerCase(), password:params.p) ?: null
@@ -204,34 +208,61 @@ class SiteController {
 				println "Attempting to log in user..."
 				client = User.findWhere(email:params.e.toLowerCase(), password:params.p) ?: null
 			}
-
+			
 			println "client: " + client
 			println "service: " + service
 			println "stylist: " + stylist
-			println "appointment: " + appointment
 
-			if (client && service && stylist && appointment){
-				appointment.client = client
-				appointment.booked = true
-				appointment.save(flush:true)
+			println "session: " + session
+
+			def tempAppointment = Appointment.get(session.appointmentId)
+			
+			if (session.multipleAppointmentsScheduled && tempAppointment){
+				println "here"
+				def now = new Date()
+				Appointment.findAllWhere(client:tempAppointment.client)?.each(){
+					if (it.booked == false && it.appointmentDate > now){
+						println "adding appointment"
+						appointments.add(it)
+					}
+				}
+			}else if (tempAppointment){
+				appointments.add(tempAppointment)
+			}
+
+			println "appointments: " + appointments
+
+			if (client && service && stylist && appointments.size() > 0){
+				appointments.each(){ appointment ->
+					println "appointment: " + appointment
+					appointment.client = client
+					appointment.booked = true
+					appointment.save(flush:true)
+					if (appointment.hasErrors() || appointment.booked == false){
+						println "ERROR: appointment.booked("+appointment.booked+") | " + appointment?.errors
+						errorOccurred = true
+					}
+					else{
+						println "saved appointment"
+					}
+				}
+				runAsync {
+					emailService.sendEmailConfirmation(appointments)
+				}
 
 				if (session.existingAppointmentId){
+					println "Deleting existing appointment..."
 					def existingAppointment = Appointment.get(session.existingAppointmentId)
-					existingAppointment?.delete()
-					existingAppointment?.save()
+					schedulerService.deleteAppointment(existingApointment.id)
 				}
 			}
-			if (appointment.hasErrors() || appointment.booked == false){
-				println "ERROR: appointment.booked("+appointment.booked+") | " + appointment?.errors
-				render ('{"success":false}') as JSON
-			}
-			else{
-				println "saved appointment"
-				runAsync {
-					emailService.sendEmailConfirmation(appointment)
-				}
-				render (template: "confirmation", model: [appointment:appointment, existingAppointments:session.existingAppointments])
-			}
+		}
+		if (errorOccurred){
+			println "AN ERROR OCCURRED"
+			render ('{"success":false}') as JSON
+		}
+		else{
+			render (template: "confirmation", model: [appointments:appointments, existingAppointments:session.existingAppointments])
 		}
 	}
 
@@ -288,12 +319,24 @@ class SiteController {
 		Calendar now = new GregorianCalendar()
 		now.add(Calendar.MINUTE, -10)
 		def tenMinutesAgo = now.getTime().format('yyyy-MM-dd HH:mm:ss')
-		def query = [
-			"DELETE FROM appointment WHERE booked = 0 AND id IN (",
+		List idsToDelete = []
+		def query1 = [
+			"SELECT id FROM appointment WHERE booked = 0 AND id IN (",
 				"SELECT id FROM core_object WHERE date_created < '"+tenMinutesAgo+"'",
 			");"
 		].join('\n')
-		sql.executeUpdate(query)
+		try {
+			sql.eachRow(query1){ row ->
+				idsToDelete.add(row.id)
+			}
+		}
+		catch(Exception e) {
+			println "ERROR: " + e
+		}
+		idsToDelete.each(){
+			schedulerService.deleteAppointment(it, sql)
+		}
+		
 	}
 
 	private getServicesForStylist(User stylist){

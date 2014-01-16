@@ -14,25 +14,9 @@ class AdminController {
 	def schedulerService
 	def emailService
 
-	def testEmail = {
-		println "sending email"
-		try {	
-			sendMail {     
-				to "bjacobi@gmail.com"     
-				subject "New Appointment [Tomorrow]"     
-				html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> Me</p>"
-			}
-		}
-		catch(Exception e) {
-			println "ERROR"
-			println e
-		}
-		println "finished"
-		
-	}
-
     def index() { 
-    	println "params: " + params
+    	println "\n" + new Date()
+		println "params: " + params
     	if (session.adminUser){
     		Calendar now = new GregorianCalendar()
     		def now2 = new Date()
@@ -87,6 +71,8 @@ class AdminController {
     }
 
     def addExistingAppointments(){
+    	println "\n" + new Date()
+		println "params: " + params
     	if (session.adminUser){
 			def baseDir = System.properties['base.dir'] + "/docs/"
 			def file = new File(baseDir+"appointments.csv")
@@ -136,8 +122,9 @@ class AdminController {
 	}
 
 	def saveHomepageMessage(){
+		println "\n" + new Date()
+		println "params: " + params
 		if (session.adminUser){
-			println "params: " + params
 			def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")
 			homepageText.value = params.m.replace("\r", "<br>").replace("\n", "<br>")
 			homepageText.save()
@@ -152,134 +139,109 @@ class AdminController {
 	}
 
 	def blockOffTime(){
+		println "\n" + new Date()
+		println "params: " + params
 		if (session.adminUser){
-			println "params: " + params
-			def from = dateFormatter2.parse(params?.date+params?.from)
-			def to = dateFormatter2.parse(params?.date+params?.to)
+			Boolean success = false
+			Boolean appointmentFailedToSave = false
+			try {
+				def from = dateFormatter2.parse(params?.date+params?.from)
+				def to = dateFormatter2.parse(params?.date+params?.to)
 
-			def stylist = User.findByCode("kp")
-			def service = Service.findByDescription("Blocked Off Time")
-			Calendar currentDate = new GregorianCalendar()
-			currentDate.setTime(from)
+				def stylist = User.findByCode("kp")
+				def service = Service.findByDescription("Blocked Off Time")
+				Calendar currentDate = new GregorianCalendar()
+				currentDate.setTime(from)
 
-			while (currentDate.getTime() <= to){
-				def appointment = new Appointment()
-				appointment.appointmentDate = currentDate.getTime()
-				appointment.stylist = stylist
-				appointment.service = service
-				appointment.code = RandomStringUtils.random(14, true, true)
-				appointment.client = stylist
-				appointment.booked = true
-				appointment.save(flush:true)
-				println "appointment: " + appointment
-				currentDate.add(Calendar.MINUTE, 15)
+				while (currentDate.getTime() <= to){
+					def appointment = new Appointment()
+					appointment.appointmentDate = currentDate.getTime()
+					appointment.stylist = stylist
+					appointment.service = service
+					appointment.code = RandomStringUtils.random(14, true, true)
+					appointment.client = stylist
+					appointment.booked = true
+					appointment.save(flush:true)
+					if (appointment.hasErrors){
+						appointmentFailedToSave = true
+						println "ERROR!"
+						println appointment.errors
+					}else{
+						success = true
+					}
+					println "appointment: " + appointment
+					currentDate.add(Calendar.MINUTE, 15)
+				}
 			}
-			render ('{"success":true}') as JSON
+			catch(Exception e) {
+				println "ERROR: " + e
+			}
+			if (success && !appointmentFailedToSave){
+				render ('{"success":true}') as JSON
+			}else{
+				render ('{"success":false}') as JSON
+			}
 		}
 	}
 
 	def blockOffWholeDay(){
+		println "\n" + new Date()
+		println "params: " + params
 		if (session.adminUser){
-			println "params: " + params
-			def from = dateFormatter3.parse(params?.from)
-			def to = dateFormatter3.parse(params?.to)
+			Boolean success = false
+			Boolean dayOffFailedToSave = false
+			try {
+				def from = dateFormatter3.parse(params?.from)
+				def to = dateFormatter3.parse(params?.to)
 
-			def stylist = User.findByCode("kp")
-			Calendar currentDate = new GregorianCalendar()
-			currentDate.setTime(from)
-			currentDate.set(Calendar.HOUR_OF_DAY, 0)
-			currentDate.set(Calendar.MINUTE, 0)
-			currentDate.set(Calendar.SECOND, 0)
-			currentDate.set(Calendar.MILLISECOND, 0)
-			Calendar endDate = new GregorianCalendar()
-			endDate.setTime(to)
-			endDate.set(Calendar.HOUR_OF_DAY, 0)
-			endDate.set(Calendar.MINUTE, 0)
-			endDate.set(Calendar.SECOND, 0)
-			endDate.set(Calendar.MILLISECOND, 0)
+				def stylist = User.findByCode("kp")
+				Calendar currentDate = new GregorianCalendar()
+				currentDate.setTime(from)
+				currentDate.set(Calendar.HOUR_OF_DAY, 0)
+				currentDate.set(Calendar.MINUTE, 0)
+				currentDate.set(Calendar.SECOND, 0)
+				currentDate.set(Calendar.MILLISECOND, 0)
+				Calendar endDate = new GregorianCalendar()
+				endDate.setTime(to)
+				endDate.set(Calendar.HOUR_OF_DAY, 0)
+				endDate.set(Calendar.MINUTE, 0)
+				endDate.set(Calendar.SECOND, 0)
+				endDate.set(Calendar.MILLISECOND, 0)
 
-			while (currentDate.getTime() <= endDate.getTime()){
-				def dayOff = new DayOff()
-				dayOff.dayOffDate = currentDate.getTime()
-				dayOff.stylist = stylist
-				dayOff.save(flush:true)
-				println "dayOff: " + dayOff
-				currentDate.add(Calendar.DAY_OF_YEAR, 1)
+				while (currentDate.getTime() <= endDate.getTime()){
+					def dayOff = new DayOff()
+					dayOff.dayOffDate = currentDate.getTime()
+					dayOff.stylist = stylist
+					dayOff.save(flush:true)
+					if (dayOff.hasErrors){
+						dayOffFailedToSave = true
+						println "ERROR!"
+						println dayOff.errors
+					}else{
+						success = true
+					}
+					println "dayOff: " + dayOff
+					currentDate.add(Calendar.DAY_OF_YEAR, 1)
+				}
 			}
-			render ('{"success":true}') as JSON
+			catch(Exception e) {
+				println "ERROR: " + e
+			}
+
+			if (success && !dayOffFailedToSave){
+				render ('{"success":true}') as JSON
+			}else{
+				render ('{"success":false}') as JSON
+			}
 		}
 	}
 
 	def bookForClient(){
-		println new Date()
+		println "\n" + new Date()
 		println "params: " + params
 		Boolean success = false
 		if (session.adminUser && params?.cId && params?.sId && params?.aDate && params?.sTime){
-			def client = User.get(new Long(params.cId))
-			def stylist = User.findByCode("kp")
-			def service = Service.get(new Long(params.sId))
-
-			def startTimeString = params.sTime
-			def amIndex = startTimeString.indexOf("AM")
-			def pmIndex = startTimeString.indexOf("PM")
-			def minutesIndex = startTimeString.indexOf(":")
-			Long hour = 0
-			Long minute = 0
-
-			if (amIndex > -1){
-				startTimeString = startTimeString.substring(0,amIndex)
-			}
-			else if (pmIndex > -1){
-				startTimeString = startTimeString.substring(0,pmIndex)
-			}
-			
-			if (minutesIndex > -1){
-				minute = new Long(startTimeString.substring(minutesIndex+1))
-			}
-			def tempHour
-			if (minutesIndex > -1){
-				tempHour = startTimeString.substring(0,minutesIndex)?.padLeft(2, "0")
-			}
-			else if (amIndex > -1){
-				tempHour = startTimeString.substring(0,amIndex)?.padLeft(2, "0")
-			}else if (pmIndex > -1){
-				tempHour = startTimeString.substring(0,pmIndex)?.padLeft(2, "0")
-			}
-			hour = new Long(tempHour)
-			if (pmIndex > -1 && hour != 12){
-				hour = hour + 12
-			}
-
-			Calendar tempDate = new GregorianCalendar()
-			tempDate.setTime(dateFormatter3.parse(params.aDate))
-			tempDate.set(Calendar.HOUR_OF_DAY, hour.intValue())
-			tempDate.set(Calendar.MINUTE, minute.intValue())
-			tempDate.set(Calendar.SECOND, 0)
-			tempDate.set(Calendar.MILLISECOND, 0)
-
-			def appointmentDate = tempDate.getTime()
-			println "appointmentDate: " + appointmentDate
-
-			if (client && stylist && service && appointmentDate){
-				def appointment = new Appointment()
-				appointment.appointmentDate = appointmentDate
-				appointment.stylist = stylist
-				appointment.service = service
-				appointment.client = client
-				appointment.code = RandomStringUtils.random(14, true, true)
-				appointment.booked = true
-				appointment.save(flush:true)
-				if (appointment.hasErrors()){
-					println "ERROR!"
-					println appointment.errors
-				}
-				else{
-					success = true
-					runAsync {
-						emailService.sendEmailConfirmation(appointment)
-					}
-				}
-			}
+			success = schedulerService.bookForClient(params)
 		}
 		if (success){
 			render ('{"success":true}') as JSON
@@ -289,17 +251,64 @@ class AdminController {
 		}
 	}
 
-	def getTimeSlotOptions(){
+	def rescheduleAppointment(){
+		println "\n" + new Date()
 		println "params: " + params
-		def requestedDate = dateFormatter3.parse(params.aDate)
-		def service = Service.get(new Long(params.sId))
-		def stylist = User.findByCode("kp")
+		Boolean success = false
+		if (session.adminUser && params?.aId && params?.sId && params?.aDate && params?.sTime){
+			try {
+				def existingApointment = Appointment.get(new Long(params.aId))
+				params["cId"] = existingApointment.client.id
+				params["rescheduledAppointment"] = "TRUE"
+				success = schedulerService.bookForClient(params)
+				if (success){
+					println "deleting appointment... " + existingApointment
+					schedulerService.deleteAppointment(existingApointment.id)
+				}
+			}
+			catch(Exception e) {
+				println "ERROR: " + e
+			}
+		}
+		if (success){
+			println "SUCCESS!"
+			render ('{"success":true}') as JSON
+		}
+		else{
+			println "ERROR!"
+			render ('{"success":false}') as JSON
+		}
+	}
+
+	def getTimeSlotOptions(){
+		println "\n" + new Date()
+		println "params: " + params
 		def timeSlots = []
-		schedulerService.getTimeSlotsAvailableMap(requestedDate, stylist, service)?.each(){ k,v ->
-			timeSlots += v
+		if (session.adminUser && params?.aDate && params?.sId){
+			def requestedDate = dateFormatter3.parse(params.aDate)
+			def service = Service.get(new Long(params.sId))
+			def stylist = User.findByCode("kp")
+			schedulerService.getTimeSlotsAvailableMap(requestedDate, stylist, service)?.each(){ k,v ->
+				timeSlots += v
+			}
 		}
 		if (timeSlots.size() > 0){
 			render (template: "timeSlotOptions", model: [timeSlots:timeSlots])
+		}else{
+			render "ERROR"
+		}
+	}
+
+	def getRescheduleOptions(){
+		println "\n" + new Date()
+		println "params: " + params
+		def appointment
+		if (session.adminUser && params?.aId){
+			appointment = Appointment.get(new Long(params.aId))
+		}
+		if (appointment){
+			def services = Service.list().sort{it.displayOrder}.findAll{it.description != "Blocked Off Time"}
+			render (template: "rescheduleOptions", model: [appointment:appointment, services:services])
 		}else{
 			render "ERROR"
 		}

@@ -112,9 +112,8 @@
 		<div class="google-map" style="display:none;">
 			<img src="./images/map.png">
 		</div>
-		<div class="footer">
-			<p>Copyright &copy; 2013 The Den Barbershop</p>
-		</div>
+		
+		<div class="footer">&nbsp;</div>
 
 
     <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>

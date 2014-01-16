@@ -16,10 +16,16 @@
 			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
 		</div>
 		<div class="grey-box">
-			<div class="message-board-backing">
-				<div class="message-board">${message}</div>
-			</div>
-			<div class="logo-large"><img id="logoLarge" src="${resource(dir:'images',file:'logo-large.png')}"></div>
+			<ul>
+				<li>
+					<div class="message-board-backing">
+						<div class="message-board">${message}</div>
+					</div>
+				</li>
+				<li>
+					<img id="logoLarge" src="${resource(dir:'images',file:'logo-large.png')}">
+				</li>
+			</ul>
 		</div>
 		
 		<div class="cancel-appointment-confirmation">Your appointment has been canceled. Thank you.</div>
@@ -28,8 +34,7 @@
 		<div class="google-map" style="display:none;">
 			<img src="./images/map.png">
 		</div>
-		<div class="footer">
-			<p>Copyright &copy; 2013 The Den Barbershop</p>
-		</div>
+		
+		<div class="footer">&nbsp;</div>
 		
 </body></html>
