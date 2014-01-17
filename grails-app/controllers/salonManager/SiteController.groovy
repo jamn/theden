@@ -255,6 +255,8 @@ class SiteController {
 					def existingAppointment = Appointment.get(session.existingAppointmentId)
 					schedulerService.deleteAppointment(existingApointment.id)
 				}
+			}else{
+				errorOccurred = true
 			}
 		}
 		if (errorOccurred){

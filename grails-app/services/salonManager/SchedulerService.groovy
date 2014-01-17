@@ -116,7 +116,6 @@ class SchedulerService {
 					List afternoon = timeSlotsMap.get("afternoon") ?: []
 					afternoon.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
 					timeSlotsMap.put("afternoon", afternoon)
-					timeSlotsMap.put("afternoon", afternoon)
 				}
 			}
 
