@@ -66,4 +66,10 @@ class DateService {
 		return [hour:hour, minute:minute]
 	}
 
+	public Date getDateThirtyDaysAgo(){
+		Calendar thirtyDaysAgo = new GregorianCalendar()
+		thirtyDaysAgo.add(Calendar.DAY_OF_YEAR, -30)
+		return thirtyDaysAgo.getTime()
+	}
+
 }

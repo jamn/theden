@@ -16,9 +16,8 @@ class User extends CoreObject {
 	String code // users initials or some short code to pass as a URL param
 	Long startTime
 	Long endTime
-    String loggedInCookieId
 
-	static hasMany = [services:Service, daysOfTheWeek:DayOfTheWeek]
+	static hasMany = [services:Service, daysOfTheWeek:DayOfTheWeek, logins:LoginLog]
 
     static constraints = {
     	username(nullable:true)
@@ -29,7 +28,6 @@ class User extends CoreObject {
 		phone(nullable:true)
 		startTime(nullable:true)
         endTime(nullable:true)
-		loggedInCookieId(nullable:true)
     }
 
 

@@ -7,5 +7,5 @@ class Service extends CoreObject {
 	User stylist
 	Long displayOrder = 0
 	Boolean display = true
-
+	Long price
 }

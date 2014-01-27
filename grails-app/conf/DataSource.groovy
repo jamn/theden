@@ -19,8 +19,8 @@ environments {
 			dbCreate = "update" // one of 'create', 'create-drop','update'
 			url = "jdbc:mysql://localhost/salon_manager?useOldAliasMetadataBehavior=true&autoReconnect=true"
 			driverClassName = "com.mysql.jdbc.Driver"
-			username = "sm1013"
-			password = "654uxF8Wdd0!"
+			username = "root"
+			password = ""
 		}
 	}
 

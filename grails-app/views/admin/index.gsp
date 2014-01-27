@@ -760,7 +760,7 @@
 						<%if (it.notes){%>
 							${it.notes}
 						<%}else{%>
-							<b>PHONE:</b> ${it.client.phone}  | <b>EMAIL:</b> ${it.client.email}
+							<b>PHONE:</b> ${it.client.phone}  | <b>EMAIL:</b> <a href="mailto:${it.client.email}">${it.client.email}</a>
 						<%}%>
 					</td>
 				</tr>
