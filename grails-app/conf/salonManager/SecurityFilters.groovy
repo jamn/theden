@@ -7,7 +7,7 @@ class SecurityFilters {
             before = {
 
                 // so we don't get stuck in a loop
-                if (controllerName == "access" || controllerName == "site"){
+                if (controllerName == "access" || controllerName == "site" || controllerName == "error"){
                     return true
                 }
                 

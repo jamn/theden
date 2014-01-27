@@ -302,10 +302,8 @@ class SiteController {
 			def appointment = Appointment.findByCode(params.c.trim())
 			println "appointment: " + appointment
 			if (appointment){
-				appointment.booked = false
-				appointment.save(flush:true)
+				appointment.delete()
 				emailService.sendCancellationNotice(appointment)
-				resetSession()
 				def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
 				render (template: "cancelAppointment", model: [message: message])
 			}
