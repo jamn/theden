@@ -4,10 +4,10 @@ class EmailService {
 
 	public sendEmailConfirmation(List appointments){
 		println "Sending email confirmation for appointment(s): "
-		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>We have you down for the following appointment(s):</p><ul>"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Hey "+appointments[0].client.firstName+". I have you down for the following appointment(s):</p><ul>"
 		appointments.each(){ appointment ->
 			println "    - " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
-			emailBody += "<li><b>${appointment.appointmentDate.format('MMMM dd, yyyy')}</b> @ <b>${appointment.appointmentDate.format('hh:mm a')}</b><br/>"
+			emailBody += "<li>A <b>${appointment.service.description}</b> on ${appointment.appointmentDate.format('MM/dd @ hh:mm a [E]')}<br/>"
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;reschedule: <a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a><br/>"
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;cancel: <a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></li>"
 		}
