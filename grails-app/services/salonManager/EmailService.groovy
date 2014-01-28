@@ -11,7 +11,7 @@ class EmailService {
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;reschedule: <a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a><br/>"
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;cancel: <a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></li>"
 		}
-		emailBody += "</ul>"
+		emailBody += "</ul><p>Thanks!</p>"
 
 		try {
 			sendMail {
@@ -65,7 +65,7 @@ class EmailService {
 
 	public sendRescheduledConfirmation(Appointment appointment){
 		println "Sending reschedule confirmation for appointment: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
-		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Your appointment has been rescheduled. Your new appointment date is: <b>${appointment.appointmentDate.format('MMMM dd, yyyy')}</b> @ <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>-Kalin</p>"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>${appointment.client.firstName},</p><p>Your appointment has been rescheduled. Your new appointment date is: <b>${appointment.appointmentDate.format('MM/dd @ hh:mm a [E]')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
 		try {
 			sendMail {
 				to "${appointment.client.email}"
@@ -77,6 +77,40 @@ class EmailService {
 		catch(Exception e) {
 			println "ERROR"
 			println e
+		}
+	}
+
+	public sendReminderEmails(){
+		Calendar almostTwentyFourHoursFromNow = new GregorianCalendar()
+		almostTwentyFourHoursFromNow.add(Calendar.HOUR, 24)
+		almostTwentyFourHoursFromNow.add(Calendar.MINUTE, -5)
+
+		Calendar aLittleMoreThanTwentyFourHoursFromNow = new GregorianCalendar()
+		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.HOUR, 24)
+		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.MINUTE, 5)
+
+		println "almostTwentyFourHoursFromNow: " + almostTwentyFourHoursFromNow.getTime()
+		println "aLittleMoreThanTwentyFourHoursFromNow: " + aLittleMoreThanTwentyFourHoursFromNow.getTime()
+
+		def appointment = Appointment.findByAppointmentDateBetween(almostTwentyFourHoursFromNow.getTime(), aLittleMoreThanTwentyFourHoursFromNow.getTime())
+		println "appointment: " + appointment
+		if (!appointment?.reminderEmailSent){
+			println "Sending appointment reminder for: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
+			def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Hey ${appointment.client.firstName},</p><p>Just a reminder that your appointment for a ${appointment.service.description} is tomorrow at <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
+			try {
+				sendMail {
+					to "${appointment.client.email}"
+					from "info@thedenbarbershop-kc.com"  
+					subject "Appointment Reminder :: The Den Barbershop"     
+					html emailBody
+				}
+				appointment.reminderEmailSent = true
+				appointment.save()
+			}
+			catch(Exception e) {
+				println "ERROR"
+				println e
+			}
 		}
 	}
 }

@@ -34,5 +34,7 @@ class version0_4 {
 		service9.price = 0 
 		service9.save()
 
+		def message = ApplicationProperty.findByName("JOBS__SEND_APPOINTMENT_REMINDER_EMAIL_JOB__ACTIVE") ?: new ApplicationProperty(name:"JOBS__SEND_APPOINTMENT_REMINDER_EMAIL_JOB__ACTIVE", value:"1").save()
+
 	}
 }
