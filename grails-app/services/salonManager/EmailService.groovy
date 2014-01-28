@@ -89,12 +89,9 @@ class EmailService {
 		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.HOUR, 24)
 		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.MINUTE, 5)
 
-		println "almostTwentyFourHoursFromNow: " + almostTwentyFourHoursFromNow.getTime()
-		println "aLittleMoreThanTwentyFourHoursFromNow: " + aLittleMoreThanTwentyFourHoursFromNow.getTime()
-
 		def appointment = Appointment.findByAppointmentDateBetween(almostTwentyFourHoursFromNow.getTime(), aLittleMoreThanTwentyFourHoursFromNow.getTime())
-		println "appointment: " + appointment
-		if (!appointment?.reminderEmailSent){
+
+		if (appointment && appointment.reminderEmailSent == false){
 			println "Sending appointment reminder for: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
 			def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Hey ${appointment.client.firstName},</p><p>Just a reminder that your appointment for a ${appointment.service.description} is tomorrow at <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
 			try {
