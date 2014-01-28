@@ -173,30 +173,36 @@ class SchedulerService {
 		def appointmentDate = tempDate.getTime()
 
 		if (client && stylist && service && appointmentDate){
-			def appointment = new Appointment()
-			appointment.appointmentDate = appointmentDate
-			appointment.stylist = stylist
-			appointment.service = service
-			appointment.client = client
-			appointment.code = RandomStringUtils.random(14, true, true)
-			appointment.booked = true
-			appointment.save(flush:true)
-			if (appointment.hasErrors()){
-				println "ERROR!"
-				println appointment.errors
-			}
-			else{
-				success = true
-				if (params?.rescheduledAppointment?.toString()?.toUpperCase() == "TRUE"){
-					runAsync {
-						emailService.sendRescheduledConfirmation(appointment)
-					}
+			def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
+			if (!existingAppointment){
+				def appointment = new Appointment()
+				appointment.appointmentDate = appointmentDate
+				appointment.stylist = stylist
+				appointment.service = service
+				appointment.client = client
+				appointment.code = RandomStringUtils.random(14, true, true)
+				appointment.booked = true
+				appointment.save(flush:true)
+				if (appointment.hasErrors()){
+					println "ERROR!"
+					println appointment.errors
 				}
 				else{
-					runAsync {
-						emailService.sendEmailConfirmation([appointment])
+					success = true
+					if (params?.rescheduledAppointment?.toString()?.toUpperCase() == "TRUE"){
+						runAsync {
+							emailService.sendRescheduledConfirmation(appointment)
+						}
+					}
+					else{
+						runAsync {
+							emailService.sendEmailConfirmation([appointment])
+						}
 					}
 				}
+			}
+			else{
+				println "ERROR: existing appointment found for this time slot. Unable to book appointment."
 			}
 		}
 		return success

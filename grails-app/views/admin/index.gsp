@@ -156,7 +156,7 @@
 		<td>${daySeven.getTime().format('EEE dd')}</td>
 		<td></td>
 	</tr>
-	<% while (dayOne <= endTime){ %>
+	<% while (dayOne < endTime){ %>
 		<tr class="halfHour" time="${dayOne.getTime().format('hh:mm a')}">
 			<td rowspan="2" class="time">${dayOne.getTime().format('hh:mm a')}</td>
 			<%
@@ -465,7 +465,7 @@
 		<td>${dayFourteen.getTime().format('EEE dd')}</td>
 		<td></td>
 	</tr>
-	<% while (dayEight <= dayEightEndTime){ %>
+	<% while (dayEight < dayEightEndTime){ %>
 		<tr class="halfHour" time="${dayEight.getTime().format('hh:mm a')}">
 			<td rowspan="2" class="time">${dayEight.getTime().format('hh:mm a')}</td>
 			<%

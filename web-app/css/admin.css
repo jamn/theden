@@ -172,7 +172,7 @@ textarea{
 .fourteenDayViewLink{
 	position: absolute;
 	top: 5px;
-	left: 330px;
+	right: 20px;
 	font-size: 1.3em;
 }
 
