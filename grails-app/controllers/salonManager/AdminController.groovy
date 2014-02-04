@@ -67,7 +67,10 @@ class AdminController {
 			now2 = new Date()
 
 	    	return [appointments:appointments, homepageText:homepageText, stylist:stylist, startTime:startTime, endTime:endTime, clients:clients, services:services, timeSlots:timeSlots]
-    	}
+    	}else{
+			println "ERROR: user in session is not an admin."
+			println "current session data: " + session
+		}
     }
 
     def addExistingAppointments(){
@@ -118,6 +121,9 @@ class AdminController {
 				}
 			}
 			render "finshed"
+		}else{
+			println "ERROR: user in session is not an admin."
+			println "current session data: " + session
 		}
 	}
 
@@ -135,6 +141,9 @@ class AdminController {
 			else{
 				println "SAVED!"
 			}
+		}else{
+			println "ERROR: user in session is not an admin."
+			println "current session data: " + session
 		}
 	}
 
@@ -182,6 +191,9 @@ class AdminController {
 			}else{
 				render ('{"success":false}') as JSON
 			}
+		}else{
+			println "ERROR: user in session is not an admin."
+			println "current session data: " + session
 		}
 	}
 
