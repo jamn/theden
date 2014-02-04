@@ -69,7 +69,7 @@ class AdminController {
 	    	return [appointments:appointments, homepageText:homepageText, stylist:stylist, startTime:startTime, endTime:endTime, clients:clients, services:services, timeSlots:timeSlots]
     	}else{
 			println "ERROR: user in session is not an admin."
-			println "current session data: " + session
+			println "    " + session
 		}
     }
 
@@ -123,7 +123,7 @@ class AdminController {
 			render "finshed"
 		}else{
 			println "ERROR: user in session is not an admin."
-			println "current session data: " + session
+			println "    " + session
 		}
 	}
 
@@ -143,7 +143,7 @@ class AdminController {
 			}
 		}else{
 			println "ERROR: user in session is not an admin."
-			println "current session data: " + session
+			println "    " + session
 		}
 	}
 
@@ -193,7 +193,7 @@ class AdminController {
 			}
 		}else{
 			println "ERROR: user in session is not an admin."
-			println "current session data: " + session
+			println "    " + session
 		}
 	}
 

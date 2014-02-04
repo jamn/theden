@@ -8,8 +8,11 @@ class EmailService {
 		appointments.each(){ appointment ->
 			println "    - " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
 			emailBody += "<li>A <b>${appointment.service.description}</b> on ${appointment.appointmentDate.format('MM/dd @ hh:mm a [E]')}<br/>"
-			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;reschedule: <a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a><br/>"
-			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;cancel: <a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></li>"
+			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;reschedule:<br/>"
+			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a><br/>"
+			emailBody += "<br/>"
+			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;cancel:<br/>"
+			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></li>"
 		}
 		emailBody += "</ul><p>See you then!</p>"
 
