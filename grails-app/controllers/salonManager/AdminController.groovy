@@ -308,7 +308,7 @@ class AdminController {
 		if (timeSlots.size() > 0){
 			render (template: "timeSlotOptions", model: [timeSlots:timeSlots])
 		}else{
-			render "ERROR"
+			render "No times available this date"
 		}
 	}
 
@@ -323,7 +323,7 @@ class AdminController {
 			def services = Service.list().sort{it.displayOrder}.findAll{it.description != "Blocked Off Time"}
 			render (template: "rescheduleOptions", model: [appointment:appointment, services:services])
 		}else{
-			render "ERROR"
+			render "No appointment found"
 		}
 	}
 
