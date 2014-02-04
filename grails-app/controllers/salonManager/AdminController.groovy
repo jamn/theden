@@ -26,7 +26,7 @@ class AdminController {
 			now.set(Calendar.MILLISECOND, 0)
 	    	def appointments = Appointment.findAllWhere(booked:true)?.findAll{it.appointmentDate > now.getTime()}?.sort{it.appointmentDate}
 	    	now2 = new Date()
-	    	def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "ERROR: HOMEPAGE_MESSAGE record not found in the database. Tell Ben."
+	    	def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "ERROR: HOMEPAGE_MESSAGE record not found in the database. Tell Ben. He's good at fixing that stuff."
 	    	now2 = new Date()
 	    	def stylist = User.findByCode("kp")
 	    	now2 = new Date()
@@ -153,7 +153,7 @@ class AdminController {
 				Calendar currentDate = new GregorianCalendar()
 				currentDate.setTime(from)
 
-				while (currentDate.getTime() <= to){
+				while (currentDate.getTime() < to){
 					def appointment = new Appointment()
 					appointment.appointmentDate = currentDate.getTime()
 					appointment.stylist = stylist
@@ -161,8 +161,9 @@ class AdminController {
 					appointment.code = RandomStringUtils.random(14, true, true)
 					appointment.client = stylist
 					appointment.booked = true
+					appointment.reminderEmailSent = true
 					appointment.save(flush:true)
-					if (appointment.hasErrors){
+					if (appointment.hasErrors()){
 						appointmentFailedToSave = true
 						println "ERROR!"
 						println appointment.errors

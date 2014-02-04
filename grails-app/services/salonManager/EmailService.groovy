@@ -4,14 +4,14 @@ class EmailService {
 
 	public sendEmailConfirmation(List appointments){
 		println "Sending email confirmation for appointment(s): "
-		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Hey "+appointments[0].client.firstName+". I have you down for the following appointment(s):</p><ul>"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>"+appointments[0].client.firstName+",</p><p>I have you down for the following appointment(s):</p><ul>"
 		appointments.each(){ appointment ->
 			println "    - " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
 			emailBody += "<li>A <b>${appointment.service.description}</b> on ${appointment.appointmentDate.format('MM/dd @ hh:mm a [E]')}<br/>"
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;reschedule: <a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a><br/>"
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;cancel: <a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></li>"
 		}
-		emailBody += "</ul><p>Thanks!</p>"
+		emailBody += "</ul><p>See you then!</p>"
 
 		try {
 			sendMail {
@@ -36,7 +36,7 @@ class EmailService {
 			adminEmailBody += "</p>"
 			sendMail {     
 				to "info@thedenbarbershop-kc.com"    
-				from "info@thedenbarbershop-kc.com"    
+				from "${appointments[0].client.email}"    
 				subject "New Appointment [${appointments[0].appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}]"     
 				html adminEmailBody
 			}
@@ -52,7 +52,7 @@ class EmailService {
 		try {
 			sendMail {     
 				to "info@thedenbarbershop-kc.com"  
-				from "info@thedenbarbershop-kc.com"  
+				from "${appointment.client.email}"  
 				subject "** Appointment Cancelled ** [${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}]"     
 				html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> ${appointment.client.firstName} ${appointment.client.lastName}<br/><b>Time:</b> ${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}<br/><b>Service:</b> ${appointment.service.description}</p>"
 			}
