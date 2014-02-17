@@ -94,7 +94,6 @@
 	<input id="toWholeDay" name="toWholeDay" type="text">
 
 	<div id="blockOffDaysButton">Block Off Days</div>
-
 	<hr>
 	<h1>Book for Client</h1>
 	<select id="clients">

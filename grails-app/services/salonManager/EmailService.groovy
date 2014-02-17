@@ -54,10 +54,23 @@ class EmailService {
 		println "Sending cancellation notice: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
 		try {
 			sendMail {     
-				to "info@thedenbarbershop-kc.com"  
+				to "${appointment.client.email}" 
 				from "${appointment.client.email}"  
 				subject "** Appointment Cancelled ** [${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}]"     
 				html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> ${appointment.client.firstName} ${appointment.client.lastName}<br/><b>Time:</b> ${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}<br/><b>Service:</b> ${appointment.service.description}</p>"
+			}
+		}
+		catch(Exception e) {
+			println "ERROR"
+			println e
+		}
+
+		try {
+			sendMail {     
+				to "info@thedenbarbershop-kc.com"  
+				from "${appointment.client.email}"  
+				subject "** Appointment Cancelled ** [${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}]"     
+				html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Your appointment for a ${appointment.service.description} on ${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')} has been cancelled. Thank you.</p>"
 			}
 		}
 		catch(Exception e) {

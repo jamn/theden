@@ -343,9 +343,10 @@ class SiteController {
 		def services = Service.executeQuery("FROM Service s WHERE s.stylist = :stylist AND display = true ORDER BY s.displayOrder", [stylist:stylist])
 		def serviceList = []
 		services?.each(){
-			def duration = dateService.getTimeString(it.duration)
+			//def duration = dateService.getTimeString(it.duration)
+			def price = it.price
 			def description = it.description
-			serviceList.add([duration:duration, description:description, id:it.id])
+			serviceList.add([price:price, description:description, id:it.id])
 		}
 		return serviceList
 	}
