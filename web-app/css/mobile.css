@@ -1,17 +1,5 @@
 /* Styles for mobile devices */
 
-@media screen and (max-width: 920px) {
-
-}
-
-@media screen and (max-width: 850px) {
-
-}
-
-@media screen and (max-width: 800px) {
-
-}
-
 @media screen and (max-width: 750px) {
 	.header, .grey-box ul{
 		-o-transform: scale(.9);
@@ -63,11 +51,10 @@
 	.existingAppointmentInfo{
 		font-size: .9em;
 	}
+	.login-box{
+		margin-top: 40px;
+	}
 }
-
-@media screen and (max-width: 560px) {
-}
-
 
 @media screen and (max-width: 494px) {
 	html {
@@ -145,17 +132,10 @@
 
 	.login-box{
 		width: 80%;
-		margin: 40px 27px;
+		margin: 40px auto;
 		padding: 20px;
 	}
 
-	input{
-		width: 200px;
-	}
-
-	label {
-		font-size: 1em;
-	}
 	.existingAppointmentInfo{
 		padding: 14px 2px;
 	}
@@ -163,14 +143,9 @@
 }
 
 @media screen and (max-width: 480px) {
-	input{
-		width: 50%;
-	}
-	.login-box{
-		padding: 16px;
-	}
+
 	#recurringAppointment{
-		margin: auto 47%;
+		margin: auto;
 	}
 		
 		/*-o-transform: scale(.7);
@@ -183,10 +158,6 @@
 	.grey-box{
 		padding: 0;
 	}
-}
-
-@media screen and (max-width: 415px) {
-
 }
 
 

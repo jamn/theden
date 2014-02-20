@@ -125,5 +125,6 @@
 	<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'jquery.mobile-1.3.2.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'application.min.js')}" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'masked-input-plugin.min.js')}" type="text/javascript"></script>
 
 </body></html>

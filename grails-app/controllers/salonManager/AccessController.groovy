@@ -41,7 +41,7 @@ class AccessController {
             )
         }
 
-        println 'admin user: ' + user
+        println 'admin user: ' + user?.getFullName()
 
     	if (user?.hasPermission('admin')){
     		session.adminUser = user

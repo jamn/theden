@@ -320,11 +320,10 @@ div.ui-mobile-viewport { overflow-x: hidden; }
 
 #registerLink{
 	position: relative;
-	left: 104px;
-	top: 6px;
 	text-decoration: underline;
 	color: blue;
 	cursor: pointer;
+	text-align: center;
 }
 
 #loginButton{
@@ -367,6 +366,14 @@ label{
 	margin: 10px;
 	color: #CF2323;
 	margin-left: 140px;
+}
+
+.login-box input {
+	width: 98%;
+	font-size: 1.4em;
+	padding: 4px;
+	margin: 5px 0;
+	text-align:center;
 }
 
 .errorButton{
