@@ -163,6 +163,10 @@ textarea{
 	margin-left: 6px;
 }
 
+#recurringAppointmentAdmin{
+	margin: 22px 0 26px -8px;
+}
+
 #clients,
 #services,
 #timeSlots{

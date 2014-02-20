@@ -39,10 +39,6 @@ class SchedulerService {
 	public Map getTimeSlotsAvailableMap(Date requestedDate, User stylist, Service service){
 		def timeSlotsMap = [:]
 
-		println "requestedDate: " + requestedDate
-		println "stylist: " + stylist
-		println "service: " + service
-
 		Calendar startDate = new GregorianCalendar()
 		startDate.setTime(requestedDate)
 		Calendar endDate = new GregorianCalendar()
@@ -139,6 +135,15 @@ class SchedulerService {
 		Long hour = 0
 		Long minute = 0
 
+		def repeatDuration = new Integer(1)
+		def repeatNumberOfAppointments = 1
+
+		if (params?.r?.toLowerCase() == "true"){ // r = recurringAppointment
+			println "Recurring Appointment"
+			repeatDuration = new Integer(params?.dur)
+			repeatNumberOfAppointments = new Integer(params?.num)
+		}
+
 		if (amIndex > -1){
 			startTimeString = startTimeString.substring(0,amIndex)
 		}
@@ -162,7 +167,6 @@ class SchedulerService {
 		if (pmIndex > -1 && hour != 12){
 			hour = hour + 12
 		}
-
 		Calendar tempDate = new GregorianCalendar()
 		tempDate.setTime(dateFormatter3.parse(params.aDate))
 		tempDate.set(Calendar.HOUR_OF_DAY, hour.intValue())
@@ -171,38 +175,50 @@ class SchedulerService {
 		tempDate.set(Calendar.MILLISECOND, 0)
 
 		def appointmentDate = tempDate.getTime()
+		def count = 1
+		List appointmentsScheduled = []
 
-		if (client && stylist && service && appointmentDate){
-			def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
-			if (!existingAppointment){
-				def appointment = new Appointment()
-				appointment.appointmentDate = appointmentDate
-				appointment.stylist = stylist
-				appointment.service = service
-				appointment.client = client
-				appointment.code = RandomStringUtils.random(14, true, true)
-				appointment.booked = true
-				appointment.save(flush:true)
-				if (appointment.hasErrors()){
-					println "ERROR!"
-					println appointment.errors
-				}
-				else{
-					success = true
-					if (params?.rescheduledAppointment?.toString()?.toUpperCase() == "TRUE"){
-						runAsync {
-							emailService.sendRescheduledConfirmation(appointment)
-						}
+		while (count <= repeatNumberOfAppointments){
+			if (client && stylist && service && appointmentDate){
+				def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
+				if (!existingAppointment){
+					def appointment = new Appointment()
+					appointment.appointmentDate = appointmentDate
+					appointment.stylist = stylist
+					appointment.service = service
+					appointment.client = client
+					appointment.code = RandomStringUtils.random(14, true, true)
+					appointment.booked = true
+					appointment.save(flush:true)
+					if (appointment.hasErrors()){
+						println "ERROR!"
+						println appointment.errors
 					}
 					else{
-						runAsync {
-							emailService.sendEmailConfirmation([appointment])
+						success = true
+						if (params?.rescheduledAppointment?.toString()?.toUpperCase() == "TRUE"){
+							runAsync {
+								emailService.sendRescheduledConfirmation(appointment)
+							}
+						}
+						else{
+							appointmentsScheduled.add(appointment)
 						}
 					}
 				}
+				else{
+					println "ERROR: existing appointment found for this time slot. Unable to book appointment."
+				}
 			}
-			else{
-				println "ERROR: existing appointment found for this time slot. Unable to book appointment."
+
+			tempDate.add(Calendar.WEEK_OF_YEAR, repeatDuration)
+			appointmentDate = tempDate.getTime()
+			count++
+		}
+
+		if (appointmentsScheduled.size() > 0){
+			runAsync {
+				emailService.sendEmailConfirmation(appointmentsScheduled)
 			}
 		}
 		return success

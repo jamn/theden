@@ -28,19 +28,25 @@ class EmailService {
 			println "ERROR"
 			println e
 		}
+
+		sendConfirmationToStylist(appointments)
+	}
+
+	private sendConfirmationToStylist(List appointments){
+		println "    sending confirmation to stylist"
 		try {
 			def adminEmailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> ${appointments[0].client.firstName} ${appointments[0].client.lastName}<br/><b>Phone:</b> ${appointments[0].client.phone}<br/><b>Email:</b> <a href='mailto:${appointments[0].client.email}'>${appointments[0].client.email}</a><br/><b>Service:</b> ${appointments[0].service.description}<br/><b>Time(s):</b> "
 			appointments.eachWithIndex(){ appointment,index ->
 				if (index > 0){
 					adminEmailBody += " | "
 				}
-				adminEmailBody += "${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}"
+				adminEmailBody += "${appointment.appointmentDate.format('MM/dd @ hh:mm a [E]')}"
 			}
 			adminEmailBody += "</p>"
 			sendMail {     
 				to "info@thedenbarbershop-kc.com"    
 				from "${appointments[0].client.email}"    
-				subject "New Appointment [${appointments[0].appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}]"     
+				subject "New Appointment [${appointments[0].appointmentDate.format('MM/dd @ hh:mm a | E')}]"     
 				html adminEmailBody
 			}
 		}
@@ -50,27 +56,38 @@ class EmailService {
 		}
 	}
 
-	public sendCancellationNotice(Appointment appointment){
-		println "Sending cancellation notice: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
+	public sendCancellationNotices(Appointment appointment){
+		println "Sending cancellation notices: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
+		sendCancellationNoticeToClient(appointment)
+		sendCancellationNoticeToStylist(appointment)
+	}
+
+	private sendCancellationNoticeToClient(Appointment appointment){
+		println "    sending notice to client"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Your appointment for a ${appointment.service.description} on ${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')} has been cancelled. Thank you.</p>"
 		try {
 			sendMail {     
-				to "info@thedenbarbershop-kc.com" 
-				from "${appointment.client.email}"  
+				to "${appointment.client.email}"  
+				from "info@thedenbarbershop-kc.com"  
 				subject "** Appointment Cancelled ** [${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}]"     
-				html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> ${appointment.client.firstName} ${appointment.client.lastName}<br/><b>Time:</b> ${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}<br/><b>Service:</b> ${appointment.service.description}</p>"
+				html emailBody
 			}
 		}
 		catch(Exception e) {
 			println "ERROR"
 			println e
 		}
+	}
 
+	private sendCancellationNoticeToStylist(Appointment appointment){
+		println "    sending notice to stylist"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p><b>Client:</b> ${appointment.client.firstName} ${appointment.client.lastName}<br/><b>Time:</b> ${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}<br/><b>Service:</b> ${appointment.service.description}</p>"
 		try {
 			sendMail {     
-				to "${appointment.client.email}"  
-				from "info@thedenbarbershop-kc.com"  
+				to "info@thedenbarbershop-kc.com" 
+				from "${appointment.client.email}"  
 				subject "** Appointment Cancelled ** [${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')}]"     
-				html "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/new/images/logo.png'></p><p>Your appointment for a ${appointment.service.description} on ${appointment.appointmentDate.format('MMMM dd, yyyy @ hh:mm a')} has been cancelled. Thank you.</p>"
+				html emailBody
 			}
 		}
 		catch(Exception e) {

@@ -33,7 +33,7 @@ class SiteController {
 		def stylist = User.findByCode(params?.u)
 		if (stylist){
 			session.stylistId = stylist.id
-			println "stylist: " + stylist
+			println "stylist: " + stylist?.getFullName()
 		}
 		def serviceList = getServicesForStylist(stylist)
 		if (serviceList.size() > 0){
@@ -72,7 +72,7 @@ class SiteController {
 			}else{
 				stylist = User.get(session.stylistId)
 			}
-			println "stylist: " + stylist
+			println "stylist: " + stylist?.getFullName()
 			if (params?.s){
 				service = Service.findWhere(stylist:stylist, description:params?.s)
 				session.serviceId = service.id
@@ -80,7 +80,7 @@ class SiteController {
 			else{
 				service = Service.get(session?.serviceId)
 			}
-			println "service: " + service
+			println "service: " + service?.description
 		}
 		catch(Exception e) {
 			println "ERROR: " + e
@@ -122,12 +122,12 @@ class SiteController {
 		def nextAppointment
 		while (count <= repeatNumberOfAppointments){
 			def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
-			println "existingAppointment: " + existingAppointment
 			if (existingAppointment && count == 1){
-				println "existingAppointment: " + existingAppointment
+				println "existingAppointment(${existingAppointment.id}): " + existingAppointment.client?.getFullName() + " | " + existingAppointment.service?.description + " on " + existingAppointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
 				render ('{"success":false}') as JSON
 			}
 			else if (existingAppointment && count > 1){
+				println "existingAppointment(${existingAppointment.id}): " + existingAppointment.client?.getFullName() + " | " + existingAppointment.service?.description + " on " + existingAppointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
 				existingAppointments.add(existingAppointment)
 			}
 
@@ -145,7 +145,7 @@ class SiteController {
 				}else{
 					session.multipleAppointmentsScheduled = true
 				}
-				println "saved appointment: " + appointment
+				println "saved appointment(${appointment.id}): " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
 			}
 			startDate.add(Calendar.WEEK_OF_YEAR, repeatDuration)
 			appointmentDate = startDate.getTime()
@@ -209,9 +209,9 @@ class SiteController {
 				client = User.findWhere(email:params.e.toLowerCase(), password:params.p) ?: null
 			}
 			
-			println "client: " + client
-			println "service: " + service
-			println "stylist: " + stylist
+			println "client: " + client?.getFullName()
+			println "service: " + service?.description
+			println "stylist: " + stylist?.getFullName()
 
 			println "session: " + session
 
@@ -234,7 +234,6 @@ class SiteController {
 
 			if (client && service && stylist && appointments.size() > 0){
 				appointments.each(){ appointment ->
-					println "appointment: " + appointment
 					appointment.client = client
 					appointment.booked = true
 					appointment.save(flush:true)
@@ -243,7 +242,7 @@ class SiteController {
 						errorOccurred = true
 					}
 					else{
-						println "saved appointment"
+						println "saved appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
 					}
 				}
 				runAsync {
@@ -253,7 +252,8 @@ class SiteController {
 				if (session.existingAppointmentId){
 					println "Deleting existing appointment..."
 					def existingAppointment = Appointment.get(session.existingAppointmentId)
-					schedulerService.deleteAppointment(existingApointment.id)
+					schedulerService.deleteAppointment(existingAppointment.id)
+					emailService.sendCancellationNotices(existingAppointment)
 				}
 			}else{
 				errorOccurred = true
@@ -300,10 +300,10 @@ class SiteController {
 		println "params: " + params
 		if (params.c){ // params.c = appointment.code
 			def appointment = Appointment.findByCode(params.c.trim())
-			println "appointment: " + appointment
+			println "appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
 			if (appointment){
 				appointment.delete()
-				emailService.sendCancellationNotice(appointment)
+				emailService.sendCancellationNotices(appointment)
 				def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
 				render (template: "cancelAppointment", model: [message: message])
 			}

@@ -94,6 +94,9 @@
 	<input id="toWholeDay" name="toWholeDay" type="text">
 
 	<div id="blockOffDaysButton">Block Off Days</div>
+	
+
+
 	<hr>
 	<h1>Book for Client</h1>
 	<select id="clients">
@@ -111,6 +114,43 @@
 	<select id="timeSlots"></select>
 	<label id="dateOfAppointmentLabel" for="dateOfAppointment">Date:</label>
 	<input id="dateOfAppointment" name="dateOfAppointment" type="text">
+	
+	<div id="recurringAppointmentAdmin">
+		<ul>
+			<li><input type="checkbox" name="recurringAppointment" id="recurringAppointment" style="top:1px;"></li>
+			<li>Recurring Appointment?</li>
+			<li class="recurringAppointmentAdminOptions">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </li>
+			<li class="recurringAppointmentAdminOptions">Repeat every</li>
+			<li class="recurringAppointmentAdminOptions">
+				<select id="repeatDuration">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+				</select>
+			</li>
+			<li class="recurringAppointmentAdminOptions">
+				week(s) for
+			</li>
+			<li class="recurringAppointmentAdminOptions">
+				<select id="repeatNumberOfAppointments">
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</li>
+			<li class="recurringAppointmentAdminOptions">
+				appointments total.
+			</li>
+		</ul>
+	</div>
 	<div id="bookForClientButton">Book Appointment</div>
 
 

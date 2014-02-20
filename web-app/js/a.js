@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+	$(".recurringAppointmentAdminOptions").fadeOut();
+
+	console.log("here");
+
 	$('#logout').click(function(e) {
 		console.log("logging out");
 		window.location.href = "../access/logout"
@@ -86,6 +90,8 @@ $(document).ready(function(){
 		});
 	});
 
+
+
 	$('#blockOffDaysButton').click(function(e) {
 		var from = $('#fromWholeDay').val();
 		var to = $('#toWholeDay').val();
@@ -111,6 +117,16 @@ $(document).ready(function(){
 		});
 	});
 
+
+	$('#recurringAppointment').click(function() {
+		if ($(this).is(':checked')){
+			$(".recurringAppointmentAdminOptions").fadeIn();
+		}else{
+			$(".recurringAppointmentAdminOptions").fadeOut();
+		}
+	});
+
+
 	$('#bookForClientButton').confirmOn({
 			classPrepend: 'confirmon',
 			questionText: 'Book for client?',
@@ -122,13 +138,16 @@ $(document).ready(function(){
 				var sId = $('#services').val();
 				var aDate = $('#dateOfAppointment').val();
 				var sTime = $('#timeSlots').val();
+				var recurringAppointment = $('#recurringAppointment').is(':checked');
+				var repeatDuration = $('#repeatDuration').val();
+				var repeatNumberOfAppointments = $('#repeatNumberOfAppointments').val();
 
 				$('#bookForClientButton').html($('#waitingSpinner').html());
 
 				$.ajax({
 					type: "POST",
 					url: "./bookForClient",
-					data: { cId:cId, sId:sId, aDate:aDate, sTime:sTime}
+					data: { cId:cId, sId:sId, aDate:aDate, sTime:sTime, r:recurringAppointment, dur:repeatDuration, num:repeatNumberOfAppointments}
 				}).done(function(response) {
 					var jsonResponse = JSON.parse(response);
 					if (jsonResponse.success === true){
@@ -174,7 +193,7 @@ $(document).ready(function(){
 
 
 	$('.appointment-data').click(function(e) {
-		$(".edit-appointment").fadeOut();
+		$(".edit-appointment").slideUp();
 		var aId = e.currentTarget.id;
 		$.ajax({
 			type: "POST",
@@ -216,19 +235,19 @@ $(document).ready(function(){
 				});
 			}
 		});
-		$(".edit-appointment-"+aId).fadeIn();
+		$(".edit-appointment-"+aId).slideDown();
 	});
 
 
 	$('#fourteenDayViewLink').click(function(e) {
 		var text = $("#fourteenDayViewLink").html()
 		if (text === "14 day view"){
-			$('#fourteenDayView-week1').fadeIn();
-			$('#fourteenDayView-week2').fadeIn();
+			$('#fourteenDayView-week1').slideDown();
+			$('#fourteenDayView-week2').slideDown();
 			$("#fourteenDayViewLink").html("Hide 14 day view");
 		}else{
-			$('#fourteenDayView-week1').fadeOut();
-			$('#fourteenDayView-week2').fadeOut();
+			$('#fourteenDayView-week1').slideUp();
+			$('#fourteenDayView-week2').slideUp();
 			$("#fourteenDayViewLink").html("14 day view");
 		}
 	});
