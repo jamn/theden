@@ -14,7 +14,6 @@ $(document).ready(function(){
 	});
 
 	$("#newAddress").click(function() {
-		console.log("clicked new address");
 		$('html, body').animate({
 			scrollTop: $("#address").offset().top
 		}, 2000);
@@ -227,8 +226,18 @@ function bookAppointment(){
 		url: baseUrl+"site/bookAppointment",
 		data: {e: email, hp: email2, p: password, f: firstName, l: lastName, ph: phoneNumber}
 	}).done(function(confirmation) {
-		var success = confirmation.search('"success":false');
-		if (success === -1){
+		var success = confirmation.search('"success":false')
+		if (success > -1){
+			var results = JSON && JSON.parse(confirmation) || $.parseJSON(confirmation);
+			$('#loginButton .spinner').hide();
+			$('#loginButton .label').show();
+			$('#loginButton').attr("disabled", false);
+			$('#loginButton').addClass('errorButton animated fadeIn');
+
+			$('.errorDetails').html(results.errorMessage);
+			$('.errorDetails').slideDown();
+		}
+		else{
 			$('.login').removeClass('animated fadeInRightBig');
 			$('.login').addClass('animated fadeOut');
 			$('.login').slideUp();
@@ -236,14 +245,6 @@ function bookAppointment(){
 			$('.confirmation').slideDown();
 			$('.confirmation').removeClass('animated fadeOut');
 			$('.confirmation').addClass('animated fadeInRightBig');
-		}
-		else{
-			$('#loginButton .spinner').hide();
-			$('#loginButton .label').show();
-			$('#loginButton').attr("disabled", false);
-			$('#loginButton').addClass('errorButton animated fadeIn');
-			// $('.login-box input').addClass('errorInput animated fadeIn');
-			// $('#loginButton').removeClass('errorButton animated fadeIn');
 		}
 	});
 }

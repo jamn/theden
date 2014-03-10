@@ -116,7 +116,7 @@ class SchedulerService {
 			}
 
 			currentTimeMarker.setTime(timeSlotStart.getTime())
-			currentTimeMarker.add(Calendar.MINUTE, durationInMinutes.intValue())
+			currentTimeMarker.add(Calendar.MINUTE, 15)
 		}
 
 		return timeSlotsMap

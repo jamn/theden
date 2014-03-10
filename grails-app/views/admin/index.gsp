@@ -15,6 +15,8 @@
 <link rel="apple-touch-icon" sizes="144x144" href="${resource(dir:'images', file:'apple-icon-144x144.png')}" />
 </head><body>
 
+	<div id="log">log</div>
+	<div id="divider">|</div>
 	<div id="logout">logout</div>
 
 

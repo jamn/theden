@@ -327,4 +327,15 @@ class AdminController {
 		}
 	}
 
+	def getLog(){
+		String log = ''
+		try {
+			log = new File('/var/log/tomcat7/catalina.out').text.replace('\n', '</br>').replace('\r', '</br>')
+		}
+		catch(Exception e) {
+			println "ERROR: " + e	
+		}
+		render log
+	}
+
 }

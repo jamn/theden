@@ -17,6 +17,7 @@ class SiteController {
 	def dateService
 	def emailService
 	def schedulerService
+	def userService
 
 	def index() {
 		resetSession()
@@ -163,108 +164,85 @@ class SiteController {
 		println new Date()
 		println "params: " + params
 		Boolean errorOccurred = false
+		def errorMessage = ''
 		def appointments = []
 		if (params?.hp?.size() > 0){ // HONEYPOT -- check value of hidden field to see if a spambot is submitting the form
 			errorOccurred = true
+			errorMessage = "bear found the honey"
 		}
 		else{
-			def client
-			def service = Service.get(session.serviceId)
-			def stylist = User.get(session.stylistId)
-			if (session.existingAppointmentId && params?.e?.size() > 1 && params?.p?.size() > 1){
-				println "Attempting to log in user (existing appointment)..."
-				def tempClient = User.findWhere(email:params.e.toLowerCase(), password:params.p) ?: null
-				def existingAppointment = Appointment.get(session.existingAppointmentId)
-				if (tempClient && existingAppointment.client == tempClient){
-					client = tempClient
-				}
-			}
-			else if (params?.f?.size() > 1 && params?.l?.size() > 1 && params?.e?.size() > 1 && params?.p?.size() > 1){
-				def existingUser = User.findByEmail(params.e.toLowerCase())
-				if (existingUser && existingUser.password == params.p){
-					println "USER LOGGED IN CORRECTLY BY ACCIDENT"
-					client = existingUser
-				}
-				else if (existingUser){
-					println "ERROR: Email already in use: " + existingUser
-				}
-				else{
-					println "CREATING NEW USER"
-					client = new User()
-					client.firstName = params.f
-					client.lastName = params.l
-					client.email = params.e.toLowerCase()
-					client.password = params.p
-					client.phone = params.ph
-					client.code = client.firstName.substring(0,1).toLowerCase() + client.lastName.substring(0,1).toLowerCase() + new Date().getTime()
-					client.save(flush:true)
-					if (client.hasErrors()){
-						println "ERROR: " + client.errors
-						render ('{"success":false}') as JSON
-					}
-				}
-			}
-			else if (params?.e?.size() > 1 && params?.p?.size() > 1){
-				println "Attempting to log in user..."
-				client = User.findWhere(email:params.e.toLowerCase(), password:params.p) ?: null
-			}
-			
-			println "client: " + client?.getFullName()
-			println "service: " + service?.description
-			println "stylist: " + stylist?.getFullName()
-
-			println "session: " + session
-
-			def tempAppointment = Appointment.get(session.appointmentId)
-			
-			if (session.multipleAppointmentsScheduled && tempAppointment){
-				println "here"
-				def now = new Date()
-				Appointment.findAllWhere(client:tempAppointment.client)?.each(){
-					if (it.booked == false && it.appointmentDate > now){
-						println "adding appointment"
-						appointments.add(it)
-					}
-				}
-			}else if (tempAppointment){
-				appointments.add(tempAppointment)
-			}
-
-			println "appointments: " + appointments
-
-			if (client && service && stylist && appointments.size() > 0){
-				appointments.each(){ appointment ->
-					appointment.client = client
-					appointment.booked = true
-					appointment.save(flush:true)
-					if (appointment.hasErrors() || appointment.booked == false){
-						println "ERROR: appointment.booked("+appointment.booked+") | " + appointment?.errors
-						errorOccurred = true
-					}
-					else{
-						println "saved appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
-					}
-				}
-				runAsync {
-					emailService.sendEmailConfirmation(appointments)
-				}
-
-				if (session.existingAppointmentId){
-					println "Deleting existing appointment..."
-					def existingAppointment = Appointment.get(session.existingAppointmentId)
-					schedulerService.deleteAppointment(existingAppointment.id)
-					emailService.sendCancellationNotices(existingAppointment)
-				}
-			}else{
+			def loginResults = userService.loginClient(params)
+			println "loginResults: " + loginResults
+			if (loginResults.error == true){
 				errorOccurred = true
+				errorMessage = loginResults.errorDetails
+			}else{
+				def client = loginResults.client
+				def service = Service.get(session.serviceId)
+				def stylist = User.get(session.stylistId)
+				
+				println "client: " + client?.getFullName()
+				println "service: " + service?.description
+				println "stylist: " + stylist?.getFullName()
+
+				println "session: " + session
+
+				def tempAppointment = Appointment.get(session.appointmentId)
+				
+				if (session.multipleAppointmentsScheduled && tempAppointment){
+					println "here"
+					def now = new Date()
+					Appointment.findAllWhere(client:tempAppointment.client)?.each(){
+						if (it.booked == false && it.appointmentDate > now){
+							println "adding appointment"
+							appointments.add(it)
+						}
+					}
+				}else if (tempAppointment){
+					appointments.add(tempAppointment)
+				}
+
+				println "appointments: " + appointments
+
+				if (client && service && stylist && appointments.size() > 0){
+					appointments.each(){ appointment ->
+						appointment.client = client
+						appointment.booked = true
+						appointment.save(flush:true)
+						if (appointment.hasErrors() || appointment.booked == false){
+							println "ERROR: " + appointment?.errors
+							errorOccurred = true
+							errorMessage = "A really weird error occured trying to save your appointment. We'll get to the bottom of it. In the meantime please try booking again from the start. Sorry about that."
+						}
+						else{
+							println "saved appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
+						}
+					}
+					runAsync {
+						emailService.sendEmailConfirmation(appointments)
+					}
+
+					if (session.existingAppointmentId){
+						def existingAppointment = Appointment.get(session.existingAppointmentId)
+						if (existingAppointment.client == client){
+							println "Deleting existing appointment..."
+							schedulerService.deleteAppointment(existingAppointment.id)
+							emailService.sendCancellationNotices(existingAppointment)
+						}
+					}
+				}else{
+					errorOccurred = true
+					errorMessage = "Email address not recognized."
+				}
 			}
 		}
 		if (errorOccurred){
 			println "AN ERROR OCCURRED"
-			render ('{"success":false}') as JSON
+			def jsonString = '{"success":false,"errorMessage":"'+errorMessage+'"}'
+			render(jsonString)
 		}
 		else{
-			render (template: "confirmation", model: [appointments:appointments, existingAppointments:session.existingAppointments])
+			render(template: "confirmation", model: [appointments:appointments, existingAppointments:session.existingAppointments])
 		}
 	}
 

@@ -1,11 +1,17 @@
 $(document).ready(function(){
 
+	$('#username').bind('keyup', function(){
+		var value = $(this).val()
+		$(this).val(value.replace(/\s+/g, ''));
+	});
+
 	$(".recurringAppointmentAdminOptions").fadeOut();
 
-	console.log("here");
+	$('#log').click(function(e) {
+		window.location.href = "../admin/getLog"
+	});
 
 	$('#logout').click(function(e) {
-		console.log("logging out");
 		window.location.href = "../access/logout"
 	});
 
@@ -16,7 +22,6 @@ $(document).ready(function(){
 	});
 
 	$('#saveTextButton').click(function(e) {
-		console.log("saveTextButton clicked!");
 		var message = $('#homepageText').val();
 		$.ajax({
 			type: "POST",

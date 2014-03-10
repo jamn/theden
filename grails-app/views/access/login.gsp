@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 </head><body>
 	<div class="content-wrapper">
-		<div class="logo-small"><img id="logoSmall" src="${resource(dir:'images',file:'logo.png')}"></div>
+		<div class="logo-small"><img width="120px" height="120px" id="logoSmall" src="${resource(dir:'images',file:'logo.png')}"></div>
 		<div class="login-box">
 			<input type="text" name="username" id="username" placeholder="username" autofocus="autofocus">
 			<input type="password" name="password" id="password" placeholder="password">

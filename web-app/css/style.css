@@ -318,6 +318,17 @@ div.ui-mobile-viewport { overflow-x: hidden; }
 	padding: 40px; 
 }
 
+.errorDetails{
+	width: 304px;
+	padding: 6px;
+	display: none;
+	color: red;
+	font-style: .8em;
+	margin: auto;
+	text-align: center;
+	margin-top: 8px;
+}
+
 #registerLink{
 	position: relative;
 	text-decoration: underline;

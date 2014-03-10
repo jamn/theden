@@ -12,9 +12,14 @@
 
 	<div id="registerLink">New Client?</div>
 </form>
+<div class="errorDetails"></div>
 <div id="loginButton"><div class="label">Login</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
 
 <script type="text/javascript">
+	$('#email').bind('keyup', function(){
+		var value = $(this).val()
+		$(this).val(value.replace(/\s+/g, ''));
+	});
 	$(document).ready(function(){
 		$("#phoneNumber").mask("999-999-9999");
 	});
