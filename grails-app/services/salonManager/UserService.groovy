@@ -28,7 +28,7 @@ class UserService {
 							results['errorDetails'] = "There was an error creating a new user. Please try again."
 						}
 						else{
-							results['client'] = client
+							results['client'] = newClient
 						}
 					}else if (existingUser.password == params.p){
 						println "1) USER LOGGED IN CORRECTLY"
