@@ -173,6 +173,9 @@ class SiteController {
 					client.passwordResetCode = RandomStringUtils.random(14, true, true)
 					client.passwordResetCodeDateCreated = new Date()
 					client.save(flush:true)
+					def appointment = Appointment.get(session.appointmentId)
+					println "deleting appointment: " + appointment
+					appointment.delete()
 					runAsync {
 						emailService.sendPasswordResetLink(client)
 					}
