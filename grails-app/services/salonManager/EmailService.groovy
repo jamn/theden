@@ -44,8 +44,7 @@ class EmailService {
 			}
 			adminEmailBody += "</p>"
 			sendMail {     
-				//to "info@thedenbarbershop-kc.com"    
-				to "bjacobi@gmail.com"
+				to "info@thedenbarbershop-kc.com"    
 				from "${appointments[0].client.email}"    
 				subject "New Appointment [${appointments[0].appointmentDate.format('E MM/dd @ hh:mm a')}]"     
 				html adminEmailBody
@@ -85,8 +84,7 @@ class EmailService {
 		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/images/logo.png'></p><p><b>Client:</b> ${appointment.client.firstName} ${appointment.client.lastName}<br/><b>Time:</b> ${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}<br/><b>Service:</b> ${appointment.service.description}</p>"
 		try {
 			sendMail {     
-				//to "info@thedenbarbershop-kc.com" 
-				to "bjacobi@gmail.com"
+				to "info@thedenbarbershop-kc.com" 
 				from "${appointment.client.email}"  
 				subject "** Appointment Cancelled ** [${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}]"     
 				html emailBody
