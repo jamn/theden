@@ -6,7 +6,7 @@
 <title>:: The Den Barbershop | Cancel Appointment ::</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css?v0.3')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
 </head><body baseUrl="${createLink()}">

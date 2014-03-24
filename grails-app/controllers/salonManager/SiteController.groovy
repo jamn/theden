@@ -173,7 +173,9 @@ class SiteController {
 					client.passwordResetCode = RandomStringUtils.random(14, true, true)
 					client.passwordResetCodeDateCreated = new Date()
 					client.save(flush:true)
-					emailService.sendPasswordResetLink(client)
+					runAsync {
+						emailService.sendPasswordResetLink(client)
+					}
 				}
 				catch(Exception e) {
 					println "ERROR: " + e
@@ -228,6 +230,8 @@ class SiteController {
 			def password2 = params.p2
 			if (password1 == password2){
 				session.userUpdatingPassword.password = password1
+				session.userUpdatingPassword.passwordResetCode = null
+				session.userUpdatingPassword.passwordResetCodeDateCreated = null
 				session.userUpdatingPassword.save(flush:true)
 				if (session.userUpdatingPassword.hasErrors()){
 					println "ERROR: " + session.userUpdatingPassword.errors
@@ -378,7 +382,9 @@ class SiteController {
 			println "appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
 			if (appointment){
 				appointment.delete()
-				emailService.sendCancellationNotices(appointment)
+				runAsync {
+					emailService.sendCancellationNotices(appointment)
+				}
 				def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
 				render (template: "cancelAppointment", model: [message: message])
 			}

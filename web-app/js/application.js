@@ -8,7 +8,6 @@ weekday[5]="Friday";
 weekday[6]="Saturday";
 
 $(document).on("tap", ".home", function() {
-	console.log("going home!");
 	window.location.href = "/";
 });
 
@@ -42,9 +41,6 @@ $(document).ready(function(){
 					$('#dateText').append(weekday[d.getDay()]);
 					$('#timeSlots').empty();
 					$('#timeSlots').append(timeSlots);
-				}
-				else{
-					// console.log("success:false");
 				}
 			});
 		},
@@ -103,7 +99,6 @@ $(document).on("tap", ".book-now-button", function() {
 				$('.select-a-service').addClass('animated fadeInRightBig');
 			}
 			else{
-				// console.log("success:false");
 				$('.book-now-button').addClass('errorButton animated fadeIn');
 				$('.book-now-button').removeClass('errorButton animated fadeIn');
 			}
@@ -139,7 +134,6 @@ $(document).on("tap", ".service", function() {
 				$('.choose-a-time').addClass('animated fadeInRightBig');
 			}
 			else{
-				// console.log("success:false");
 				$(serviceButton).addClass('errorButton');
 			}
 		});
@@ -165,10 +159,7 @@ $(document).on("tap", ".time-slot", function() {
 			data: {d: date, r: recurringAppointment, dur: repeatDuration, num: repeatNumberOfAppointments}
 		}).done(function(loginForm) {
 			var success = loginForm.search('"success":false');
-			console.log(success);
 			if (success === -1){
-				console.log("SHOW LOGIN FORM");
-				// DONE
 				$('.choose-a-time').removeClass('animated fadeInRightBig');
 				$('.choose-a-time').addClass('animated fadeOut');
 				$('.choose-a-time').slideUp();
@@ -178,7 +169,6 @@ $(document).on("tap", ".time-slot", function() {
 				$('.login').addClass('animated fadeInRightBig');
 			}
 			else{
-				 console.log("success:false");
 				$(timeSlot).addClass('errorButton');
 				$(timeSlot).text("No longer available...");
 				$(timeSlot).addClass('animated fadeOut');
@@ -277,12 +267,14 @@ $(document).on("tap", "#loginButton", function() {
 
 $(document).on("keypress", "#password", function() {
 	if (event.keyCode === 13) {
+		$('#loginButton').removeClass('errorButton animated fadeIn');
 		bookAppointment();
 	}
 });
 
 $(document).on("keypress", "#verifyNewPassword", function() {
 	if (event.keyCode === 13) {
+		$('#loginButton').removeClass('errorButton animated fadeIn');
 		attemptPasswordReset();
 	}
 });
@@ -317,7 +309,6 @@ function attemptPasswordReset(){
 		url: baseUrl+"site/attemptPasswordReset",
 		data: {p1:p1, p2:p2}
 	}).done(function(confirmation) {
-		console.log(confirmation);
 		processResults(confirmation);
 	});
 }
@@ -354,7 +345,6 @@ function processResults(confirmation){
 		$('.errorDetails').slideDown();
 	}
 	else{
-		console.log('here');
 		$('.login').removeClass('animated fadeInRightBig');
 		$('.login').addClass('animated fadeOut');
 		$('.login').slideUp();
