@@ -395,6 +395,8 @@ class SiteController {
 	}
 
 	private deleteStaleAppointments(){
+		println "\n---- DELETING STALE APPOINTMENTS ----"
+		println new Date()
 		def con = AH.application.mainContext.sessionFactory.currentSession.connection()
 		def sql = new groovy.sql.Sql(con)
 		Calendar now = new GregorianCalendar()

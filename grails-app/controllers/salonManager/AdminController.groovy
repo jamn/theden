@@ -275,7 +275,6 @@ class AdminController {
 				params["rescheduledAppointment"] = "TRUE"
 				success = schedulerService.bookForClient(params)
 				if (success){
-					println "deleting appointment... " + existingApointment
 					schedulerService.deleteAppointment(existingApointment.id)
 				}
 			}
