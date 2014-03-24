@@ -29,6 +29,7 @@
 <title>:: The Den Barbershop ::</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'animate.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
@@ -42,7 +43,7 @@
 </head><body  baseUrl="${createLink()}">
 
 		<div class="header">
-			<img id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
+			<img class="home" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
 			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
 		</div>
 		<div class="grey-box">
@@ -61,7 +62,7 @@
 			<div class="pictures">
 				<img width="100%" src="${resource(dir:'images',file:'shop.jpg')}">
 			</div>
-			<div class="book-now-button"><div class="label">Book Now</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
+			<div class="green-button book-now-button"><div class="label">Book Now</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
 		</div>
 
 		<div class="select-a-service"></div>
@@ -115,7 +116,7 @@
 
 		<div id="address" class="address">1013 W 47th Street &bull; KCMO, 64112</div>
 		<div class="google-map" style="display:none;">
-			<img src="./images/map.png">
+			<img src="${resource(dir: 'images', file: 'map.png')}">
 		</div>
 
 		<div class="footer">&nbsp;</div>

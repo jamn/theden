@@ -2,6 +2,7 @@
 <html><head>
 <meta charset="UTF-8">
 <title>Salon Manager | Login</title>
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 </head><body>
@@ -10,7 +11,7 @@
 		<div class="login-box">
 			<input type="text" name="username" id="username" placeholder="username" autofocus="autofocus">
 			<input type="password" name="password" id="password" placeholder="password">
-			<div id="loginButton">Login</div>
+			<div class="green-button" id="loginButton">Login</div>
 		</div>
 	</div>
 <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>

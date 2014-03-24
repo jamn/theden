@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <title>:: The Den Barbershop | Cancel Appointment ::</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
@@ -12,7 +13,7 @@
 
 
 		<div class="header">
-			<img id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
+			<img class="home" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
 			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
 		</div>
 		<div class="grey-box">
@@ -32,7 +33,7 @@
 
 		<div class="address">1013 W 47th Street &bull; KCMO, 64112</div>
 		<div class="google-map" style="display:none;">
-			<img src="./images/map.png">
+			<img src="${resource(dir: 'images', file: 'map.png')}">
 		</div>
 		
 		<div class="footer">&nbsp;</div>

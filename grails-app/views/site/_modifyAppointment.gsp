@@ -6,6 +6,7 @@
 <title>:: The Den Barbershop | Modify Appointment ::</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'animate.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
@@ -15,7 +16,7 @@
 		<div class="existingAppointmentInfo"><b>Existing Appointment:</b> ${appointment.service.description} | ${appointment.appointmentDate.format('EEEE MMMM dd, yyyy')} @ ${appointment.appointmentDate.format('hh:mm a')}</div>
 
 		<div class="header">
-			<img id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
+			<img class="home" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
 			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
 		</div>
 		<div class="grey-box">
@@ -80,7 +81,7 @@
 						<li class="morning">
 							<h2 class="time-slots-h2">Morning</h2>
 							<g:each in="${timeSlots.value}">
-								<div onclick="funtion(){}" startTime="${it.startTime}" class="time-slot" id="time-slot-${it.id}"><div class="label">${it.timeSlot}</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
+								<div onclick="funtion(){}" startTime="${it.startTime}" class="green-button time-slot" id="time-slot-${it.id}"><div class="label">${it.timeSlot}</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
 							</g:each>
 						</li>
 					<%}%>
@@ -88,7 +89,7 @@
 						<li class="lunch">
 							<h2 class="time-slots-h2">Lunch</h2>
 							<g:each in="${timeSlots.value}">
-								<div onclick="funtion(){}" startTime="${it.startTime}" class="time-slot" id="time-slot-${it.id}"><div class="label">${it.timeSlot}</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
+								<div onclick="funtion(){}" startTime="${it.startTime}" class="green-button time-slot" id="time-slot-${it.id}"><div class="label">${it.timeSlot}</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
 							</g:each>
 						</li>
 					<%}%>
@@ -96,7 +97,7 @@
 						<li class="afternoon">
 							<h2 class="time-slots-h2">Afternoon</h2>
 							<g:each in="${timeSlots.value}">
-								<div onclick="funtion(){}" startTime="${it.startTime}" class="time-slot" id="time-slot-${it.id}"><div class="label">${it.timeSlot}</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
+								<div onclick="funtion(){}" startTime="${it.startTime}" class="green-button time-slot" id="time-slot-${it.id}"><div class="label">${it.timeSlot}</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
 							</g:each>
 						</li>
 					<%}%>
@@ -110,7 +111,7 @@
 
 		<div id="address" class="address">1013 W 47th Street &bull; KCMO, 64112</div>
 		<div class="google-map" style="display:none;">
-			<img src="./images/map.png">
+			<img src="${resource(dir: 'images', file: 'map.png')}">
 		</div>
 		
 		<div class="footer">&nbsp;</div>
@@ -120,6 +121,7 @@
 	<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'jquery.mobile-1.3.2.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'application.min.js')}" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'masked-input-plugin.min.js')}" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('.choose-a-time').slideDown();
@@ -128,6 +130,8 @@
 			$('#dateText').empty();
 			$('#dateText').append(weekday[d.getDay()]);
 			$("#chooseDate").datepicker("setDate", d);
+			$('#registerLink').hide();
+			$('.left-divider').hide();
 		});
 	</script>
 </body></html>

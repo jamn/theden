@@ -44,7 +44,8 @@ class EmailService {
 			}
 			adminEmailBody += "</p>"
 			sendMail {     
-				to "info@thedenbarbershop-kc.com"    
+				//to "info@thedenbarbershop-kc.com"    
+				to "bjacobi@gmail.com"
 				from "${appointments[0].client.email}"    
 				subject "New Appointment [${appointments[0].appointmentDate.format('E MM/dd @ hh:mm a')}]"     
 				html adminEmailBody
@@ -84,7 +85,8 @@ class EmailService {
 		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/images/logo.png'></p><p><b>Client:</b> ${appointment.client.firstName} ${appointment.client.lastName}<br/><b>Time:</b> ${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}<br/><b>Service:</b> ${appointment.service.description}</p>"
 		try {
 			sendMail {     
-				to "info@thedenbarbershop-kc.com" 
+				//to "info@thedenbarbershop-kc.com" 
+				to "bjacobi@gmail.com"
 				from "${appointment.client.email}"  
 				subject "** Appointment Cancelled ** [${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}]"     
 				html emailBody
@@ -98,7 +100,7 @@ class EmailService {
 
 	public sendRescheduledConfirmation(Appointment appointment){
 		println "Sending reschedule confirmation for appointment: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('E MM/dd @ hh:mm a')
-		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/images/logo.png'></p><p>${appointment.client.firstName},</p><p>Your appointment has been rescheduled. Your new appointment date is: <b>${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/images/logo.png'></p><p>${appointment.client.firstName},</p><p>Your appointment has been rescheduled. Your new appointment date is: <b>${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}</b>. If you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
 		try {
 			sendMail {
 				to "${appointment.client.email}"
@@ -141,6 +143,23 @@ class EmailService {
 				println "ERROR"
 				println e
 			}
+		}
+	}
+
+	public sendPasswordResetLink(User client){
+		println "Sending password reset link to: " + client.getFullName()
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/images/logo.png'></p><p>The following link can be used to reset your password:</p><ul><li><a href='http://www.thedenbarbershop-kc.com/site/resetPasswordForm?rc="+client.passwordResetCode+"&cc="+client.code+"'>http://www.thedenbarbershop-kc.com/site/resetPasswordForm?rc="+client.passwordResetCode+"&cc="+client.code+"</a></li></ul>"
+		try {
+			sendMail {
+				to "${client.email}"
+				from "info@thedenbarbershop-kc.com"  
+				subject "Password Reset Link :: The Den Barbershop"     
+				html emailBody
+			}
+		}
+		catch(Exception e) {
+			println "ERROR"
+			println e
 		}
 	}
 }

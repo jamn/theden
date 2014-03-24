@@ -4,6 +4,7 @@
 <html><head>
 <meta charset="UTF-8">
 <title>The Den Barbershop :: Admin</title>
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />

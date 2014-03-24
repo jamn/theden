@@ -16,6 +16,8 @@ class User extends CoreObject {
 	String code // users initials or some short code to pass as a URL param
 	Long startTime
 	Long endTime
+    String passwordResetCode
+    Date passwordResetCodeDateCreated
 
 	static hasMany = [services:Service, daysOfTheWeek:DayOfTheWeek, logins:LoginLog]
 
@@ -28,6 +30,8 @@ class User extends CoreObject {
 		phone(nullable:true)
 		startTime(nullable:true)
         endTime(nullable:true)
+        passwordResetCode(nullable:true)
+        passwordResetCodeDateCreated(nullable:true)
     }
 
 

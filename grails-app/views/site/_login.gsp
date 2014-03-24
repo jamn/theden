@@ -9,11 +9,17 @@
 	<input placeholder="Last Name" type="text" name="last-name" id="lastName" class="new-user"><br>
 
 	<input placeholder="Phone #" type="text" name="phone" id="phoneNumber" class="new-user"><br>
-
-	<div id="registerLink">New Client?</div>
+	
+	<div style="text-align:center;"> <span id="registerLink">New Client?</span>
+		<span class="left-divider"> | </span>
+		<span id="resetPassword">Reset Password</span>
+		<span class="right-divider"> | </span>
+		<span id="showLoginForm">Login Form</span>
+	</div>
+	
 </form>
 <div class="errorDetails"></div>
-<div id="loginButton"><div class="label">Login</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
+<div class="green-button" id="loginButton"><div class="label">Book Appointment</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
 
 <script type="text/javascript">
 	$('#email').bind('keyup', function(){

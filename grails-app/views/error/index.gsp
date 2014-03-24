@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <title>:: The Den Barbershop | Cancel Appointment ::</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'style.css')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
@@ -12,7 +13,7 @@
 
 
 		<div class="header">
-			<img id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
+			<img class="home" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
 			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
 		</div>
 		<div class="grey-box">
@@ -28,13 +29,18 @@
 			</ul>
 		</div>
 		
-		<div class="server-error-message">An error has occured. Click <a href='${createLink(controller: 'site', action: 'index')}'>here</a> to start over.</div>
+		<div class="server-error-message">An error has occured. Click <span class="home">here</span> to start over.</div>
 
 		<div class="address">1013 W 47th Street &bull; KCMO, 64112</div>
 		<div class="google-map" style="display:none;">
-			<img src="./images/map.png">
+			<img src="${resource(dir: 'images', file: 'map.png')}">
 		</div>
 		
 		<div class="footer">&nbsp;</div>
+
+		<script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
+		<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
+		<script src="${resource(dir:'js', file:'jquery.mobile-1.3.2.min.js')}" type="text/javascript"></script>
+		<script src="${resource(dir:'js', file:'application.min.js')}" type="text/javascript"></script>
 		
 </body></html>

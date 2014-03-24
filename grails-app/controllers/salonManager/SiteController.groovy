@@ -158,6 +158,101 @@ class SiteController {
 		render (template: "login", model: [appointment:nextAppointment])
 	}
 
+	def sendPasswordResetEmail(){
+		println "\n---- PASSWORD RESET EMAIL REQUESTED ----"
+		println new Date()
+		println "params: " + params
+		Boolean errorOccurred = false
+		def errorMessage = ''
+
+		if (params?.e?.size() > 0){
+			def email = params?.e
+			def client = User.findByEmail(email)
+			if (client){
+				try {
+					client.passwordResetCode = RandomStringUtils.random(14, true, true)
+					client.passwordResetCodeDateCreated = new Date()
+					client.save(flush:true)
+					emailService.sendPasswordResetLink(client)
+				}
+				catch(Exception e) {
+					println "ERROR: " + e
+					errorOccurred = true
+					errorMessage = "Oops, something didn't work right. Try again please."
+				}
+				
+			}
+			else{
+				errorOccurred = true
+				errorMessage = "Email not found."
+			}
+		}else{
+			errorOccurred = true
+			errorMessage = "Email required."
+		}
+
+		if (errorOccurred){
+			println "AN ERROR OCCURRED: " + errorMessage
+			def jsonString = '{"success":false,"errorMessage":"'+errorMessage+'"}'
+			render(jsonString)
+		}else{
+			render(template: "confirmation", model: [passwordReset:true])
+		}
+	}
+
+	def resetPasswordForm(){
+		println "\n---- GETTING PASSWORD RESET FORM ----"
+		println new Date()
+		println "params: " + params
+
+		if (params?.rc?.size() > 0 && params?.cc?.size() > 0){
+			def user = User.findWhere(passwordResetCode:params.rc, code:params.cc)
+			if (user){
+				session.userUpdatingPassword = user
+				def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
+				render(template: "resetPassword", model: [message:message])
+			}
+		}else{
+			println "ERROR: required params not passed."
+		}
+	}
+
+	def attemptPasswordReset(){
+		println "\n---- ATTEMPTING TO RESET PASSWORD ----"
+		println new Date()
+		println "params: " + params
+		Boolean errorOccurred = false
+		def errorMessage = ''
+		if (params?.p1?.size() > 0 && params?.p2?.size() > 0){
+			def password1 = params.p1
+			def password2 = params.p2
+			if (password1 == password2){
+				session.userUpdatingPassword.password = password1
+				session.userUpdatingPassword.save(flush:true)
+				if (session.userUpdatingPassword.hasErrors()){
+					println "ERROR: " + session.userUpdatingPassword.errors
+					errorOccurred = true
+					errorMessage = 'Something really weird happened. Please try again.'
+				}
+			}else{
+				errorOccurred = true
+				errorMessage = 'Password fields do not match.'
+			}
+		}
+		else{
+			errorOccurred = true
+			errorMessage = 'Please enter a new password.'
+		}
+
+		if (errorOccurred){
+			println "AN ERROR OCCURRED: " + errorMessage
+			def jsonString = '{"success":false,"errorMessage":"'+errorMessage+'"}'
+			render(jsonString)
+		}else{
+			render(template: "confirmation", model: [passwordReset:true, success:true])
+		}
+	}
+
 
 	def bookAppointment(){
 		println "\n---- BOOK APPOINTMENT ----"
@@ -237,7 +332,7 @@ class SiteController {
 			}
 		}
 		if (errorOccurred){
-			println "AN ERROR OCCURRED"
+			println "AN ERROR OCCURRED: " + errorMessage
 			def jsonString = '{"success":false,"errorMessage":"'+errorMessage+'"}'
 			render(jsonString)
 		}
@@ -252,23 +347,25 @@ class SiteController {
 		println "params: " + params
 		if (params.a && params.cc){ // params.a = appointmentId | params.cc = clientCode
 			def appointment = Appointment.get(params.a)
-			session.appointmentId = null
-			session.requestedDate = appointment.appointmentDate
-			session.serviceId = appointment?.service?.id ?: null
-			session.stylistId = appointment?.stylist?.id ?: null
-			if (appointment?.client?.code?.toUpperCase() == params.cc.toString().toUpperCase().trim()){
-				session.existingAppointmentId = appointment.id
-				println "session: " + session
-				def timeSlotsMap = getAvailableTimes()
-				def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
-				render (template: "modifyAppointment", model: [timeSlotsMap:timeSlotsMap, message:message, appointment:appointment])
+			if (appointment){
+				session.appointmentId = null
+				session.requestedDate = appointment.appointmentDate
+				session.serviceId = appointment?.service?.id ?: null
+				session.stylistId = appointment?.stylist?.id ?: null
+				if (appointment?.client?.code?.toUpperCase() == params.cc.toString().toUpperCase().trim()){
+					session.existingAppointmentId = appointment.id
+					println "session: " + session
+					def timeSlotsMap = getAvailableTimes()
+					def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
+					render (template: "modifyAppointment", model: [timeSlotsMap:timeSlotsMap, message:message, appointment:appointment])
+				}
 			}
 			else{
-				render ('{"success":false}') as JSON
+				println "ERROR: appointment doesn't exist"
 			}
 		}
 		else{
-			render ('{"success":false}') as JSON
+			println "ERROR: required params not passed"
 		}
 	}
 
