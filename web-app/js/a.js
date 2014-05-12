@@ -275,3 +275,31 @@ function getTimeSlotOptionsForRescheduledAppointment(aId){
 		}
 	});
 }
+
+$('.cancel-appointment-link').click(function(e) {
+	var c = $(this).attr('c');
+	console.log(c);
+	$.ajax({
+		type: "POST",
+		url: "./cancelAppointment",
+		data: { c: c }
+	}).done(function(response) {
+		var success = response.search('"success":false');
+		if (success === -1){
+			console.log("success:true");
+			alert('You did it, appoiment deleted!');
+			location.reload();
+		}
+		else{
+			alert('That didn\'t work. Dang.');
+			console.log("success:false");
+		}
+	});
+});
+
+
+
+
+
+
+

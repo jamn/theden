@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <title>The Den Barbershop :: Admin</title>
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css?v0.3')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery.confirmon.css')}" />
@@ -24,14 +23,14 @@
 
 	<h1>Homepage Message</h1>
 	<textarea id="homepageText" rows="8" cols="50">${homepageText}</textarea>
-	<div id="saveTextButton">Save</div>
+	<div id="saveTextButton" class="green-button">Save</div>
 
 
 
 	<hr>
 	<h1>Block Off Time</h1>
 	<label id="chooseDateToBlockOffText" for="chooseDateToBlockOff">Choose a date:</label>
-	<input id="chooseDateToBlockOff" name="chooseDateToBlockOff" type="text">
+	<input id="chooseDateToBlockOff" name="chooseDateToBlockOff" type="text" class="date">
 	<label id="fromText" for="from">&nbsp;&nbsp;&nbsp;From:</label>
 	<select id="fromHour">
 		<option value="1">1</option>
@@ -84,19 +83,19 @@
 		<option value="am">AM</option>
 		<option value="pm">PM</option>
 	</select>
-	<div id="blockOffTimeButton">Block Off Time</div>
+	<div id="blockOffTimeButton" class="green-button">Block Off Time</div>
 
 
 
 	<hr>
 	<h1>Block Off Whole Day</h1>
 	<label id="fromText" for="fromWholeDay">&nbsp;&nbsp;&nbsp;From:</label>
-	<input id="fromWholeDay" name="fromWholeDay" type="text">
+	<input id="fromWholeDay" name="fromWholeDay" type="text" class="date">
 
 	<label id="toText" for="toWholeDay">&nbsp;&nbsp;&nbsp;To:</label>
-	<input id="toWholeDay" name="toWholeDay" type="text">
+	<input id="toWholeDay" name="toWholeDay" type="text" class="date">
 
-	<div id="blockOffDaysButton">Block Off Days</div>
+	<div id="blockOffDaysButton" class="green-button">Block Off Days</div>
 	
 
 
@@ -116,7 +115,7 @@
 	</select>
 	<select id="timeSlots"></select>
 	<label id="dateOfAppointmentLabel" for="dateOfAppointment">Date:</label>
-	<input id="dateOfAppointment" name="dateOfAppointment" type="text">
+	<input id="dateOfAppointment" name="dateOfAppointment" type="text" class="date">
 	
 	<div id="recurringAppointmentAdmin">
 		<ul>
@@ -154,7 +153,7 @@
 			</li>
 		</ul>
 	</div>
-	<div id="bookForClientButton">Book Appointment</div>
+	<div id="bookForClientButton" class="green-button">Book Appointment</div>
 
 
 	<hr>
@@ -781,9 +780,9 @@
 
 	<table class="appointments">
 		<tr>
-			<td width="120px"><h2>Name:</h2></td>
+			<td width="140px"><h2>Name:</h2></td>
 			<td><h2>Service:</h2></td>
-			<td width="150px"><h2>Date:</h2></td>
+			<td width="180px"><h2>Date:</h2></td>
 			<td><h2>Notes:</h2></td>
 		</tr>
 		<g:each in="${appointments}">
@@ -807,8 +806,7 @@
 					</td>
 				</tr>
 				<tr class="edit-appointment edit-appointment-${it.id}">
-					<td></td>
-					<td colspan="3">(x) <a href="${createLink(controller:'site',action:'cancelAppointment',params:[c:it.code])}" onclick="return confirm('Cancel appointment?')">cancel</a> | Reschedule: <span id="edit-appointment-options-${it.id}"></span> <img src="${resource(dir:'images', file:'spinner-gray.gif')}" class="spinner-${it.id}" style="display:none;"></td>
+					<td colspan="4">(x) <a href="#" c="${it.code}" class="cancel-appointment-link" onclick="return confirm('Cancel appointment?')">cancel</a> | Reschedule: <span id="edit-appointment-options-${it.id}"></span> <img src="${resource(dir:'images', file:'spinner-gray.gif')}" class="spinner-${it.id}" style="display:none;"></td>
 				</tr>
 			<%}%>
 		</g:each>

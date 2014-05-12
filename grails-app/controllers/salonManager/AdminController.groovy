@@ -337,4 +337,22 @@ class AdminController {
 		render log
 	}
 
+	def cancelAppointment(){
+		Boolean success = false
+		if (params.c){ // params.c = appointment.code
+			def appointment = Appointment.findByCode(params.c.trim())
+			println "appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
+			if (appointment){
+				appointment.delete()
+				if (!appointment.hasErrors()){
+					runAsync {
+						emailService.sendCancellationNotices(appointment)
+					}
+					success = true
+				}
+			}
+		}
+		render ('{"success":'+success+'}') as JSON
+	}
+
 }
