@@ -4,14 +4,14 @@
 
 	<input placeholder="Password" type="password" name="password" id="password" value="${client?.password}">
 
-	<input placeholder="First Name" type="text" name="first-name" id="firstName" class="new-user">
+	%{--<input placeholder="First Name" type="text" name="first-name" id="firstName" class="new-user">
 
 	<input placeholder="Last Name" type="text" name="last-name" id="lastName" class="new-user"><br>
 
 	<input placeholder="Phone #" type="text" name="phone" id="phoneNumber" class="new-user"><br>
 	
 	<div style="text-align:center;"> <span id="registerLink">New Client?</span>
-		<span class="left-divider"> | </span>
+		<span class="left-divider"> | </span>--}%
 		<span id="resetPassword">Reset Password</span>
 		<span class="right-divider"> | </span>
 		<span id="showLoginForm">Login Form</span>

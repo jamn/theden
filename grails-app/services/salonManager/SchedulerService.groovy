@@ -92,9 +92,10 @@ class SchedulerService {
 
 
 			def dayOfWeek = timeSlotEnd.get(Calendar.DAY_OF_WEEK)
-			def now = new Date()
+			Calendar anHourFromNow = new GregorianCalendar()
+			anHourFromNow.add(Calendar.MINUTE, 60)
 			
-			if (timeSlotEnd <= endDate && stylistDayOfTheWeek.available && timeSlotStart.getTime() > now){ // BLOCK OFF SATURDAY AND SUNDAY
+			if (timeSlotEnd <= endDate && stylistDayOfTheWeek.available && timeSlotStart.getTime() > anHourFromNow.getTime()){ // BLOCK OFF SATURDAY AND SUNDAY
 			//if (timeSlotEnd <= endDate && dayOfWeek != 1 && dayOfWeek != 7){ // BLOCK OFF SATURDAY AND SUNDAY
 			//if (timeSlotEnd <= endDate){
 				def timeSlot = timeSlotStart.getTime().format('h:mma').replace(':00', '') + " / " + timeSlotEnd.getTime().format('h:mma').replace(':00', '')

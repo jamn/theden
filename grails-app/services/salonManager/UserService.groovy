@@ -11,7 +11,7 @@ class UserService {
 		if (params.size() > 0){
 			if (params?.e?.size() > 1 && params?.p?.size() > 1){
 				def existingUser = User.findByEmail(params.e.toLowerCase())
-				if (params?.f?.size() > 1 && params?.l?.size() > 1){
+				/*if (params?.f?.size() > 1 && params?.l?.size() > 1){
 					if (!existingUser){
 						println "CREATING NEW USER"
 						def newClient = new User()
@@ -38,7 +38,8 @@ class UserService {
 						results['errorDetails'] = "Email address exists, but the wrong password was used."
 					}
 				}
-				else if (existingUser && existingUser.password == params.p){
+				else */
+				if (existingUser && existingUser.password == params.p){
 					println "2) USER LOGGED IN CORRECTLY"
 					results['client'] = existingUser
 				}
