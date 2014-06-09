@@ -25,7 +25,16 @@
 	<textarea id="homepageText" rows="8" cols="50">${homepageText}</textarea>
 	<div id="saveTextButton" class="green-button">Save</div>
 
-
+	<hr>
+	<h1>Client Details</h1>
+	<select id="clientsDetailsSelector">
+		<option selected="selected">Choose a client...</option>
+		<g:each in="${clients}">
+			<option value="${it?.id}">${it?.lastName}, ${it?.firstName}</option>
+		</g:each>
+	</select>
+	<div id="mask"></div>
+	<div id="clientDetailsPopup"></div>
 
 	<hr>
 	<h1>Block Off Time</h1>
@@ -801,7 +810,7 @@
 						<%if (it.notes){%>
 							${it.notes}
 						<%}else{%>
-							<b>PHONE:</b> ${it.client.phone}  | <b>EMAIL:</b> <a href="mailto:${it.client.email}">${it.client.email}</a>
+							<b>PHONE:</b> <a href="tel:${it.client.phone.replace('-', '')}">${it.client.phone}</a>  | <b>EMAIL:</b> <a href="mailto:${it.client.email}">${it.client.email}</a>
 						<%}%>
 					</td>
 				</tr>

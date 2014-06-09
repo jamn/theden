@@ -185,6 +185,83 @@ select{
 	margin-left: 10px;
 }
 
+#mask {
+	display: none;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0,0,0,.8);
+	z-index: 2;
+}
+
+#clientDetailsPopup {
+	display:none;
+	position: fixed;
+	background-color: #ccc;
+	padding: 40px;
+	z-index: 3;
+	top: 80px;
+	width: 530px;
+	margin: auto 12%;
+	font-size: 1.4em;
+}
+
+#clientDetailsPopup > div,
+#clientDetailsPopup > h2,
+#clientDetailsPopup > h3,
+#clientDetailsPopup > p{
+	margin: 10px 0;
+}
+
+#clientDetailsPopup > h2 {
+	font-size: 4em;
+}
+
+#clientDetailsPopup > h3 {
+	font-size: 1.8em;
+}
+
+#clientDetailsPopup > textarea {
+	width: 524px;
+	height: 140px;
+	overflow-x: scroll;
+}
+
+#clientDetailsPopup table thead {
+	font-weight: bold;
+}
+
+#clientDetailsPopup .close-popup-button {
+	position: absolute;
+	right: 14px;
+	font-size: 2.5em;
+	top: 2px;
+	z-index: 100;
+	border: 1px solid #999;
+	padding: 0px 13px;
+	border-radius: 40px;
+	color: #888;
+}
+
+#clientDetailsPopup .close-popup-button .icon{
+	top: -3px;
+	position: relative;
+}
+
+#clientDetailsPopup .close-popup-button:hover {
+	color: #000;
+	cursor: pointer;
+}
+#clientDetailsPopup #saveClientNotesButton {
+	width: 508px;
+	position: relative;
+	left: 0;
+	margin-top: 6px;
+	font-size: 2.6em;
+}
+
 .date{
 	width: 112px;
 }

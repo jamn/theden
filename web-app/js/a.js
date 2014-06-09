@@ -30,10 +30,8 @@ $(document).ready(function(){
 		}).done(function(response) {
 			var success = response.search('"success":false');
 			if (success === -1){
-				console.log("success:true");
 			}
 			else{
-				console.log("success:false");
 			}
 		});
 	});
@@ -45,6 +43,38 @@ $(document).ready(function(){
 			window.location.href = "../access/login?u="+user+"&p="+password
 		}
 	});
+
+	$('#clientsDetailsSelector').on('change', function() {
+		var cId = $(this).val();
+		$.ajax({
+			type: "POST",
+			url: "./getClientDetails",
+			data: { cId:cId }
+		}).done(function(response) {
+			var success = response.search('"success":false');
+			if (success === -1){
+				$('#mask').fadeIn();
+				$('#clientDetailsPopup').html(response).fadeIn();
+			}
+			else{
+			}
+		});
+	});
+
+	$('#mask').click(function(e) {
+		closeClientDetailsPopup();
+	});
+
+	$(document).keyup(function(e){
+		if(e.keyCode == 27){
+			closeClientDetailsPopup();
+		}
+	});
+
+	function closeClientDetailsPopup(){
+		$('#mask').fadeOut();
+		$('#clientDetailsPopup').fadeOut();
+	}
 
 	$('#chooseDateToBlockOff').datepicker( {
 		minDate: 0
@@ -83,12 +113,10 @@ $(document).ready(function(){
 		}).done(function(response) {
 			var jsonResponse = JSON.parse(response);
 			if (jsonResponse.success === true){
-				console.log("success:true");
 				$('#blockOffTimeButton').html("Success");
 				$('#blockOffTimeButton').removeClass('errorButton animated fadeIn');
 			}
 			else{
-				console.log("success:false");
 				$('#blockOffTimeButton').html("Error");
 				$('#blockOffTimeButton').addClass('errorButton animated fadeIn');
 			}
@@ -110,12 +138,10 @@ $(document).ready(function(){
 		}).done(function(response) {
 			var jsonResponse = JSON.parse(response);
 			if (jsonResponse.success === true){
-				console.log("success:true");
 				$('#blockOffDaysButton').html("Success");
 				$('#blockOffDaysButton').removeClass('errorButton animated fadeIn');
 			}
 			else{
-				console.log("success:false");
 				$('#blockOffDaysButton').html("Error");
 				$('#blockOffDaysButton').addClass('errorButton animated fadeIn');
 			}
@@ -278,7 +304,6 @@ function getTimeSlotOptionsForRescheduledAppointment(aId){
 
 $('.cancel-appointment-link').click(function(e) {
 	var c = $(this).attr('c');
-	console.log(c);
 	$.ajax({
 		type: "POST",
 		url: "./cancelAppointment",
@@ -286,13 +311,11 @@ $('.cancel-appointment-link').click(function(e) {
 	}).done(function(response) {
 		var success = response.search('"success":false');
 		if (success === -1){
-			console.log("success:true");
 			alert('You did it, appoiment deleted!');
 			location.reload();
 		}
 		else{
 			alert('That didn\'t work. Dang.');
-			console.log("success:false");
 		}
 	});
 });

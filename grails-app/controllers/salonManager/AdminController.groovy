@@ -147,6 +147,30 @@ class AdminController {
 		}
 	}
 
+	def getClientDetails(){
+		println "params: " + params
+		if (params?.cId){
+			def client = User.get(params.cId)
+			session.editClient = client
+			def appointments = Appointment.findAllWhere(client:client, booked:true)?.sort{it.appointmentDate}?.sort{it.appointmentDate}
+			if (client){
+				render (template: "client", model: [client:client, appointments:appointments])
+			}
+		}
+		return [success:false] as JSON
+	}
+
+	def saveClientNotes(){
+		println "params: " + params
+		if (params?.n){
+			def coder = new org.apache.commons.codec.net.URLCodec() 
+			session.editClient.notes = coder.decode(params.n)
+			session.editClient.save(flush:true)
+			return [success:true] as JSON
+		}
+		return [success:false] as JSON
+	}
+
 	def blockOffTime(){
 		println "\n" + new Date()
 		println "params: " + params

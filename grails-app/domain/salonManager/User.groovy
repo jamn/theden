@@ -18,6 +18,7 @@ class User extends CoreObject {
 	Long endTime
     String passwordResetCode
     Date passwordResetCodeDateCreated
+    String notes
 
 	static hasMany = [services:Service, daysOfTheWeek:DayOfTheWeek, logins:LoginLog]
 
@@ -32,6 +33,7 @@ class User extends CoreObject {
         endTime(nullable:true)
         passwordResetCode(nullable:true)
         passwordResetCodeDateCreated(nullable:true)
+        notes(nullable:true)
     }
 
 
