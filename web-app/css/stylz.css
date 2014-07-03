@@ -318,7 +318,8 @@ body {
 	text-align: center;
 }
 
-#loginButton{
+#loginButton,
+#cancelAppointmentLoginButton{
 	margin-top: 10px;
 	cursor: pointer;
 }

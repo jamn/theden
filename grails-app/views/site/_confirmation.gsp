@@ -6,6 +6,10 @@
 	<p>
 		A link to reset your password has been sent to your email.
 	</p>
+<%}else if (appointmentDeleted){%>
+	<p>
+		Your appointment has been cancelled.
+	</p>
 <%}else{%>
 	<p>
 		Your appointment(s) have been booked for:

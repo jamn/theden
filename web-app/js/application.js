@@ -256,8 +256,7 @@ $(document).on("tap", "#loginButton", function() {
 			sendPasswordResetEmail();
 		}else if ($(this).attr("attemptPasswordReset") === "true"){
 			attemptPasswordReset();
-		}
-		else{
+		}else{
 			bookAppointment();
 		}
 	}
@@ -269,6 +268,13 @@ $(document).on("keypress", "#password", function() {
 	if (event.keyCode === 13) {
 		$('#loginButton').removeClass('errorButton animated fadeIn');
 		bookAppointment();
+	}
+});
+
+$(document).on("keypress", "#password2", function() {
+	if (event.keyCode === 13) {
+		$('#cancelAppointmentLoginButton').removeClass('errorButton animated fadeIn');
+		cancelAppointment();
 	}
 });
 
@@ -355,5 +361,53 @@ function processResults(confirmation){
 		$('.confirmation').slideDown();
 		$('.confirmation').removeClass('animated fadeOut');
 		$('.confirmation').addClass('animated fadeInRightBig');
+	}
+}
+
+function processCancelAppointmentResults(confirmation){
+	var success = confirmation.search('"success":false')
+	if (success > -1){
+		var results = JSON && JSON.parse(confirmation) || $.parseJSON(confirmation);
+		$('#cancelAppointmentLoginButton .spinner').hide();
+		$('#cancelAppointmentLoginButton .label').show();
+		$('#cancelAppointmentLoginButton').attr("disabled", false);
+		$('#cancelAppointmentLoginButton').addClass('errorButton animated fadeIn');
+
+		$('.errorDetails').html(results.errorMessage);
+		$('.errorDetails').slideDown();
+	}
+	else{
+		$('.login').removeClass('animated fadeInRightBig');
+		$('.login').addClass('animated fadeOut');
+		$('.login').slideUp();
+		$('.main-content-area').removeClass('animated fadeInRightBig');
+		$('.main-content-area').addClass('animated fadeOut');
+		$('.main-content-area').slideUp();
+		$('.confirmation').append(confirmation);
+		$('.confirmation').slideDown();
+		$('.confirmation').removeClass('animated fadeOut');
+		$('.confirmation').addClass('animated fadeInRightBig');
+	}
+}
+
+function cancelAppointment(){
+	var cancelAppointmentLoginButton = $('#cancelAppointmentLoginButton');
+	var disabled = cancelAppointmentLoginButton.attr("disabled");
+	cancelAppointmentLoginButton.removeClass('errorButton animated fadeIn');
+	if (disabled != "disabled"){
+		cancelAppointmentLoginButton.attr("disabled", "disabled");
+		console.log('called cancel appointment.');
+		var email = $('#email').val();
+		var password = $('#password2').val();
+		$('#cancelAppointmentLoginButton .label').hide();
+		$('#cancelAppointmentLoginButton .spinner').show();
+		var baseUrl = $('body').attr('baseUrl');
+		$.ajax({
+			type: "POST",
+			url: baseUrl+"site/cancelAppointment",
+			data: {e:email, p:password}
+		}).done(function(confirmation) {
+			processCancelAppointmentResults(confirmation);
+		});
 	}
 }

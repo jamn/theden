@@ -48,6 +48,11 @@ class UserService {
 					results['error'] = true
 					results['errorDetails'] = "Incorrect password."
 				}
+				else if (!existingUser){
+					println "NO USER FOUND"
+					results['error'] = true
+					results['errorDetails'] = "Email/password not found."
+				}
 			}else{
 				println "1) USERNAME AND PASSWORD REQUIRED"
 				results['error'] = true

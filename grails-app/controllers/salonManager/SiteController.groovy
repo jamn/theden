@@ -380,21 +380,75 @@ class SiteController {
 		println "\n---- CANCEL APPOINTMENT ----"
 		println new Date()
 		println "params: " + params
-		if (params.c){ // params.c = appointment.code
-			def appointment = Appointment.findByCode(params.c.trim())
-			println "appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
+		Boolean errorOccurred = false
+		def errorMessage = ''
+		def appointment
+		Boolean showLoginForm = false
+		if (params?.c){ // params.c = appointment.code
+			showLoginForm = true
+			appointment = Appointment.findByCode(params.c.trim())
 			if (appointment){
-				appointment.delete()
-				runAsync {
-					emailService.sendCancellationNotices(appointment)
-				}
-				def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
-				render (template: "cancelAppointment", model: [message: message])
+				session.appointmentToDelete = appointment
 			}
-			else{
-				render ('{"success":false}') as JSON
+			println "appointment(${appointment.id}): " + appointment?.client?.getFullName() + " | " + appointment?.service?.description + " on " + appointment?.appointmentDate?.format('MM/dd/yy @ hh:mm a [E]')
+	
+		}
+		else if (session.appointmentToDelete){
+			appointment = session.appointmentToDelete
+			def loginResults = userService.loginClient(params)
+			println "loginResults: " + loginResults
+			if (loginResults.error == true){
+				errorOccurred = true
+				errorMessage = loginResults.errorDetails
+			}else{
+				def client = loginResults.client
+				println "client: " + client
+				println "appointment.client: " + appointment.client
+				println "appointment: " + appointment
+				if (appointment.client.id == client.id){
+					try {
+						appointment.delete()
+						if (appointment.hasErrors()){
+							errorOccurred = true
+							errorMessage = 'An error has occured. (5264)'
+							println "ERROR: " + appointment.error
+						}
+						else{
+							session.appointmentToDelete = null
+							runAsync {
+								emailService.sendCancellationNotices(appointment)
+							}
+						}
+					}
+					catch(Exception e) {
+						println "ERROR: " + e
+						errorOccurred = true
+						errorMessage = 'An error has occured. (5265)'
+					}
+					
+				}
+				else {
+					println "** login credentials are not the client's who booked the appointment **"
+					errorOccurred = true
+					errorMessage = 'An error has occured. (5266)'
+				}
 			}
 		}
+
+		if (showLoginForm){
+			def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
+			render (template: "cancelAppointment", model: [message: message])
+		}
+		else if (errorOccurred){
+			println "AN ERROR OCCURRED: " + errorMessage
+			def jsonString = '{"success":false,"errorMessage":"'+errorMessage+'"}'
+			render(jsonString)
+		}
+		else{
+			render(template: "confirmation", model: [appointmentDeleted:true])
+		}
+
+
 	}
 
 	private deleteStaleAppointments(){
