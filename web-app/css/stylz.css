@@ -22,6 +22,20 @@ body {
 	overflow-x: hidden;
 }
 
+.jackson {
+	background-color: rgba(132, 184, 226, 0.94);
+	text-align: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 100;
+	display: none;
+	padding: 10px;
+}
+
+
 .ui-loading .ui-loader { display: block; }
 .ui-loader { display: none; position: absolute; opacity: .85; z-index: 100; left: 50%; width: 200px; margin-left: -130px; margin-top: -35px; padding: 10px 30px; }
 /* responsive page widths */

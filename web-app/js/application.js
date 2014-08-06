@@ -107,6 +107,10 @@ $(document).on("tap", ".book-now-button", function() {
 
 });
 
+$(document).on("tap", ".jackson", function() {
+	$(this).fadeOut();
+});
+
 $(document).on("tap", ".service", function() {
 	var disabled = $(this).attr("disabled");
 	if (disabled != "disabled"){

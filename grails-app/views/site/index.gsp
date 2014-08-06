@@ -8,7 +8,7 @@
           |#' ,#|
           |' ,##|
           | ,###|		SHAVE AND A HAIRCUT,
-          |,###'|		AND GREAT CONVERSATION,
+          |,###'|		AND SOME CONVERSATION,
           |###' |		AND PROBABLY A BEER TOO.
           |##' ,|
           |#' ,#|
@@ -30,7 +30,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'animate.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css?v0.3')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css?v0.4')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
@@ -45,6 +45,9 @@
 		<div class="header">
 			<img class="home" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
 			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
+		</div>
+		<div class="jackson">
+			<img class="pic" src="${resource(dir:'images',file:'jackson.jpg')}">
 		</div>
 		<div class="grey-box">
 			<ul>

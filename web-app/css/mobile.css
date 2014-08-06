@@ -42,6 +42,10 @@
 		width: 120px;
 		font-size: .8em;
 	}
+
+	.jackson .pic {
+		width: 100%;
+	}
 }
 
 @media screen and (max-width: 600px) {

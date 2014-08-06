@@ -66,6 +66,8 @@ class AdminController {
 
 			now2 = new Date()
 
+			println "endTime: " + endTime.getTime()
+
 	    	return [appointments:appointments, homepageText:homepageText, stylist:stylist, startTime:startTime, endTime:endTime, clients:clients, services:services, timeSlots:timeSlots]
     	}else{
 			println "ERROR: user in session is not an admin."

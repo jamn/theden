@@ -810,7 +810,7 @@
 						<%if (it.notes){%>
 							${it.notes}
 						<%}else{%>
-							<b>PHONE:</b> <a href="tel:${it.client.phone.replace('-', '')}">${it.client.phone}</a>  | <b>EMAIL:</b> <a href="mailto:${it.client.email}">${it.client.email}</a>
+							<b>PHONE:</b> <a href="tel:${it.client?.phone?.replace('-', '')}">${it.client.phone}</a>  | <b>EMAIL:</b> <a href="mailto:${it.client.email}">${it.client.email}</a>
 						<%}%>
 					</td>
 				</tr>
