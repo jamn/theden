@@ -4,7 +4,10 @@
 <textarea id="clientNotes">${client.notes}</textarea>
 <div id="saveClientNotesButton" class="green-button">Save</div>
 <hr>
-<h3>History</h3>
+<h3>Contact:</h3>
+<p><a href="tel:${it.client?.phone?.replace('-', '')}">${it.client.phone}</a> | <a href="mailto:${it.client.email}">${it.client.email}</a></p>
+<hr>
+<h3>History:</h3>
 <%if (appointments.size() > 0){%>
 	<table>
 		<thead>
