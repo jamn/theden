@@ -5,7 +5,7 @@
 <div id="saveClientNotesButton" class="green-button">Save</div>
 <hr>
 <h3>Contact:</h3>
-<p><a href="tel:${it.client?.phone?.replace('-', '')}">${it.client.phone}</a> | <a href="mailto:${it.client.email}">${it.client.email}</a></p>
+<p><a href="tel:${client?.phone?.replace('-', '')}">${client.phone}</a> | <a href="mailto:${client.email}">${client.email}</a></p>
 <hr>
 <h3>History:</h3>
 <%if (appointments.size() > 0){%>
