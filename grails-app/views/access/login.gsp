@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <title>Salon Manager | Login</title>
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css?v0.3')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css')}?v0.4" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 </head><body>
 	<div class="content-wrapper">
@@ -15,5 +15,5 @@
 		</div>
 	</div>
 <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
-<script src="${resource(dir:'js', file:'a.min.js')}" type="text/javascript"></script>
+<script src="${resource(dir:'js', file:'a.min.js')}?v0.4" type="text/javascript"></script>
 </body></html>

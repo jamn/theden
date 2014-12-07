@@ -74,6 +74,6 @@
 <script src="${resource(dir:'js', file:'bootstrap-3.2.0.min.js')}" type="text/javascript"></script>
 <script src="${resource(dir:'js', file:'jquery.confirmon.js')}"></script>
 <script src="${resource(dir:'js', file:'jquery-validate-min.js')}"></script>
-<script src="${resource(dir:'js', file:'a.min.js')}" type="text/javascript"></script>
+<script src="${resource(dir:'js', file:'a.min.js')}?v0.4" type="text/javascript"></script>
 
 </body></html>
