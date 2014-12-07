@@ -30,7 +30,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'animate.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css?v0.4')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css')}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
@@ -40,7 +40,7 @@
 <link rel="apple-touch-icon" sizes="114x114" href="${resource(dir:'images', file:'apple-icon-114x114.png')}" />
 <link rel="apple-touch-icon" sizes="144x144" href="${resource(dir:'images', file:'apple-icon-144x144.png')}" />
 
-</head><body  baseUrl="${createLink()}">
+</head><body baseUrl="${createLink()}">
 
 		<div class="header">
 			<img class="home" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
@@ -53,7 +53,7 @@
 			<ul>
 				<li>
 					<div class="message-board-backing">
-						<div class="message-board">${message}</div>
+						<div class="message-board">${raw(message)}</div>
 					</div>
 				</li>
 				<li>
@@ -128,7 +128,7 @@
     <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'jquery.mobile-1.3.2.min.js')}" type="text/javascript"></script>
-	<script src="${resource(dir:'js', file:'application.min.js?v0.3')}" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'application.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'masked-input-plugin.min.js')}" type="text/javascript"></script>
 
 </body></html>

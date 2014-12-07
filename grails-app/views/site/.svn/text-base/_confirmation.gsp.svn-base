@@ -1,3 +1,0 @@
-<div>
-Your appointment has been booked. See you on ${appointment.appointmentDate.format('EEEE')}!
-</div>

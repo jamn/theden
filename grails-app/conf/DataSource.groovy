@@ -1,18 +1,21 @@
 dataSource {
 	pooled = true
-	maxActive = 20
-	initialSize = 5
+	jmxExport = true
 	driverClassName = "org.hsqldb.jdbcDriver"
 	username = "sa"
 	password = ""
 }
 hibernate {
-	cache.use_second_level_cache=true
-	cache.use_query_cache=true
-	cache.provider_class='org.hibernate.cache.EhCacheProvider'
+	cache.use_second_level_cache = true
+	cache.use_query_cache = false
+//    cache.region.factory_class = 'net.sf.ehcache.hibernate.EhCacheRegionFactory' // Hibernate 3
+	cache.region.factory_class = 'org.hibernate.cache.ehcache.EhCacheRegionFactory' // Hibernate 4
+	singleSession = true // configure OSIV singleSession mode
+	flush.mode = 'manual' // OSIV session flush mode outside of transactional context
 }
-environments {
 
+// environment specific settings
+environments {
 	development {
 		dataSource {
 			//logSql = true;
