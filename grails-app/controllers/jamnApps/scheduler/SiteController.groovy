@@ -25,8 +25,6 @@ class SiteController {
 		return [message:message]
 	}
 
-	
-
 	def getServices(){
 		println "\n---- GET SERVICES ----"
 		println new Date()
@@ -48,7 +46,7 @@ class SiteController {
 		}
 	}
 
-	def getAvailableTimes() {
+	def getTimeSlots() {
 		println "\n---- GET AVAILABLE TIMES ----"
 		println new Date()
 		def timeSlotsMap = [:]
@@ -103,7 +101,12 @@ class SiteController {
 
 	}
 
-	def saveDate(){
+	def getLogin() {
+		saveDate(params)
+		render (template: "login")
+	}
+
+	private saveDate(){
 		println "\n---- SAVE DATE ----"
 		println new Date()
 
@@ -155,7 +158,6 @@ class SiteController {
 		println "existingAppointments: " + existingAppointments
 		session.appointmentId = nextAppointment.id
 		session.existingAppointments = existingAppointments
-		render (template: "login", model: [appointment:nextAppointment])
 	}
 
 	def sendPasswordResetEmail(){

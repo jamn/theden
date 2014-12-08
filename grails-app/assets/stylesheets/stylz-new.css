@@ -1,0 +1,126 @@
+/* GLOBAL STYLES */
+
+body,
+input, select, textarea {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+body {
+	margin-bottom: 40px;
+}
+
+.link,
+.as-button {
+	cursor: pointer;
+}
+
+.green-button{
+	background-color: #827D00;
+	background: -moz-linear-gradient(top,  rgba(130,125,0,0.9) 0%, rgba(130,125,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(130,125,0,0.9)), color-stop(100%,rgba(130,125,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6827d00', endColorstr='#827d00',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #777200;
+	box-shadow: 1px 1px 2px #B9B300 inset;
+	width: 344px;
+	color: #FFF;
+	font-size: 1.8em;
+	vertical-align: middle;
+	text-align: center;
+	padding: 20px;
+	margin: 50px auto;
+}
+
+
+
+/* SHELL */
+
+.grey-box .logo{
+	display: none;
+}
+
+.header {
+	margin-bottom: 16px;
+}
+
+.header .logo {
+	margin: 0 auto;
+	padding: 18px 0 4px;
+}
+
+.header .address {
+	text-align: center;
+	font-size: 1.4em;
+	margin-top: 7px;
+	margin-left: 2px;
+	line-height: 1.1em;
+	color: #B5B5B5;
+}
+
+.header .address:hover {
+	color: #333;
+}
+
+.grey-box {
+	background-color: #58585A;
+	padding: 20px;
+}
+
+.message-board-backing{
+	background-color: #a8a8a8;
+	border-top: 1px solid #d0d0d0;
+	border-left: 1px solid #d0d0d0;
+	border-bottom: 1px solid #4a4a4c;
+	border-right: 1px solid #4a4a4c;
+	-webkit-box-shadow: 1px 1px 6px #363636, 1px 1px 2px #CCC inset;
+	-moz-box-shadow: 1px 1px 6px #363636, 1px 1px 2px #CCC inset;
+	box-shadow: 1px 1px 6px #363636, 1px 1px 2px #CCC inset;
+	padding: 10px;
+}
+
+.message-board-backing,
+.message-board/*,
+.book-now-button,
+.service,
+.time-slot*/{
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+}
+
+.message-board{
+	background-color: #FFF;
+	padding: 20px;
+	line-height: 18px;
+	overflow-y: scroll;
+	height: 100%;
+}
+
+.grey-box .message-board-backing,
+.grey-box .logo {
+	height: 158px;
+}
+
+.grey-box .logo {
+	margin: 0 auto;
+}
+
+.footer .address {
+	text-align: center;
+	font-size: 1.7em;
+}
+
+.footer .address:hover{
+	color: #fff;
+	background-color: #8D8800;
+}
+
+
+/* HOME PAGE */
+
+.building-front {
+	width: 100%;
+}
