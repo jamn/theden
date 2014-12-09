@@ -198,8 +198,6 @@ $(document).on("tap", "#loginButton", function() {
 	}
 });
 
-
-
 $(document).on("keypress", "#password", function() {
 	if (event.keyCode === 13) {
 		$('#loginButton').removeClass('errorButton animated fadeIn');
@@ -350,13 +348,13 @@ function cancelAppointment(){
 
 function disableButton(button){
 	$(button).attr("disabled", "disabled");
+	$(button).find('.as-button-label').hide();
+	$(button).find('.spinner').show();
 }
 
 function getPageContent(button, data, nextPage){
 	var currentPage = $(button).closest(".page").attr("page");
 	if (typeof currentPage != 'undefined' && typeof nextPage != 'undefined'){
-		$(button).find('.as-button-label').hide();
-		$(button).find('.spinner').show();
 		var baseUrl = $('body').attr('baseUrl');
 		var action = "get" + nextPage.charAt(0).toUpperCase() + nextPage.slice(1)
 		$.ajax({
