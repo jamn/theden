@@ -127,6 +127,12 @@
 
     <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(document).bind('mobileinit',function(){
+			$.mobile.loadingMessage = false; 	// Hide the jquery mobile loading message.
+												// Must be done before loading jquery mobile.
+		});
+	</script>
 	<script src="${resource(dir:'js', file:'jquery.mobile-1.3.2.min.js')}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'application.min.js')}?v0.4" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'masked-input-plugin.min.js')}" type="text/javascript"></script>
