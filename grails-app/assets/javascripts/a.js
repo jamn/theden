@@ -27,11 +27,11 @@ function getTimeSlotOptions(){
 	}).done(function(response) {
 		if (response.indexOf("ERROR") > -1){
 			$('#bookForClientButton').html("Error");
-			$('#bookForClientButton').addClass('errorButton animated fadeIn');
+			$('#bookForClientButton').addClass('error-button animated fadeIn');
 		}else{
 			$('#timeSlots').html(response);
 			$('#bookForClientButton').html("Book Appointment");
-			$('#bookForClientButton').removeClass('errorButton animated fadeIn');
+			$('#bookForClientButton').removeClass('error-button animated fadeIn');
 		}
 	});
 }
@@ -164,7 +164,7 @@ function hideClientRegistrationForm(){
 	$('#addClient').fadeIn();
 }
 
-$(document).on('tap', '.cancel-appointment-link', function(e) {
+$(document).on('tap', '.cancel-appointment-button', function(e) {
 	var c = $(this).attr('c');
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -244,11 +244,11 @@ $(document).on('tap', '#blockOffTimeButton', function(e) {
 		var jsonResponse = JSON.parse(response);
 		if (jsonResponse.success === true){
 			$('#blockOffTimeButton').html("Success");
-			$('#blockOffTimeButton').removeClass('errorButton animated fadeIn');
+			$('#blockOffTimeButton').removeClass('error-button animated fadeIn');
 		}
 		else{
 			$('#blockOffTimeButton').html("Error");
-			$('#blockOffTimeButton').addClass('errorButton animated fadeIn');
+			$('#blockOffTimeButton').addClass('error-button animated fadeIn');
 		}
 	});
 });
@@ -270,11 +270,11 @@ $(document).on('tap', '#blockOffDaysButton', function(e) {
 		var jsonResponse = JSON.parse(response);
 		if (jsonResponse.success === true){
 			$('#blockOffDaysButton').html("Success");
-			$('#blockOffDaysButton').removeClass('errorButton animated fadeIn');
+			$('#blockOffDaysButton').removeClass('error-button animated fadeIn');
 		}
 		else{
 			$('#blockOffDaysButton').html("Error");
-			$('#blockOffDaysButton').addClass('errorButton animated fadeIn');
+			$('#blockOffDaysButton').addClass('error-button animated fadeIn');
 		}
 	});
 });
@@ -330,11 +330,11 @@ $(document).on('tap', '.appointment-data', function(e) {
 					var jsonResponse = JSON.parse(response);
 					if (jsonResponse.success === true){
 						$('#rescheduleButton-'+aId).html('Success');
-						$('#rescheduleButton-'+aId).removeClass('errorButton animated fadeIn');
+						$('#rescheduleButton-'+aId).removeClass('error-button animated fadeIn');
 						setTimeout(function() {window.location.href = "./";},1250);
 					}else{
 						$('#rescheduleButton-'+aId).html('Error');
-						$('#rescheduleButton-'+aId).addClass('errorButton animated fadeIn');
+						$('#rescheduleButton-'+aId).addClass('error-button animated fadeIn');
 					}
 				});
 			});

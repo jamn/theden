@@ -231,7 +231,7 @@ b {
 }
 
 hr{
-	margin: 20px 0;
+	margin: 6px 0;
 	border: 0;
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -313,7 +313,7 @@ select{
 	margin: 10px 0;
 }
 
-.errorButton{
+.error-button{
 	background: rgb(196,3,3) !important; /* Old browsers */
 	background: -moz-linear-gradient(top,  rgba(196,3,3,1) 0%, rgba(160,3,3,1) 44%, rgba(132,0,0,1) 100%) !important; /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(196,3,3,1)), color-stop(44%,rgba(160,3,3,1)), color-stop(100%,rgba(132,0,0,1))) !important; /* Chrome,Safari4+ */
@@ -324,21 +324,10 @@ select{
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c40303', endColorstr='#840000',GradientType=0 ) !important; /* IE6-9 */
 	border-color: #630000 !important;
 	box-shadow: 1px 1px 2px #E2466C inset !important;
+	color: #fff;
 }
 
-.rescheduleButton{
-	background-color: #827D00;
-	background: -moz-linear-gradient(top,  rgba(130,125,0,0.9) 0%, rgba(130,125,0,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(130,125,0,0.9)), color-stop(100%,rgba(130,125,0,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6827d00', endColorstr='#827d00',GradientType=0 ); /* IE6-9 */
-	border: 1px solid #777200;
-	box-shadow: 1px 1px 2px #B9B300 inset;
-	color: #FFF;
-	cursor: pointer;
+.reschedule-button{
 	font-size: 1em;
 	padding: 6px;
 }
@@ -626,7 +615,13 @@ select{
 	font-size: 1.3em;
 }
 
-
+.edit-appointment .cancel-appointment-button {
+	display: block;
+	margin: 24px;
+	padding: 44px 0;
+	position: relative;
+	top: 46px;
+}
 
 
 

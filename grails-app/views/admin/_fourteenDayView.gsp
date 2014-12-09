@@ -1,3 +1,5 @@
+<h1>Upcoming Appointments</h1>
+
 <%
 Calendar dayOne = new GregorianCalendar()
 dayOne.setTime(startTime.getTime())
@@ -21,7 +23,6 @@ daySeven.setTime(startTime.getTime())
 daySeven.add(Calendar.DAY_OF_WEEK, 6)
 def now = new Date()
 %>
-<%System.out.println("Rendering template at: " + now)%>
 <table id="fourteenDayView-week1">
 <tr class="dateHeader">
 	<td></td>
@@ -34,7 +35,7 @@ def now = new Date()
 	<td>${daySeven.getTime().format('EEE dd')}</td>
 	<td></td>
 </tr>
-<% while (dayOne <= endTime){ %>
+<% while (dayOne < endTime){ %>
 	<tr class="halfHour" time="${dayOne.getTime().format('hh:mm a')}">
 		<td rowspan="2" class="time">${dayOne.getTime().format('hh:mm a')}</td>
 		<%
@@ -51,7 +52,7 @@ def now = new Date()
 			}
 			def dayOneDay = dayOne.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayOneDay == 1 || dayOneDay == 7){%>"unavailable"<%}%><%else if(dayOneAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayOneDay == 1 || dayOneDay == 7){%>"unavailable"<%}else if(dayOneAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayOneAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayOneAppointment){%><div id="appointment-${dayOneAppointment?.id}" class="appointmentDetailsCallOut">${dayOneAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -69,7 +70,7 @@ def now = new Date()
 			}
 			def dayTwoDay = dayTwo.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayTwoDay == 1 || dayTwoDay == 7){%>"unavailable"<%}%><%else if(dayTwoAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayTwoDay == 1 || dayTwoDay == 7){%>"unavailable"<%}else if(dayTwoAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayTwoAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayTwoAppointment){%><div id="appointment-${dayTwoAppointment?.id}" class="appointmentDetailsCallOut">${dayTwoAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -87,7 +88,7 @@ def now = new Date()
 			}
 			def dayThreeDay = dayThree.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayThreeDay == 1 || dayThreeDay == 7){%>"unavailable"<%}%><%else if(dayThreeAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayThreeDay == 1 || dayThreeDay == 7){%>"unavailable"<%}else if(dayThreeAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayThreeAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayThreeAppointment){%><div id="appointment-${dayThreeAppointment?.id}" class="appointmentDetailsCallOut">${dayThreeAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -105,7 +106,7 @@ def now = new Date()
 			}
 			def dayFourDay = dayFour.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayFourDay == 1 || dayFourDay == 7){%>"unavailable"<%}%><%else if(dayFourAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayFourDay == 1 || dayFourDay == 7){%>"unavailable"<%}else if(dayFourAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayFourAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayFourAppointment){%><div id="appointment-${dayFourAppointment?.id}" class="appointmentDetailsCallOut">${dayFourAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -123,7 +124,7 @@ def now = new Date()
 			}
 			def dayFiveDay = dayFive.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayFiveDay == 1 || dayFiveDay == 7){%>"unavailable"<%}%><%else if(dayFiveAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayFiveDay == 1 || dayFiveDay == 7){%>"unavailable"<%}else if(dayFiveAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayFiveAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayFiveAppointment){%><div id="appointment-${dayFiveAppointment?.id}" class="appointmentDetailsCallOut">${dayFiveAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -141,7 +142,7 @@ def now = new Date()
 			}
 			def daySixDay = daySix.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(daySixDay == 1 || daySixDay == 7){%>"unavailable"<%}%><%else if(daySixAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(daySixDay == 1 || daySixDay == 7){%>"unavailable"<%}else if(daySixAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(daySixAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (daySixAppointment){%><div id="appointment-${daySixAppointment?.id}" class="appointmentDetailsCallOut">${daySixAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -159,7 +160,7 @@ def now = new Date()
 			}
 			def daySevenDay = daySeven.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(daySevenDay == 1 || daySevenDay == 7){%>"unavailable"<%}%><%else if(daySevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(daySevenDay == 1 || daySevenDay == 7){%>"unavailable"<%}else if(daySevenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(daySevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (daySevenAppointment){%><div id="appointment-${daySevenAppointment?.id}" class="appointmentDetailsCallOut">${daySevenAppointment?.service?.description}</div><%}%>
 		</td>
 		
@@ -189,7 +190,7 @@ def now = new Date()
 				}
 			}
 		%>
-		<td class=<%if(dayOneDay == 1 || dayOneDay == 7){%>"unavailable"<%}%><%else if(dayOneAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayOneDay == 1 || dayOneDay == 7){%>"unavailable"<%}else if(dayOneAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayOneAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayOneAppointment){%><div id="appointment-${dayOneAppointment?.id}" class="appointmentDetailsCallOut">${dayOneAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -206,7 +207,7 @@ def now = new Date()
 				}
 			}
 		%>
-		<td class=<%if(dayTwoDay == 1 || dayTwoDay == 7){%>"unavailable"<%}%><%else if(dayTwoAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayTwoDay == 1 || dayTwoDay == 7){%>"unavailable"<%}else if(dayTwoAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayTwoAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayTwoAppointment){%><div id="appointment-${dayTwoAppointment?.id}" class="appointmentDetailsCallOut">${dayTwoAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -223,7 +224,7 @@ def now = new Date()
 				}
 			}
 		%>
-		<td class=<%if(dayThreeDay == 1 || dayThreeDay == 7){%>"unavailable"<%}%><%else if(dayThreeAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayThreeDay == 1 || dayThreeDay == 7){%>"unavailable"<%}else if(dayThreeAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayThreeAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayThreeAppointment){%><div id="appointment-${dayThreeAppointment?.id}" class="appointmentDetailsCallOut">${dayThreeAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -240,7 +241,7 @@ def now = new Date()
 				}
 			}
 		%>
-		<td class=<%if(dayFourDay == 1 || dayFourDay == 7){%>"unavailable"<%}%><%else if(dayFourAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayFourDay == 1 || dayFourDay == 7){%>"unavailable"<%}else if(dayFourAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayFourAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayFourAppointment){%><div id="appointment-${dayFourAppointment?.id}" class="appointmentDetailsCallOut">${dayFourAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -257,7 +258,7 @@ def now = new Date()
 				}
 			}
 		%>
-		<td class=<%if(dayFiveDay == 1 || dayFiveDay == 7){%>"unavailable"<%}%><%else if(dayFiveAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayFiveDay == 1 || dayFiveDay == 7){%>"unavailable"<%}else if(dayFiveAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayFiveAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayFiveAppointment){%><div id="appointment-${dayFiveAppointment?.id}" class="appointmentDetailsCallOut">${dayFiveAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -274,7 +275,7 @@ def now = new Date()
 				}
 			}
 		%>
-		<td class=<%if(daySixDay == 1 || daySixDay == 7){%>"unavailable"<%}%><%else if(daySixAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(daySixDay == 1 || daySixDay == 7){%>"unavailable"<%}else if(daySixAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(daySixAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (daySixAppointment){%><div id="appointment-${daySixAppointment?.id}" class="appointmentDetailsCallOut">${daySixAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -291,7 +292,7 @@ def now = new Date()
 				}
 			}
 		%>
-		<td class=<%if(daySevenDay == 1 || daySevenDay == 7){%>"unavailable"<%}%><%else if(daySevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(daySevenDay == 1 || daySevenDay == 7){%>"unavailable"<%}else if(daySevenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(daySevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (daySevenAppointment){%><div id="appointment-${daySevenAppointment?.id}" class="appointmentDetailsCallOut">${daySevenAppointment?.service?.description}</div><%}%>
 		</td>
 	</tr>
@@ -343,7 +344,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 	<td>${dayFourteen.getTime().format('EEE dd')}</td>
 	<td></td>
 </tr>
-<% while (dayEight <= dayEightEndTime){ %>
+<% while (dayEight < dayEightEndTime){ %>
 	<tr class="halfHour" time="${dayEight.getTime().format('hh:mm a')}">
 		<td rowspan="2" class="time">${dayEight.getTime().format('hh:mm a')}</td>
 		<%
@@ -360,7 +361,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 			}
 			def dayEightDay = dayEight.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayEightDay == 1 || dayEightDay == 7){%>"unavailable"<%}%><%else if(dayEightAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayEightDay == 1 || dayEightDay == 7){%>"unavailable"<%}else if(dayEightAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayEightAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayEightAppointment){%><div id="appointment-${dayEightAppointment?.id}" class="appointmentDetailsCallOut">${dayEightAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -378,7 +379,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 			}
 			def dayNineDay = dayNine.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayNineDay == 1 || dayNineDay == 7){%>"unavailable"<%}%><%else if(dayNineAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayNineDay == 1 || dayNineDay == 7){%>"unavailable"<%}else if(dayNineAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayNineAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayNineAppointment){%><div id="appointment-${dayNineAppointment?.id}" class="appointmentDetailsCallOut">${dayNineAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -396,7 +397,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 			}
 			def dayTenDay = dayTen.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayTenDay == 1 || dayTenDay == 7){%>"unavailable"<%}%><%else if(dayTenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayTenDay == 1 || dayTenDay == 7){%>"unavailable"<%}else if(dayTenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayTenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayTenAppointment){%><div id="appointment-${dayTenAppointment?.id}" class="appointmentDetailsCallOut">${dayTenAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -414,7 +415,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 			}
 			def dayElevenDay = dayEleven.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayElevenDay == 1 || dayElevenDay == 7){%>"unavailable"<%}%><%else if(dayElevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayElevenDay == 1 || dayElevenDay == 7){%>"unavailable"<%}else if(dayElevenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayElevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayElevenAppointment){%><div id="appointment-${dayElevenAppointment?.id}" class="appointmentDetailsCallOut">${dayElevenAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -432,7 +433,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 			}
 			def dayTwelveDay = dayTwelve.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayTwelveDay == 1 || dayTwelveDay == 7){%>"unavailable"<%}%><%else if(dayTwelveAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayTwelveDay == 1 || dayTwelveDay == 7){%>"unavailable"<%}else if(dayTwelveAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayTwelveAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayTwelveAppointment){%><div id="appointment-${dayTwelveAppointment?.id}" class="appointmentDetailsCallOut">${dayTwelveAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -450,7 +451,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 			}
 			def dayThirteenDay = dayThirteen.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayThirteenDay == 1 || dayThirteenDay == 7){%>"unavailable"<%}%><%else if(dayThirteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayThirteenDay == 1 || dayThirteenDay == 7){%>"unavailable"<%}else if(dayThirteenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayThirteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayThirteenAppointment){%><div id="appointment-${dayThirteenAppointment?.id}" class="appointmentDetailsCallOut">${dayThirteenAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -468,7 +469,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 			}
 			def dayFourteenDay = dayFourteen.get(Calendar.DAY_OF_WEEK)
 		%>
-		<td class=<%if(dayFourteenDay == 1 || dayFourteenDay == 7){%>"unavailable"<%}%><%else if(dayFourteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayFourteenDay == 1 || dayFourteenDay == 7){%>"unavailable"<%}else if(dayFourteenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayFourteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayFourteenAppointment){%><div id="appointment-${dayFourteenAppointment?.id}" class="appointmentDetailsCallOut">${dayFourteenAppointment?.service?.description}</div><%}%>
 		</td>
 		
@@ -498,7 +499,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 				}
 			}
 		%>
-		<td class=<%if(dayEightDay == 1 || dayEightDay == 7){%>"unavailable"<%}%><%else if(dayEightAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayEightDay == 1 || dayEightDay == 7){%>"unavailable"<%}else if(dayEightAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayEightAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayEightAppointment){%><div id="appointment-${dayEightAppointment?.id}" class="appointmentDetailsCallOut">${dayEightAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -515,7 +516,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 				}
 			}
 		%>
-		<td class=<%if(dayNineDay == 1 || dayNineDay == 7){%>"unavailable"<%}%><%else if(dayNineAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayNineDay == 1 || dayNineDay == 7){%>"unavailable"<%}else if(dayNineAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayNineAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayNineAppointment){%><div id="appointment-${dayNineAppointment?.id}" class="appointmentDetailsCallOut">${dayNineAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -532,7 +533,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 				}
 			}
 		%>
-		<td class=<%if(dayTenDay == 1 || dayTenDay == 7){%>"unavailable"<%}%><%else if(dayTenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayTenDay == 1 || dayTenDay == 7){%>"unavailable"<%}else if(dayTenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayTenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayTenAppointment){%><div id="appointment-${dayTenAppointment?.id}" class="appointmentDetailsCallOut">${dayTenAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -549,7 +550,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 				}
 			}
 		%>
-		<td class=<%if(dayElevenDay == 1 || dayElevenDay == 7){%>"unavailable"<%}%><%else if(dayElevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayElevenDay == 1 || dayElevenDay == 7){%>"unavailable"<%}else if(dayElevenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayElevenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayElevenAppointment){%><div id="appointment-${dayElevenAppointment?.id}" class="appointmentDetailsCallOut">${dayElevenAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -566,7 +567,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 				}
 			}
 		%>
-		<td class=<%if(dayTwelveDay == 1 || dayTwelveDay == 7){%>"unavailable"<%}%><%else if(dayTwelveAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayTwelveDay == 1 || dayTwelveDay == 7){%>"unavailable"<%}else if(dayTwelveAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayTwelveAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayTwelveAppointment){%><div id="appointment-${dayTwelveAppointment?.id}" class="appointmentDetailsCallOut">${dayTwelveAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -583,7 +584,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 				}
 			}
 		%>
-		<td class=<%if(dayThirteenDay == 1 || dayThirteenDay == 7){%>"unavailable"<%}%><%else if(dayThirteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayThirteenDay == 1 || dayThirteenDay == 7){%>"unavailable"<%}else if(dayThirteenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayThirteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayThirteenAppointment){%><div id="appointment-${dayThirteenAppointment?.id}" class="appointmentDetailsCallOut">${dayThirteenAppointment?.service?.description}</div><%}%>
 		</td>
 
@@ -600,7 +601,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 				}
 			}
 		%>
-		<td class=<%if(dayFourteenDay == 1 || dayFourteenDay == 7){%>"unavailable"<%}%><%else if(dayFourteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
+		<td class=<%if(dayFourteenDay == 1 || dayFourteenDay == 7){%>"unavailable"<%}else if(dayFourteenAppointment?.service?.description == "Blocked Off Time"){%>"blocked-off"<%}else if(dayFourteenAppointment){%>"booked"<%}else{%>"available"<%}%>>
 			<%if (dayFourteenAppointment){%><div id="appointment-${dayFourteenAppointment?.id}" class="appointmentDetailsCallOut">${dayFourteenAppointment?.service?.description}</div><%}%>
 		</td>
 	</tr>

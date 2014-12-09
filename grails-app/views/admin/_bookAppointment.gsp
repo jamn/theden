@@ -85,11 +85,11 @@
 				var jsonResponse = JSON.parse(response);
 				if (jsonResponse.success === true){
 					$('#bookForClientButton').html("Success");
-					$('#bookForClientButton').removeClass('errorButton animated fadeIn');
+					$('#bookForClientButton').removeClass('error-button animated fadeIn');
 				}
 				else{
 					$('#bookForClientButton').html("Error");
-					$('#bookForClientButton').addClass('errorButton animated fadeIn');
+					$('#bookForClientButton').addClass('error-button animated fadeIn');
 				}
 			});
 		}

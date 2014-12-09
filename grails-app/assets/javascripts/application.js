@@ -99,8 +99,8 @@ $(document).on("tap", ".book-now-button", function() {
 				$('.select-a-service').addClass('animated fadeInRightBig');
 			}
 			else{
-				$('.book-now-button').addClass('errorButton animated fadeIn');
-				$('.book-now-button').removeClass('errorButton animated fadeIn');
+				$('.book-now-button').addClass('error-button animated fadeIn');
+				$('.book-now-button').removeClass('error-button animated fadeIn');
 			}
 		});
 	}
@@ -138,7 +138,7 @@ $(document).on("tap", ".service", function() {
 				$('.choose-a-time').addClass('animated fadeInRightBig');
 			}
 			else{
-				$(serviceButton).addClass('errorButton');
+				$(serviceButton).addClass('error-button');
 			}
 		});
 	}
@@ -173,7 +173,7 @@ $(document).on("tap", ".time-slot", function() {
 				$('.login').addClass('animated fadeInRightBig');
 			}
 			else{
-				$(timeSlot).addClass('errorButton');
+				$(timeSlot).addClass('error-button');
 				$(timeSlot).text("No longer available...");
 				$(timeSlot).addClass('animated fadeOut');
 			}
@@ -200,7 +200,7 @@ $(document).on("tap", "#registerLink", function() {
 
 	$('#loginButton').attr("sendPasswordResetEmail", false);
 	$('#loginButton').attr("attemptPasswordReset", false);
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('error-button animated fadeIn');
 	$('#loginButton .label').text("Register & Book");
 });
 
@@ -223,7 +223,7 @@ $(document).on("tap", "#resetPassword", function() {
 	
 	$('#loginButton').attr("sendPasswordResetEmail", true);
 	$('#loginButton').attr("attemptPasswordReset", false);
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('error-button animated fadeIn');
 	$('#loginButton .label').text("Send Reset Email");
 });
 
@@ -246,13 +246,13 @@ $(document).on("tap", "#showLoginForm", function() {
 	
 	$('#loginButton').attr("sendPasswordResetEmail", false);
 	$('#loginButton').attr("attemptPasswordReset", false);
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('error-button animated fadeIn');
 	$('#loginButton .label').text("Book Appointment");
 });
 
 $(document).on("tap", "#loginButton", function() {
 	var disabled = $(this).attr("disabled");
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('error-button animated fadeIn');
 
 	if (disabled != "disabled"){
 		$(this).attr("disabled", "disabled");
@@ -270,21 +270,21 @@ $(document).on("tap", "#loginButton", function() {
 
 $(document).on("keypress", "#password", function() {
 	if (event.keyCode === 13) {
-		$('#loginButton').removeClass('errorButton animated fadeIn');
+		$('#loginButton').removeClass('error-button animated fadeIn');
 		bookAppointment();
 	}
 });
 
 $(document).on("keypress", "#password2", function() {
 	if (event.keyCode === 13) {
-		$('#cancelAppointmentLoginButton').removeClass('errorButton animated fadeIn');
+		$('#cancelAppointmentLoginButton').removeClass('error-button animated fadeIn');
 		cancelAppointment();
 	}
 });
 
 $(document).on("keypress", "#verifyNewPassword", function() {
 	if (event.keyCode === 13) {
-		$('#loginButton').removeClass('errorButton animated fadeIn');
+		$('#loginButton').removeClass('error-button animated fadeIn');
 		attemptPasswordReset();
 	}
 });
@@ -349,7 +349,7 @@ function processResults(confirmation){
 		$('#loginButton .spinner').hide();
 		$('#loginButton .label').show();
 		$('#loginButton').attr("disabled", false);
-		$('#loginButton').addClass('errorButton animated fadeIn');
+		$('#loginButton').addClass('error-button animated fadeIn');
 
 		$('.errorDetails').html(results.errorMessage);
 		$('.errorDetails').slideDown();
@@ -375,7 +375,7 @@ function processCancelAppointmentResults(confirmation){
 		$('#cancelAppointmentLoginButton .spinner').hide();
 		$('#cancelAppointmentLoginButton .label').show();
 		$('#cancelAppointmentLoginButton').attr("disabled", false);
-		$('#cancelAppointmentLoginButton').addClass('errorButton animated fadeIn');
+		$('#cancelAppointmentLoginButton').addClass('error-button animated fadeIn');
 
 		$('.errorDetails').html(results.errorMessage);
 		$('.errorDetails').slideDown();
@@ -397,7 +397,7 @@ function processCancelAppointmentResults(confirmation){
 function cancelAppointment(){
 	var cancelAppointmentLoginButton = $('#cancelAppointmentLoginButton');
 	var disabled = cancelAppointmentLoginButton.attr("disabled");
-	cancelAppointmentLoginButton.removeClass('errorButton animated fadeIn');
+	cancelAppointmentLoginButton.removeClass('error-button animated fadeIn');
 	if (disabled != "disabled"){
 		cancelAppointmentLoginButton.attr("disabled", "disabled");
 		console.log('called cancel appointment.');
