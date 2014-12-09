@@ -1,19 +1,5 @@
 $(document).ready(function(){
-
-	$('#username').bind('keyup', function(){
-		var value = $(this).val()
-		$(this).val(value.replace(/\s+/g, ''));
-	});
-
 	$(".recurringAppointmentAdminOptions").fadeOut();
-
-	$('#password').keypress(function(e) {
-		var user = $('#username').val();
-		var password = $('#password').val();
-		if (e.keyCode === 13){
-			window.location.href = "../access/login?u="+user+"&p="+password
-		}
-	});
 });
 
 function getTimeSlotOptions(){
@@ -53,11 +39,7 @@ function getTimeSlotOptionsForRescheduledAppointment(aId){
 	});
 }
 
-$(document).on('tap', '#loginButton', function(e) {
-	var user = $('#username').val();
-	var password = $('#password').val();
-	window.location.href = "../access/login?u="+user+"&p="+password
-});
+
 
 $(document).on('tap', '.nav a', function(e) {
 	var section = $(this).attr("href");

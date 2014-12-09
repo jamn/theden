@@ -197,14 +197,13 @@ background-color: #6F6F6F;
 }
 
 .login-box input{
-	width: 134px;
 	font-size: 1.4em;
 	padding: 4px;
 }
 
 #loginButton{
 	margin: 10px 0;
-	width: 254px;
+	width: 286px;
 	font-size: 1.7em;
 }
 
