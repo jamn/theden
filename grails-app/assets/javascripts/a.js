@@ -156,7 +156,7 @@ $(document).on('tap', '.cancel-appointment-button', function(e) {
 	}).done(function(response) {
 		var success = response.search('"success":false');
 		if (success === -1){
-			alert('You did it, appoiment deleted!');
+			alert('*Appointment Deleted*');
 			location.reload();
 		}
 		else{

@@ -420,9 +420,7 @@ class AdminController {
 			if (appointment){
 				appointment.delete()
 				if (!appointment.hasErrors()){
-					runAsync {
-						emailService.sendCancellationNotices(appointment)
-					}
+					emailService.sendCancellationNotices(appointment)
 					success = true
 				}
 			}
