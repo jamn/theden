@@ -6,7 +6,7 @@
 <title>:: The Den Barbershop | Cancel Appointment ::</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css')}?v0.4" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css')}?v0.5" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
 
 </head><body baseUrl="${createLink()}">
@@ -41,6 +41,6 @@
 		<script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
 		<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
 		<script src="${resource(dir:'js', file:'jquery.mobile-1.3.2.min.js')}" type="text/javascript"></script>
-		<script src="${resource(dir:'js', file:'application.min.js')}?v0.4" type="text/javascript"></script>
+		<script src="${resource(dir:'js', file:'application.min.js')}?v0.5" type="text/javascript"></script>
 		
 </body></html>

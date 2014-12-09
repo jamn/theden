@@ -3,7 +3,7 @@
 <meta charset="UTF-8">
 <title>Salon Manager | Login</title>
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css')}?v0.4" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css')}?v0.5" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
 </head><body>
 	<div class="content-wrapper">
