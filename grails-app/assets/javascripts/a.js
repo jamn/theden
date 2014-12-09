@@ -7,27 +7,6 @@ $(document).ready(function(){
 
 	$(".recurringAppointmentAdminOptions").fadeOut();
 
-	$('.nav a').click(function(e) {
-		var section = $(this).attr("href");
-		var baseUrl = $('body').attr('baseUrl');
-		$.ajax({
-			type: "POST",
-			url: baseUrl + "/getSection",
-			data: {section:section}
-		}).done(function(response) {
-			$('.active').removeClass("active");
-			$('a[href="'+section+'"]').parent().addClass("active");
-			$('.main').html(response);
-			$(".navbar-toggle").click();
-		});
-	});
-
-	$('#loginButton').click(function(e) {
-		var user = $('#username').val();
-		var password = $('#password').val();
-		window.location.href = "../access/login?u="+user+"&p="+password
-	});
-
 	$('#password').keypress(function(e) {
 		var user = $('#username').val();
 		var password = $('#password').val();
@@ -36,10 +15,6 @@ $(document).ready(function(){
 		}
 	});
 });
-
-
-
-
 
 function getTimeSlotOptions(){
 	var sId = $('#services').val();
@@ -78,7 +53,28 @@ function getTimeSlotOptionsForRescheduledAppointment(aId){
 	});
 }
 
-$(document).on('click', '#addClient', function(e) {
+$(document).on('tap', '#loginButton', function(e) {
+	var user = $('#username').val();
+	var password = $('#password').val();
+	window.location.href = "../access/login?u="+user+"&p="+password
+});
+
+$(document).on('tap', '.nav a', function(e) {
+	var section = $(this).attr("href");
+	var baseUrl = $('body').attr('baseUrl');
+	$.ajax({
+		type: "POST",
+		url: baseUrl + "/getSection",
+		data: {section:section}
+	}).done(function(response) {
+		$('.active').removeClass("active");
+		$('a[href="'+section+'"]').parent().addClass("active");
+		$('.main').html(response);
+		$(".navbar-toggle").click();
+	});
+});
+
+$(document).on('tap', '#addClient', function(e) {
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
@@ -96,7 +92,7 @@ $(document).on('click', '#addClient', function(e) {
 	});
 });
 
-$(document).on('click', '#editClient', function(e) {
+$(document).on('tap', '#editClient', function(e) {
 	var cId = $("#clientsDetailsSelector").val()[0]; $("#clientsDetailsSelector").val()[0];
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -116,7 +112,7 @@ $(document).on('click', '#editClient', function(e) {
 	});
 });
 
-$(document).on('click', '.last-name-filter', function(e) {
+$(document).on('tap', '.last-name-filter', function(e) {
 	var lastNameStartsWith = $(e.currentTarget).attr('value');
 	$("#clientsDetailsSelector").slideDown();
 	if (lastNameStartsWith === "Reset"){
@@ -130,7 +126,7 @@ $(document).on('click', '.last-name-filter', function(e) {
 	}
 });
 
-$(document).on('click', '#saveClientButton', function(e) {
+$(document).on('tap', '#saveClientButton', function(e) {
 	var email = $('#e').val();
 	var email2 = $('#e2').val();
 	var password = $('#p').val();
@@ -156,7 +152,7 @@ $(document).on('click', '#saveClientButton', function(e) {
 	}
 });
 
-$(document).on('click', '#cancelClientRegistrationButton', function(e) {
+$(document).on('tap', '#cancelClientRegistrationButton', function(e) {
 	hideClientRegistrationForm();
 });
 
@@ -168,7 +164,7 @@ function hideClientRegistrationForm(){
 	$('#addClient').fadeIn();
 }
 
-$(document).on('click', '.cancel-appointment-link', function(e) {
+$(document).on('tap', '.cancel-appointment-link', function(e) {
 	var c = $(this).attr('c');
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -204,7 +200,7 @@ $(document).on('change', '#clientsDetailsSelector', function() {
 	});
 });
 
-$(document).on('click', '#saveTextButton', function(e) {
+$(document).on('tap', '#saveTextButton', function(e) {
 	var message = $('#homepageText').val();
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -214,7 +210,7 @@ $(document).on('click', '#saveTextButton', function(e) {
 	});
 });
 
-$(document).on('click', '#saveClientNotesButton', function(e) {
+$(document).on('tap', '#saveClientNotesButton', function(e) {
 	var notes = encodeURIComponent($('#clientNotes').val());
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -226,7 +222,7 @@ $(document).on('click', '#saveClientNotesButton', function(e) {
 
 
 
-$(document).on('click', '#blockOffTimeButton', function(e) {
+$(document).on('tap', '#blockOffTimeButton', function(e) {
 	var date = $('#chooseDateToBlockOff').val();
 	var fromHour = $('#fromHour').val();
 	var fromMinute = $('#fromMinute').val();
@@ -259,7 +255,7 @@ $(document).on('click', '#blockOffTimeButton', function(e) {
 
 
 
-$(document).on('click', '#blockOffDaysButton', function(e) {
+$(document).on('tap', '#blockOffDaysButton', function(e) {
 	var from = $('#fromWholeDay').val();
 	var to = $('#toWholeDay').val();
 
@@ -284,7 +280,7 @@ $(document).on('click', '#blockOffDaysButton', function(e) {
 });
 
 
-$(document).on('click', '#recurringAppointment', function() {
+$(document).on('tap', '#recurringAppointment', function() {
 	if ($(this).is(':checked')){
 		$(".recurringAppointmentAdminOptions").fadeIn();
 	}else{
@@ -300,7 +296,7 @@ $(document).on('change', '#dateOfAppointment', function() {
 	getTimeSlotOptions();
 });
 
-$(document).on('click', '.appointment-data', function(e) {
+$(document).on('tap', '.appointment-data', function(e) {
 	$(".edit-appointment").slideUp();
 	var aId = e.currentTarget.id;
 	var baseUrl = $('body').attr('baseUrl');
@@ -321,7 +317,7 @@ $(document).on('click', '.appointment-data', function(e) {
 			$('#dateOfRescheduledAppointment-'+aId).on('change', function() {
 				getTimeSlotOptionsForRescheduledAppointment(aId);
 			});
-			$('#rescheduleButton-'+aId).on('click', function() {
+			$('#rescheduleButton-'+aId).on('tap', function() {
 				var sId = $('#servicesForRescheduledAppointment-'+aId).val();
 				var aDate = $('#dateOfRescheduledAppointment-'+aId).val();
 				var sTime = $('#timeSlotsForRescheduledAppointment-'+aId).val();

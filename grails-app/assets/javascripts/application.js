@@ -12,19 +12,6 @@ $(document).on("tap", ".home", function() {
 });
 
 $(document).ready(function(){
-
-	$("#newAddress").click(function() {
-		$('html, body').animate({
-			scrollTop: $("#address").offset().top
-		}, 2000);
-		if ($(".google-map").is(":visible")){
-			// $(".google-map").slideUp();
-		}
-		else{
-			$(".google-map").slideDown();
-		}
-	});
-
 	$('#chooseDate').datepicker( {
 		onSelect: function(date) {
 			var date = $('#chooseDate').val();
@@ -52,28 +39,41 @@ $(document).ready(function(){
 	});
 	$('#chooseDate').datepicker("setDate", new Date());
 
-	$('#recurringAppointment').click(function() {
-		if ($(this).is(':checked')){
-			$("#recurringAppointmentOptions").slideDown();
-		}else{
-			$("#recurringAppointmentOptions").slideUp();
-		}
-	});
+});
 
-	$('.address').click(function() {
-		if ($(".google-map").is(":visible")){
-			$(".google-map").slideUp();
-		}
-		else{
-			$(".google-map").slideDown();
-		}
-	});
-	
-	$('.google-map').click(function() {
-		var url = "https://local.google.com/maps/ms?msid=203990239811952052030.0004de4cdb5c11e4fc186&msa=0";
-		var windowName = "Directions to The Den";
-		window.open(url, windowName, "height=600,width=900");
-	});
+$(document).on("tap", "#newAddress", function() {
+	$('html, body').animate({
+		scrollTop: $("#address").offset().top
+	}, 2000);
+	if ($(".google-map").is(":visible")){
+		// $(".google-map").slideUp();
+	}
+	else{
+		$(".google-map").slideDown();
+	}
+});
+
+$(document).on("tap", "#recurringAppointment", function() {
+	if ($(this).is(':checked')){
+		$("#recurringAppointmentOptions").slideDown();
+	}else{
+		$("#recurringAppointmentOptions").slideUp();
+	}
+});
+
+$(document).on("tap", ".address", function() {
+	if ($(".google-map").is(":visible")){
+		$(".google-map").slideUp();
+	}
+	else{
+		$(".google-map").slideDown();
+	}
+});
+
+$(document).on("tap", ".google", function() {
+	var url = "https://local.google.com/maps/ms?msid=203990239811952052030.0004de4cdb5c11e4fc186&msa=0";
+	var windowName = "Directions to The Den";
+	window.open(url, windowName, "height=600,width=900");
 });
 
 $(document).on("tap", ".book-now-button", function() {
