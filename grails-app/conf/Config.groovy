@@ -88,6 +88,7 @@ grails.hibernate.osiv.readonly = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+        grails.mail.disabled=true
     }
     production {
         grails.logging.jul.usebridge = false

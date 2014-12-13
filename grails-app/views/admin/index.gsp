@@ -65,7 +65,7 @@
 	</div>
 
 
-	<div id="mask"></div>
+	<div id="mask"><img class="loader" src="${resource(dir:'images',file:'loading.gif')}" /></div>
 	<div id="waitingSpinner" style="display:none;"><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" class="spinner"></div> 
 
 
@@ -81,6 +81,6 @@
 <script src="${resource(dir:'js', file:'bootstrap-3.2.0.min.js')}" type="text/javascript"></script>
 <script src="${resource(dir:'js', file:'jquery.confirmon.js')}"></script>
 <script src="${resource(dir:'js', file:'jquery-validate-min.js')}"></script>
-<script src="${resource(dir:'js', file:'a.min.js')}?v0.5" type="text/javascript"></script>
+<script src="${resource(dir:'js', file:'a.min.js')}?v0.6" type="text/javascript"></script>
 
 </body></html>

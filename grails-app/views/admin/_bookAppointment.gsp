@@ -1,30 +1,30 @@
-<h1>Book for Client</h1>
-	<select id="clients">
+<div class="row book-for-client">
+	<h1>Book for Client</h1>
+	<select class="form-control" id="clients">
 		<option selected="selected">Choose a client...</option>
 		<g:each in="${clients}">
 			<option value="${it?.id}">${it?.lastName}, ${it?.firstName}</option>
 		</g:each>
 	</select>
-	<select id="services">
+	<select class="form-control" id="services">
 		<option selected="selected">Choose a service...</option>
 		<g:each in="${services}">
 			<option value="${it?.id}">${it?.description}</option>
 		</g:each>
 	</select>
-	<select id="timeSlots">
+	<select class="form-control" id="timeSlots">
 		<option class="no-timeslots-available">No timeslots available</option>
 	</select>
 	<label id="dateOfAppointmentLabel" for="dateOfAppointment">Date:</label>
-	<input id="dateOfAppointment" name="dateOfAppointment" type="text" class="date">
+	<input class="form-control date" id="dateOfAppointment" name="dateOfAppointment" type="text" />
 	
+	<label>Recurring Appointment?</label>
 	<div id="recurringAppointmentAdmin">
-		<ul>
-			<li><input type="checkbox" name="recurringAppointment" id="recurringAppointment" style="top:1px;"></li>
-			<li>Recurring Appointment?</li>
-			<li class="recurringAppointmentAdminOptions">&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </li>
+		<ul style="margin-bottom:0;">
+			<li><input type="checkbox" name="recurringAppointment" id="recurringAppointment" /></li>
 			<li class="recurringAppointmentAdminOptions">Repeat every</li>
 			<li class="recurringAppointmentAdminOptions">
-				<select id="repeatDuration">
+				<select class="form-control" id="repeatDuration">
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -41,7 +41,7 @@
 				week(s) for
 			</li>
 			<li class="recurringAppointmentAdminOptions">
-				<select id="repeatNumberOfAppointments">
+				<select class="form-control" id="repeatNumberOfAppointments">
 					<option value="2">2</option>
 					<option value="3">3</option>
 					<option value="4">4</option>
@@ -54,8 +54,12 @@
 		</ul>
 	</div>
 	<div id="bookForClientButton" class="btn green-button">Book Appointment</div>
-
+</div>
 <script type="text/javascript">
+	$(document).ready(function(){
+		$(".recurringAppointmentAdminOptions").fadeOut();
+	});
+
 	$('#dateOfAppointment').datepicker( {
 		minDate: 0
 	});
@@ -74,12 +78,13 @@
 			var recurringAppointment = $('#recurringAppointment').is(':checked');
 			var repeatDuration = $('#repeatDuration').val();
 			var repeatNumberOfAppointments = $('#repeatNumberOfAppointments').val();
+			var baseUrl = $('body').attr('baseUrl');
 
 			$('#bookForClientButton').html($('#waitingSpinner').html());
 
 			$.ajax({
 				type: "POST",
-				url: "./bookForClient",
+				url: baseUrl+"/bookForClient",
 				data: { cId:cId, sId:sId, aDate:aDate, sTime:sTime, r:recurringAppointment, dur:repeatDuration, num:repeatNumberOfAppointments}
 			}).done(function(response) {
 				var jsonResponse = JSON.parse(response);

@@ -1,7 +1,3 @@
-$(document).ready(function(){
-	$(".recurringAppointmentAdminOptions").fadeOut();
-});
-
 function getTimeSlotOptions(){
 	var sId = $('#services').val();
 	var aDate = $('#dateOfAppointment').val();
@@ -44,6 +40,7 @@ function getTimeSlotOptionsForRescheduledAppointment(aId){
 $(document).on('tap', '.nav a', function(e) {
 	var section = $(this).attr("href");
 	var baseUrl = $('body').attr('baseUrl');
+	$('#mask').fadeIn();
 	$.ajax({
 		type: "POST",
 		url: baseUrl + "/getSection",
@@ -53,6 +50,7 @@ $(document).on('tap', '.nav a', function(e) {
 		$('a[href="'+section+'"]').parent().addClass("active");
 		$('.main').html(response);
 		$(".navbar-toggle").click();
+		$('#mask').fadeOut();
 	});
 });
 
