@@ -53,7 +53,7 @@
 		<div class="footer">&nbsp;</div>
 
 		<script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
-		<script src="${resource(dir:'js', file:'application.min.js')}?v0.4" type="text/javascript"></script>
+		<script src="${resource(dir:'js', file:'application.min.js')}?v0.6" type="text/javascript"></script>
 
 		<script type="text/javascript">
 			$('#email').bind('keyup', function(){

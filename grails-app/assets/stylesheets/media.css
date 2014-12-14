@@ -1,6 +1,12 @@
 /* Extra small devices (phones, less than 768px) */
 /* No media query since this is the default in Bootstrap */
 
+@media (min-width: 580px) {
+	.footer .address {
+		font-size: 1.7em;
+	}
+}
+
 /* Small devices (tablets, 768px and up) */
 @media (min-width: 768px) {
 	.grey-box .logo {

@@ -1,14 +1,14 @@
 <form class="login-box">
-	<input placeholder="Email" type="text" name="email" id="email" value="${client?.email}" autofocus="autofocus">
-	<input placeholder="Verify Email" type="text" name="email2" id="email2" style="display:none;">
+	<input class="form-control" placeholder="Email" type="text" name="email" id="email" value="${client?.email}" autofocus="autofocus">
+	<input class="form-control" placeholder="Verify Email" type="text" name="email2" id="email2" style="display:none;">
 
-	<input placeholder="Password" type="password" name="password" id="password" value="${client?.password}">
+	<input class="form-control" placeholder="Password" type="password" name="password" id="password" value="${client?.password}">
 
-	%{--<input placeholder="First Name" type="text" name="first-name" id="firstName" class="new-user">
+	%{--<input class="form-control" placeholder="First Name" type="text" name="first-name" id="firstName" class="new-user">
 
-	<input placeholder="Last Name" type="text" name="last-name" id="lastName" class="new-user"><br>
+	<input class="form-control" placeholder="Last Name" type="text" name="last-name" id="lastName" class="new-user"><br>
 
-	<input placeholder="Phone #" type="text" name="phone" id="phoneNumber" class="new-user"><br>
+	<input class="form-control" placeholder="Phone #" type="text" name="phone" id="phoneNumber" class="new-user"><br>
 	
 	<div style="text-align:center;"> <span id="registerLink">New Client?</span>
 		<span class="left-divider"> | </span>--}%

@@ -7,28 +7,11 @@ weekday[4]="Thursday";
 weekday[5]="Friday";
 weekday[6]="Saturday";
 
-$(document).on("tap", ".home", function() {
-	window.location.href = "/";
-});
-
-$(document).on("tap", ".jackson", function() {
-	$(this).fadeOut();
+$(document).on("tap", ".home-link", function() {
+	window.location.href = "./site";
 });
 
 $(document).ready(function(){
-
-	$("#newAddress").click(function() {
-		$('html, body').animate({
-			scrollTop: $("#address").offset().top
-		}, 2000);
-		if ($(".google-map").is(":visible")){
-			// $(".google-map").slideUp();
-		}
-		else{
-			$(".google-map").slideDown();
-		}
-	});
-
 	$('#chooseDate').datepicker( {
 		onSelect: function(date) {
 			var date = $('#chooseDate').val();
@@ -56,28 +39,42 @@ $(document).ready(function(){
 	});
 	$('#chooseDate').datepicker("setDate", new Date());
 
-	$('#recurringAppointment').click(function() {
-		if ($(this).is(':checked')){
-			$("#recurringAppointmentOptions").slideDown();
-		}else{
-			$("#recurringAppointmentOptions").slideUp();
-		}
-	});
+});
 
-	$('.address').click(function() {
-		if ($(".google-map").is(":visible")){
-			$(".google-map").slideUp();
-		}
-		else{
-			$(".google-map").slideDown();
-		}
-	});
-	
-	$('.google-map').click(function() {
-		var url = "https://local.google.com/maps/ms?msid=203990239811952052030.0004de4cdb5c11e4fc186&msa=0";
-		var windowName = "Directions to The Den";
-		window.open(url, windowName, "height=600,width=900");
-	});
+$(document).on("tap", "#newAddress", function() {
+	$('html, body').animate({
+		scrollTop: $("#address").offset().top
+	}, 2000);
+	if ($(".google-map").is(":visible")){
+		// $(".google-map").slideUp();
+	}
+	else{
+		$(".google-map").slideDown();
+	}
+});
+
+$(document).on("tap", "#recurringAppointment", function() {
+	var opts = $("#recurringAppointmentOptions");
+	if ($(opts).is(":visible")){
+		$(opts).slideUp();
+	}else{
+		$(opts).slideDown();
+	}
+});
+
+$(document).on("tap", ".address", function() {
+	if ($(".google-map").is(":visible")){
+		$(".google-map").slideUp();
+	}
+	else{
+		$(".google-map").slideDown();
+	}
+});
+
+$(document).on("tap", ".google", function() {
+	var url = "https://local.google.com/maps/ms?msid=203990239811952052030.0004de4cdb5c11e4fc186&msa=0";
+	var windowName = "Directions to The Den";
+	window.open(url, windowName, "height=600,width=900");
 });
 
 $(document).on("tap", "#bookNowButton", function() {
@@ -132,6 +129,7 @@ $(document).on("tap", "#registerLink", function() {
 
 	$('#loginButton').attr("sendPasswordResetEmail", false);
 	$('#loginButton').attr("attemptPasswordReset", false);
+
 	$('#loginButton').removeClass('errorButton animated fadeIn');
 	$('#loginButton .as-button-label').text("Register & Book");
 });
@@ -155,6 +153,7 @@ $(document).on("tap", "#resetPassword", function() {
 	
 	$('#loginButton').attr("sendPasswordResetEmail", true);
 	$('#loginButton').attr("attemptPasswordReset", false);
+
 	$('#loginButton').removeClass('errorButton animated fadeIn');
 	$('#loginButton .as-button-label').text("Send Reset Email");
 });
@@ -178,13 +177,14 @@ $(document).on("tap", "#showLoginForm", function() {
 	
 	$('#loginButton').attr("sendPasswordResetEmail", false);
 	$('#loginButton').attr("attemptPasswordReset", false);
+
 	$('#loginButton').removeClass('errorButton animated fadeIn');
 	$('#loginButton .as-button-label').text("Book Appointment");
 });
 
 $(document).on("tap", "#loginButton", function() {
 	var disabled = $(this).attr("disabled");
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('error-button animated fadeIn');
 
 	if (disabled != "disabled"){
 		$(this).attr("disabled", "disabled");
@@ -200,21 +200,21 @@ $(document).on("tap", "#loginButton", function() {
 
 $(document).on("keypress", "#password", function() {
 	if (event.keyCode === 13) {
-		$('#loginButton').removeClass('errorButton animated fadeIn');
+		$('#loginButton').removeClass('error-button animated fadeIn');
 		bookAppointment();
 	}
 });
 
 $(document).on("keypress", "#password2", function() {
 	if (event.keyCode === 13) {
-		$('#cancelAppointmentLoginButton').removeClass('errorButton animated fadeIn');
+		$('#cancelAppointmentLoginButton').removeClass('error-button animated fadeIn');
 		cancelAppointment();
 	}
 });
 
 $(document).on("keypress", "#verifyNewPassword", function() {
 	if (event.keyCode === 13) {
-		$('#loginButton').removeClass('errorButton animated fadeIn');
+		$('#loginButton').removeClass('error-button animated fadeIn');
 		attemptPasswordReset();
 	}
 });
@@ -275,7 +275,7 @@ function processResults(confirmation){
 		$('#loginButton .spinner').hide();
 		$('#loginButton .as-button-label').show();
 		$('#loginButton').attr("disabled", false);
-		$('#loginButton').addClass('errorButton animated fadeIn');
+		$('#loginButton').addClass('error-button animated fadeIn');
 
 		$('.errorDetails').html(results.errorMessage);
 		$('.errorDetails').slideDown();
@@ -301,7 +301,7 @@ function processCancelAppointmentResults(confirmation){
 		$('#cancelAppointmentLoginButton .spinner').hide();
 		$('#cancelAppointmentLoginButton .as-button-label').show();
 		$('#cancelAppointmentLoginButton').attr("disabled", false);
-		$('#cancelAppointmentLoginButton').addClass('errorButton animated fadeIn');
+		$('#cancelAppointmentLoginButton').addClass('error-button animated fadeIn');
 
 		$('.errorDetails').html(results.errorMessage);
 		$('.errorDetails').slideDown();
@@ -323,7 +323,7 @@ function processCancelAppointmentResults(confirmation){
 function cancelAppointment(){
 	var cancelAppointmentLoginButton = $('#cancelAppointmentLoginButton');
 	var disabled = cancelAppointmentLoginButton.attr("disabled");
-	cancelAppointmentLoginButton.removeClass('errorButton animated fadeIn');
+	cancelAppointmentLoginButton.removeClass('error-button animated fadeIn');
 	if (disabled != "disabled"){
 		cancelAppointmentLoginButton.attr("disabled", "disabled");
 		console.log('called cancel appointment.');
@@ -341,10 +341,6 @@ function cancelAppointment(){
 		});
 	}
 }
-
-
-
-
 
 function disableButton(button){
 	$(button).attr("disabled", "disabled");
@@ -364,9 +360,10 @@ function getPageContent(button, data, nextPage){
 		}).done(function(response) {
 			var success = response.search('"success":false');
 			if (success === -1){
+				$('.main-content').css("background-color", "white");
 				$('.main-content .page[page="'+currentPage+'"]').removeClass('fadeIn');
 				$('.main-content .page[page="'+currentPage+'"]').addClass('animated fadeOut');
-				$('.main-content .page[page="'+currentPage+'"]').slideUp()
+				$('.main-content .page[page="'+currentPage+'"]').slideUp();
 
 				$('.main-content .page[page="'+nextPage+'"]').html(response);
 				$('.main-content .page[page="'+nextPage+'"]').slideDown();

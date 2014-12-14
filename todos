@@ -1,2 +1,30 @@
 - apache page when tomcat is down
 - build script that checks out from github
+
+
+
+#!/bin/bash
+ 
+path="/var/www/sites/htdocs/wp-content/themes/vip/";
+ 
+git_path="https://username:password@bitbucket.org/penskemediacorp/";
+ 
+git_array=( plugins pmc-variety pmc-plugins );
+ 
+git_path_array=("${git_array[@]}")
+ 
+git_path_array[0]=wordpress-vip-plugins;
+#git_path_array[1]=pmc-variety-interim;
+ 
+ 
+total=${#git_array[*]}
+for (( i=0; i<=$(( $total -1 )); i++ ))
+do
+  echo "\n$path${git_array[$i]}\n";
+	cd $path${git_array[$i]};
+	echo $git_path${git_path_array[$i]}".git";
+	git pull $git_path${git_path_array[$i]}".git";
+ 
+done
+ 
+echo -e '\n Complete';

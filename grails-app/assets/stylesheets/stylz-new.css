@@ -9,6 +9,15 @@ body {
 	margin-bottom: 40px;
 }
 
+/* Remove the blue halo jquery mobile adds */
+.ui-focus,
+.ui-page { 
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	outline: none 0px;
+}
+
 .link,
 .as-button {
 	cursor: pointer;
@@ -25,13 +34,12 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6827d00', endColorstr='#827d00',GradientType=0 ); /* IE6-9 */
 	border: 1px solid #777200;
 	box-shadow: 1px 1px 2px #B9B300 inset;
-	width: 344px;
 	color: #FFF;
 	font-size: 1.8em;
 	vertical-align: middle;
 	text-align: center;
 	padding: 20px;
-	margin: 50px auto;
+	margin: 0 auto;
 }
 
 
@@ -60,13 +68,9 @@ body {
 	color: #B5B5B5;
 }
 
-.header .address:hover {
-	color: #333;
-}
-
 .grey-box {
 	background-color: #58585A;
-	padding: 20px;
+	padding: 20px 0;
 }
 
 .message-board-backing{
@@ -108,12 +112,16 @@ body {
 	margin: 0 auto;
 }
 
-.footer .address {
-	text-align: center;
-	font-size: 1.7em;
+.main-content {
+	margin-bottom: 24px;
 }
 
-.footer .address:hover{
+.footer .address {
+	text-align: center;
+	font-size: 1.3em;
+}
+
+.address:hover{
 	color: #fff;
 	background-color: #8D8800;
 }
@@ -124,3 +132,44 @@ body {
 .building-front {
 	width: 100%;
 }
+
+#bookNowButton {
+	margin-top: 50px;
+	margin-bottom: 25px;
+}
+
+/* SERVICES */
+
+.book-now-button:hover,
+.address:hover,
+.google-map:hover,
+.service:hover,
+.time-slot:hover{
+	color: #fff;
+	background-color: #8D8800;
+	cursor: pointer;
+}
+
+.service,
+.time-slot{
+	font-size: 1.1em;
+	margin: 4px auto;
+}
+
+.page h1 {
+	text-align: center;
+	margin-bottom: 38px;
+	font-size: 2.8em;
+	font-weight: normal;
+	top: 14px;
+	position: relative;
+}
+
+
+/* TIME SLOTS */
+
+#recurringAppointmentOptions {
+	display: none;
+}
+
+

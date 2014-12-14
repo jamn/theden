@@ -55,12 +55,12 @@
 			</div>
 		</div>
 		<div class="row grey-box">
-			<div class="col-xs-offset-1 col-xs-10 col-sm-6">
+			<div class="col-xs-12 col-sm-offset-1 col-sm-6">
 				<div class="message-board-backing">
 					<div class="message-board">${raw(message)}</div>
 				</div>
 			</div>
-			<div class="col-xs-offset-right-1 col-sm-4">
+			<div class="col-sm-4">
 				<img class="logo" src="${resource(dir:'images',file:'logo-large.png')}">
 			</div>
 		</div>
@@ -72,14 +72,14 @@
 			<div class="page" page="timeSlots"></div>
 			<div class="page" page="login"></div>
 			<div class="page" page="confirmation"></div>
-			</div>
 		</div>
 		
 		<div class="row footer">
-			<div class="link address" id="footerAddressLink">1013 W 47th Street &bull; KCMO, 64112</div>
+			<div class="col-xs-12 link address" id="footerAddressLink">1013 W 47th Street &bull; KCMO, 64112</div>
 		</div>
 	</div>
 
+	<div id="mask"><img class="loader" src="${resource(dir:'images',file:'loading.gif')}" /></div>
 
 	<script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
 	<script type="text/javascript">
@@ -95,5 +95,6 @@
 	<!-- <script src="${resource(dir:'js', file:'jquery-validate-min.js')}"></script> -->
 	<script src="${resource(dir:'js', file:'application.min.js')}?v0.4" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'masked-input-plugin.min.js')}" type="text/javascript"></script>
+
 
 </body></html>

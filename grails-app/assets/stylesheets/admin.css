@@ -12,6 +12,20 @@ body {
   border-bottom: 1px solid #eee;
 }
 
+.confirmon-box {
+	top: 240px;
+}
+
+/* Remove the blue halo jquery mobile adds */
+.ui-focus,
+.ui-page,
+body { 
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	outline: none 0px;
+}
+
 /*
  * Top navigation
  * Hide default border to remove 1px line.
@@ -26,11 +40,12 @@ body {
 	text-align: center;
 	width: 100%;
 	position: absolute;
-	top: -10px;
+	top: -6px;
 }
 
 .navbar-inverse .navbar-toggle {
-	border-color: #818181;
+	width: 40px;
+	height: 40px;
 }
 
 .navbar-inverse .navbar-toggle:hover {
@@ -79,28 +94,6 @@ background-color: #6F6F6F;
 .logged-in-user {
 	display: none;
 }
-@media (min-width: 768px) {
-	.logged-in-user {
-		display: initial;
-	}
-	.navbar-nav {
-		display: none;
-	}
-	.sidebar {
-		position: fixed;
-		top: 51px;
-		bottom: 0;
-		left: 0;
-		z-index: 1000;
-		display: block;
-		padding: 20px;
-		overflow-x: hidden;
-		overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-		background-color: #f5f5f5;
-		border-right: 1px solid #eee;
-	}
-
-}
 
 /* Sidebar navigation */
 .nav-sidebar {
@@ -128,30 +121,15 @@ background-color: #6F6F6F;
 .main {
   padding: 20px 40px;
 }
-@media (min-width: 768px) {
-  .main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
-}
+
 .main .page-header {
   margin-top: 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.main .green-button,
+.main .white-button {
+	width: 100%
+}
 
 #log{
 	position: absolute;
@@ -190,27 +168,25 @@ background-color: #6F6F6F;
 	border: 1px solid #A2A2A2;
 	margin: auto;
 	margin-top: 40px;
-	width: 304px;
 	border-radius: 4px;
 	padding: 40px;
 	margin-bottom: 120px;
 }
 
 .login-box input{
-	width: 134px;
 	font-size: 1.4em;
 	padding: 4px;
 }
 
 #loginButton{
 	margin: 10px 0;
-	width: 254px;
+	width: 100%;
 	font-size: 1.7em;
 }
 
 h1{
-	margin: 20px 0;
-	font-size: 1.8em;
+	margin: 24px 0;
+	font-size: 1.4em;
 	font-weight: bold;
 	color: #2E2E2E;
 }
@@ -231,7 +207,7 @@ b {
 }
 
 hr{
-	margin: 20px 0;
+	margin: 6px 0;
 	border: 0;
     height: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -313,7 +289,7 @@ select{
 	margin: 10px 0;
 }
 
-.errorButton{
+.error-button{
 	background: rgb(196,3,3) !important; /* Old browsers */
 	background: -moz-linear-gradient(top,  rgba(196,3,3,1) 0%, rgba(160,3,3,1) 44%, rgba(132,0,0,1) 100%) !important; /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(196,3,3,1)), color-stop(44%,rgba(160,3,3,1)), color-stop(100%,rgba(132,0,0,1))) !important; /* Chrome,Safari4+ */
@@ -324,36 +300,12 @@ select{
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c40303', endColorstr='#840000',GradientType=0 ) !important; /* IE6-9 */
 	border-color: #630000 !important;
 	box-shadow: 1px 1px 2px #E2466C inset !important;
+	color: #fff;
 }
 
-.rescheduleButton{
-	background-color: #827D00;
-	background: -moz-linear-gradient(top,  rgba(130,125,0,0.9) 0%, rgba(130,125,0,1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(130,125,0,0.9)), color-stop(100%,rgba(130,125,0,1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(130,125,0,0.9) 0%,rgba(130,125,0,1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6827d00', endColorstr='#827d00',GradientType=0 ); /* IE6-9 */
-	border: 1px solid #777200;
-	box-shadow: 1px 1px 2px #B9B300 inset;
-	color: #FFF;
-	cursor: pointer;
+.reschedule-button{
 	font-size: 1em;
 	padding: 6px;
-}
-
-/*#homepageText,*/
-/*.green-button,*/
-#clients,
-#services,
-#timeSlots,
-#dateOfAppointment,
-#dateOfAppointmentLabel{
-	position: relative;
-	left: 18px;
- 	margin-top: 17px;
-	margin-left: 10px;
 }
 
 #mask {
@@ -364,7 +316,13 @@ select{
 	left: 0;
 	right: 0;
 	background-color: rgba(0,0,0,.8);
-	z-index: 2;
+	z-index: 10000;
+	text-align: center;
+}
+
+#mask .loader {
+	top: 180px;
+	position: relative;
 }
 
 #addClient:hover {
@@ -372,9 +330,6 @@ select{
 }
 
 #editClient {
-	position: absolute;
-	right: 28px;
-	top: 128px;
 	color: #717171;
 	font-size: 1.4em;
 	cursor: pointer;
@@ -397,7 +352,7 @@ select{
 	border-radius: 30px;
 	padding: 6px 0 10px 0;
 	line-height: .5em;
-	width: 28px;
+	width: 28px !important;
 }
 
 .add-client-label {
@@ -466,18 +421,15 @@ select{
 }
 
 .last-name-filter {
-	font-size: 1.4em;
+	font-size: 1.7em;
 	color: #717171;
 	cursor: pointer;
-	margin-right: 6px; 
+	margin-right: 6px;
+	padding: 2px;
 }
 
 .last-name-filter.reset {
 	color: #B2B2B2;
-}
-
-#clientsDetailsSelector {
-	height: 160px;
 }
 
 #clientNotes {
@@ -488,8 +440,10 @@ select{
 	width: 112px;
 }
 
-#dateOfAppointmentLabel{
-	width: 20px;
+.book-for-client label {
+	font-size: 1.3em;
+	margin-top: 24px;
+	margin-bottom: -1px;
 }
 
 #chooseDateToBlockOffText{
@@ -499,6 +453,11 @@ select{
 #recurringAppointmentAdmin{
 	margin: 22px 0 26px -8px;
 	font-size: 1.2em;
+}
+
+#recurringAppointment {
+	height: 30px;
+	width: 30px;
 }
 
 #clients,
@@ -626,7 +585,13 @@ select{
 	font-size: 1.3em;
 }
 
-
+.edit-appointment .cancel-appointment-button {
+	display: block;
+	margin: 24px;
+	padding: 44px 0;
+	position: relative;
+	top: 46px;
+}
 
 
 

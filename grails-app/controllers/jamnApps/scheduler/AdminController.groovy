@@ -23,7 +23,8 @@ class AdminController {
     def index() { 
     	println "\n" + new Date()
 		println "params: " + params
-    	return [homepageText:getHomepageText().homepageText]
+		def model = getUpcomingAppointments() + getStylistInfo()
+    	return model
     }
 
     def getSection() {
@@ -82,10 +83,10 @@ class AdminController {
 	    return [homepageText:homepageText]
     }
 
-    private Map getClients(){
+    private Map getClients(lastNameStartsWith = null){
 		def clients = []
 		User.list()?.each(){
-			if (it.hasPermission("client")){
+			if (it.hasPermission("client") && (!lastNameStartsWith || it.lastName.substring(0,1).toUpperCase() == lastNameStartsWith.toUpperCase()) ){
 				clients.add(it)
 			}
 		}
@@ -169,6 +170,11 @@ class AdminController {
 		return true
 	}
 
+	def getClientsSelectMenu(){
+    	def clientData = getClients(params.lastNameStartsWith)
+    	render(template:"clientsSelectMenu", model:clientData)
+    }
+
 	def getClientDetails(){
 		println "\n" + new Date()
 		println "params: " + params
@@ -180,7 +186,7 @@ class AdminController {
 				render (template: "client", model: [client:client, appointments:appointments])
 			}
 		}
-		return true
+		return false
 	}
 
 	def getClientDataForm(){
@@ -420,9 +426,7 @@ class AdminController {
 			if (appointment){
 				appointment.delete()
 				if (!appointment.hasErrors()){
-					runAsync {
-						emailService.sendCancellationNotices(appointment)
-					}
+					emailService.sendCancellationNotices(appointment)
 					success = true
 				}
 			}

@@ -1,5 +1,6 @@
 	<h1>Block Off Time</h1>
 	<label id="chooseDateToBlockOffText" for="chooseDateToBlockOff">Choose a date:</label>
+	</br>
 	<input id="chooseDateToBlockOff" name="chooseDateToBlockOff" type="text" class="date">
 	</br>
 	</br>
@@ -29,7 +30,10 @@
 		<option value="am">AM</option>
 		<option value="pm">PM</option>
 	</select>
+	</br>
+	</br>
 	<label id="toText" for="to">&nbsp;&nbsp;&nbsp;To:</label>
+	</br>
 	<select id="toHour">
 		<option value="1">1</option>
 		<option value="2">2</option>
@@ -55,6 +59,8 @@
 		<option value="am">AM</option>
 		<option value="pm">PM</option>
 	</select>
+	</br>
+	</br>
 	<div id="blockOffTimeButton" class="btn green-button">Block Off Time</div>
 
 	<hr>

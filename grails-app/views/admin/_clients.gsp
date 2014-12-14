@@ -16,30 +16,7 @@
 </div>
 <div class="row">
 	<div class="col-sm-4 col-sm-offset-right-8">
-		<select id="clientsDetailsSelector" class="form-control" multiple>
-			<g:each in="${clients}" var="client" status="i">
-				<g:set var="currentLastNameStartsWith" value="${client.lastName.substring(0,1)}" />
-				
-				<g:if test="${(i == 0)}">
-					<g:set var="previousLastNameStartedWith" value="${client.lastName.substring(0,1)}" />
-					<optgroup label="${currentLastNameStartsWith}">
-						<option value="${client.id}">${client.lastName}, ${client.firstName}</option>
-				</g:if>
-				<g:elseif test="${(i == clients.size())}">
-					</optgroup>
-				</g:elseif>
-				<g:elseif test="${(currentLastNameStartsWith != previousLastNameStartedWith)}">
-					</optgroup>
-					<optgroup label="${currentLastNameStartsWith}">
-						<option value="${client.id}">${client.lastName}, ${client.firstName}</option>
-				</g:elseif>
-				<g:else>
-					<option value="${client.id}">${client.lastName}, ${client.firstName}</option>
-				</g:else>
-
-				<g:set var="previousLastNameStartedWith" value="${client.lastName.substring(0,1)}" />
-			</g:each>
-		</select>
+		<g:render template="clientsSelectMenu" />
 	</div>
 </div>
 <div class="row">

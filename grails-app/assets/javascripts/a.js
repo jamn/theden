@@ -1,46 +1,3 @@
-$(document).ready(function(){
-
-	$('#username').bind('keyup', function(){
-		var value = $(this).val()
-		$(this).val(value.replace(/\s+/g, ''));
-	});
-
-	$(".recurringAppointmentAdminOptions").fadeOut();
-
-	$('.nav a').click(function(e) {
-		var section = $(this).attr("href");
-		var baseUrl = $('body').attr('baseUrl');
-		$.ajax({
-			type: "POST",
-			url: baseUrl + "/getSection",
-			data: {section:section}
-		}).done(function(response) {
-			$('.active').removeClass("active");
-			$('a[href="'+section+'"]').parent().addClass("active");
-			$('.main').html(response);
-			$(".navbar-toggle").click();
-		});
-	});
-
-	$('#loginButton').click(function(e) {
-		var user = $('#username').val();
-		var password = $('#password').val();
-		window.location.href = "../access/login?u="+user+"&p="+password
-	});
-
-	$('#password').keypress(function(e) {
-		var user = $('#username').val();
-		var password = $('#password').val();
-		if (e.keyCode === 13){
-			window.location.href = "../access/login?u="+user+"&p="+password
-		}
-	});
-});
-
-
-
-
-
 function getTimeSlotOptions(){
 	var sId = $('#services').val();
 	var aDate = $('#dateOfAppointment').val();
@@ -52,11 +9,11 @@ function getTimeSlotOptions(){
 	}).done(function(response) {
 		if (response.indexOf("ERROR") > -1){
 			$('#bookForClientButton').html("Error");
-			$('#bookForClientButton').addClass('errorButton animated fadeIn');
+			$('#bookForClientButton').addClass('error-button animated fadeIn');
 		}else{
 			$('#timeSlots').html(response);
 			$('#bookForClientButton').html("Book Appointment");
-			$('#bookForClientButton').removeClass('errorButton animated fadeIn');
+			$('#bookForClientButton').removeClass('error-button animated fadeIn');
 		}
 	});
 }
@@ -78,7 +35,36 @@ function getTimeSlotOptionsForRescheduledAppointment(aId){
 	});
 }
 
-$(document).on('click', '#addClient', function(e) {
+$(document).on("tap", ".main", function() {
+	var navMenuExpanded = ($('.navbar-collapse').attr('class').indexOf("in") >= 0);
+	if(navMenuExpanded){
+		$(".navbar-toggle").click();
+	}
+});
+
+$(document).on('tap', '.nav a', function(e) {
+	var section = $(this).attr("href");
+	var baseUrl = $('body').attr('baseUrl');
+	if (section === "#logout") {
+		window.location.href = "./access/logout";
+	}
+	else {
+		$('#mask').fadeIn();
+		$.ajax({
+			type: "POST",
+			url: baseUrl + "/getSection",
+			data: {section:section}
+		}).done(function(response) {
+			$('.active').removeClass("active");
+			$('a[href="'+section+'"]').parent().addClass("active");
+			$('.main').html(response);
+			$(".navbar-toggle").click();
+			$('#mask').fadeOut();
+		});
+	}
+});
+
+$(document).on('tap', '#addClient', function(e) {
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
@@ -96,8 +82,8 @@ $(document).on('click', '#addClient', function(e) {
 	});
 });
 
-$(document).on('click', '#editClient', function(e) {
-	var cId = $("#clientsDetailsSelector").val()[0]; $("#clientsDetailsSelector").val()[0];
+$(document).on('tap', '#editClient', function(e) {
+	var cId = $("#clientsDetailsSelector").val();
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
@@ -116,21 +102,38 @@ $(document).on('click', '#editClient', function(e) {
 	});
 });
 
-$(document).on('click', '.last-name-filter', function(e) {
+$(document).on('tap', '.last-name-filter', function(e) {
 	var lastNameStartsWith = $(e.currentTarget).attr('value');
 	$("#clientsDetailsSelector").slideDown();
 	if (lastNameStartsWith === "Reset"){
-		$("#clientsDetailsSelector").children("optgroup").fadeIn();
+		console.log("here");
+		getClientSelectMenuData();
 		$('.reset-search').fadeOut();
 	}
 	else {
 		$('.reset-search').fadeIn();
-		$("#clientsDetailsSelector").children("optgroup").fadeOut();
-		$("#clientsDetailsSelector").children("optgroup[label='" + lastNameStartsWith + "']").fadeIn();
+		getClientSelectMenuData(lastNameStartsWith);
+
 	}
 });
 
-$(document).on('click', '#saveClientButton', function(e) {
+function getClientSelectMenuData(lastNameStartsWith){
+	console.log("resetting clients drop down");
+	var baseUrl = $('body').attr('baseUrl');
+	$.ajax({
+		type: "POST",
+		url: baseUrl+"/getClientsSelectMenu",
+		data: {lastNameStartsWith: lastNameStartsWith}
+	}).done(function(confirmation) {
+		var success = confirmation.search('"success":false');
+		if (success === -1){
+			$("#clientsDetailsSelector").html(confirmation);
+		}
+	});
+
+}
+
+$(document).on('tap', '#saveClientButton', function(e) {
 	var email = $('#e').val();
 	var email2 = $('#e2').val();
 	var password = $('#p').val();
@@ -156,7 +159,7 @@ $(document).on('click', '#saveClientButton', function(e) {
 	}
 });
 
-$(document).on('click', '#cancelClientRegistrationButton', function(e) {
+$(document).on('tap', '#cancelClientRegistrationButton', function(e) {
 	hideClientRegistrationForm();
 });
 
@@ -168,7 +171,7 @@ function hideClientRegistrationForm(){
 	$('#addClient').fadeIn();
 }
 
-$(document).on('click', '.cancel-appointment-link', function(e) {
+$(document).on('tap', '.cancel-appointment-button', function(e) {
 	var c = $(this).attr('c');
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -178,7 +181,7 @@ $(document).on('click', '.cancel-appointment-link', function(e) {
 	}).done(function(response) {
 		var success = response.search('"success":false');
 		if (success === -1){
-			alert('You did it, appoiment deleted!');
+			alert('*Appointment Deleted*');
 			location.reload();
 		}
 		else{
@@ -190,7 +193,7 @@ $(document).on('click', '.cancel-appointment-link', function(e) {
 $(document).on('change', '#clientsDetailsSelector', function() {
 	$(this).slideUp();
 	$('.reset-search').fadeIn();
-	var cId = $(this).val()[0];
+	var cId = $(this).val();
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
@@ -204,7 +207,7 @@ $(document).on('change', '#clientsDetailsSelector', function() {
 	});
 });
 
-$(document).on('click', '#saveTextButton', function(e) {
+$(document).on('tap', '#saveTextButton', function(e) {
 	var message = $('#homepageText').val();
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -214,7 +217,7 @@ $(document).on('click', '#saveTextButton', function(e) {
 	});
 });
 
-$(document).on('click', '#saveClientNotesButton', function(e) {
+$(document).on('tap', '#saveClientNotesButton', function(e) {
 	var notes = encodeURIComponent($('#clientNotes').val());
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -226,7 +229,7 @@ $(document).on('click', '#saveClientNotesButton', function(e) {
 
 
 
-$(document).on('click', '#blockOffTimeButton', function(e) {
+$(document).on('tap', '#blockOffTimeButton', function(e) {
 	var date = $('#chooseDateToBlockOff').val();
 	var fromHour = $('#fromHour').val();
 	var fromMinute = $('#fromMinute').val();
@@ -248,18 +251,18 @@ $(document).on('click', '#blockOffTimeButton', function(e) {
 		var jsonResponse = JSON.parse(response);
 		if (jsonResponse.success === true){
 			$('#blockOffTimeButton').html("Success");
-			$('#blockOffTimeButton').removeClass('errorButton animated fadeIn');
+			$('#blockOffTimeButton').removeClass('error-button animated fadeIn');
 		}
 		else{
 			$('#blockOffTimeButton').html("Error");
-			$('#blockOffTimeButton').addClass('errorButton animated fadeIn');
+			$('#blockOffTimeButton').addClass('error-button animated fadeIn');
 		}
 	});
 });
 
 
 
-$(document).on('click', '#blockOffDaysButton', function(e) {
+$(document).on('tap', '#blockOffDaysButton', function(e) {
 	var from = $('#fromWholeDay').val();
 	var to = $('#toWholeDay').val();
 
@@ -274,21 +277,22 @@ $(document).on('click', '#blockOffDaysButton', function(e) {
 		var jsonResponse = JSON.parse(response);
 		if (jsonResponse.success === true){
 			$('#blockOffDaysButton').html("Success");
-			$('#blockOffDaysButton').removeClass('errorButton animated fadeIn');
+			$('#blockOffDaysButton').removeClass('error-button animated fadeIn');
 		}
 		else{
 			$('#blockOffDaysButton').html("Error");
-			$('#blockOffDaysButton').addClass('errorButton animated fadeIn');
+			$('#blockOffDaysButton').addClass('error-button animated fadeIn');
 		}
 	});
 });
 
 
-$(document).on('click', '#recurringAppointment', function() {
-	if ($(this).is(':checked')){
-		$(".recurringAppointmentAdminOptions").fadeIn();
+$(document).on('tap', '#recurringAppointment', function() {
+	var opts = $(".recurringAppointmentAdminOptions");
+	if ($(opts).is(":visible")){
+		$(opts).fadeOut();
 	}else{
-		$(".recurringAppointmentAdminOptions").fadeOut();
+		$(opts).fadeIn();
 	}
 });
 
@@ -300,7 +304,7 @@ $(document).on('change', '#dateOfAppointment', function() {
 	getTimeSlotOptions();
 });
 
-$(document).on('click', '.appointment-data', function(e) {
+$(document).on('tap', '.appointment-data', function(e) {
 	$(".edit-appointment").slideUp();
 	var aId = e.currentTarget.id;
 	var baseUrl = $('body').attr('baseUrl');
@@ -321,7 +325,7 @@ $(document).on('click', '.appointment-data', function(e) {
 			$('#dateOfRescheduledAppointment-'+aId).on('change', function() {
 				getTimeSlotOptionsForRescheduledAppointment(aId);
 			});
-			$('#rescheduleButton-'+aId).on('click', function() {
+			$('#rescheduleButton-'+aId).on('tap', function() {
 				var sId = $('#servicesForRescheduledAppointment-'+aId).val();
 				var aDate = $('#dateOfRescheduledAppointment-'+aId).val();
 				var sTime = $('#timeSlotsForRescheduledAppointment-'+aId).val();
@@ -334,11 +338,11 @@ $(document).on('click', '.appointment-data', function(e) {
 					var jsonResponse = JSON.parse(response);
 					if (jsonResponse.success === true){
 						$('#rescheduleButton-'+aId).html('Success');
-						$('#rescheduleButton-'+aId).removeClass('errorButton animated fadeIn');
+						$('#rescheduleButton-'+aId).removeClass('error-button animated fadeIn');
 						setTimeout(function() {window.location.href = "./";},1250);
 					}else{
 						$('#rescheduleButton-'+aId).html('Error');
-						$('#rescheduleButton-'+aId).addClass('errorButton animated fadeIn');
+						$('#rescheduleButton-'+aId).addClass('error-button animated fadeIn');
 					}
 				});
 			});
