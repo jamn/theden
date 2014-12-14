@@ -38,7 +38,6 @@ $(document).ready(function(){
 		}
 	});
 	$('#chooseDate').datepicker("setDate", new Date());
-
 });
 
 $(document).on("tap", "#newAddress", function() {
@@ -358,22 +357,18 @@ function getPageContent(button, data, nextPage){
 			url: baseUrl+"site/"+action,
 			data: data
 		}).done(function(response) {
-			var success = response.search('"success":false');
-			if (success === -1){
-				$('.main-content').css("background-color", "white");
-				$('.main-content .page[page="'+currentPage+'"]').removeClass('fadeIn');
-				$('.main-content .page[page="'+currentPage+'"]').addClass('animated fadeOut');
-				$('.main-content .page[page="'+currentPage+'"]').slideUp();
+			$('.main-content').css("background-color", "white");
+			$('.main-content .page[page="'+currentPage+'"]').removeClass('fadeIn');
+			$('.main-content .page[page="'+currentPage+'"]').addClass('animated fadeOut');
+			$('.main-content .page[page="'+currentPage+'"]').slideUp();
 
-				$('.main-content .page[page="'+nextPage+'"]').html(response);
-				$('.main-content .page[page="'+nextPage+'"]').slideDown();
-				$('.main-content .page[page="'+nextPage+'"]').removeClass('animated fadeOut');
-				$('.main-content .page[page="'+nextPage+'"]').addClass('animated fadeInRightBig');
-			}
-			else{
-				$(button).addClass('errorButton animated fadeIn');
-				$(button).removeClass('errorButton animated fadeIn');
-			}
+			$('.main-content .page[page="'+nextPage+'"]').html(response);
+			$('.main-content .page[page="'+nextPage+'"]').slideDown();
+			$('.main-content .page[page="'+nextPage+'"]').removeClass('animated fadeOut');
+			$('.main-content .page[page="'+nextPage+'"]').addClass('animated fadeInRightBig');
+		}).fail(function(){
+			$(button).html("Error");
+			$(button).addClass('error-button animated fadeIn');
 		});
 	}
 }

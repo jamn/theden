@@ -35,8 +35,8 @@
 <!-- <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery.confirmon.css')}" /> -->
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'animate.css')}" />
 
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz-new.css')}?v0.4" />
-<link media="handheld, only screen" href="${resource(dir:'css', file:'media.css')}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz-new.css')}?v${grailsApplication.metadata.'app.version'}" />
+<link media="handheld, only screen" href="${resource(dir:'css', file:'media.css')}?v${grailsApplication.metadata.'app.version'}" type="text/css" rel="stylesheet" />
 
 <link rel="apple-touch-icon" sizes="57x57" href="${resource(dir:'images', file:'apple-icon-57x57.png')}" />
 <link rel="apple-touch-icon" sizes="72x72" href="${resource(dir:'images', file:'apple-icon-72x72.png')}" />
@@ -93,7 +93,7 @@
 	<script src="${resource(dir:'js', file:'bootstrap-3.2.0.min.js')}" type="text/javascript"></script>
 	<!-- <script src="${resource(dir:'js', file:'jquery.confirmon.js')}"></script> -->
 	<!-- <script src="${resource(dir:'js', file:'jquery-validate-min.js')}"></script> -->
-	<script src="${resource(dir:'js', file:'application.min.js')}?v0.4" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'application.min.js')}?v${grailsApplication.metadata.'app.version'}" type="text/javascript"></script>
 	<script src="${resource(dir:'js', file:'masked-input-plugin.min.js')}" type="text/javascript"></script>
 
 

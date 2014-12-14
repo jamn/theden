@@ -34,3 +34,35 @@
 		<p>No times available on this day</p>
 	</div>
 </g:else>
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#chooseDate').datepicker( {
+			onSelect: function(date) {
+				var date = $('#chooseDate').val();
+				var baseUrl = $('body').attr('baseUrl');
+				$.ajax({
+					type: "POST",
+					url: baseUrl+"site/getAvailableTimes",
+					data: {d: date}
+				}).done(function(timeSlots) {
+					var success = timeSlots.search('"success":false');
+					if (success === -1){
+						var d = new Date(date);
+						$('#dateText').empty();
+						$('#dateText').append(weekday[d.getDay()]);
+						$('#timeSlots').empty();
+						$('#timeSlots').append(timeSlots);
+					}
+				});
+			},
+			minDate: 0,
+			beforeShowDay: function(date) {
+			 	var day = date.getDay();
+			 	return [(day != 6 && day != 0)];
+			}
+		});
+		$('#chooseDate').datepicker("setDate", new Date());
+	});
+</script>

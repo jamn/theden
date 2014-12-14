@@ -6,7 +6,7 @@
 <title>:: The Den Barbershop | Cancel Appointment ::</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz-new.css')}?v0.4" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz-new.css')}?v${grailsApplication.metadata.'app.version'}" />
 <link media="handheld, only screen" href="${resource(dir:'css', file:'media.css')}" type="text/css" rel="stylesheet" />
 
 </head><body baseUrl="${createLink()}">
@@ -53,7 +53,7 @@
 		<div class="footer">&nbsp;</div>
 
 		<script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
-		<script src="${resource(dir:'js', file:'application.min.js')}?v0.6" type="text/javascript"></script>
+		<script src="${resource(dir:'js', file:'application.min.js')}?v${grailsApplication.metadata.'app.version'}" type="text/javascript"></script>
 
 		<script type="text/javascript">
 			$('#email').bind('keyup', function(){

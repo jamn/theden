@@ -54,51 +54,46 @@ class SiteController {
 		def service
 		def stylist
 		Boolean dontRenderTemplate = false
-		try {
-			if (params?.d){
-				requestedDate = dateFormatter3.parse(params?.d)
-			}
-			else if (session?.requestedDate){
-				requestedDate = session.requestedDate
-				dontRenderTemplate = true
-			}
-			else{
-				requestedDate =  new Date()
-			}
-			println "requestedDate: " + requestedDate
-			if (params?.stylist){
-				stylist = params.stylist
-			}else{
-				stylist = User.get(session.stylistId)
-			}
-			println "stylist: " + stylist?.getFullName()
-			if (params?.s){
-				service = Service.findWhere(stylist:stylist, description:params?.s)
-				session.serviceId = service.id
-			}
-			else{
-				service = Service.get(session?.serviceId)
-			}
-			println "service: " + service?.description
+
+		if (params?.d){
+			requestedDate = dateFormatter3.parse(params?.d)
 		}
-		catch(Exception e) {
-			println "ERROR: " + e
+		else if (session?.requestedDate){
+			requestedDate = session.requestedDate
+			dontRenderTemplate = true
 		}
+		else{
+			requestedDate =  new Date()
+		}
+		println "requestedDate: " + requestedDate
+		if (params?.stylist){
+			stylist = params.stylist
+		}else{
+			stylist = User.get(session.stylistId)
+		}
+		println "stylist: " + stylist?.getFullName()
+		if (params?.s){
+			service = Service.findWhere(stylist:stylist, description:params?.s)
+			session.serviceId = service.id
+		}
+		else{
+			service = Service.get(session?.serviceId)
+		}
+		println "service: " + service?.description
 
 		if (requestedDate && stylist && service){
 			timeSlotsMap = schedulerService.getTimeSlotsAvailableMap(requestedDate, stylist, service)
+			if (dontRenderTemplate){
+				return timeSlotsMap
+			}
+			else{
+				render (template: "timeSlots", model: [timeSlotsMap:timeSlotsMap])
+			}
 		}
 		else {
 			println "ERROR: unable to process params -> " + params
+			return false
 		}
-
-		if (dontRenderTemplate){
-			return timeSlotsMap
-		}
-		else{
-			render (template: "timeSlots", model: [timeSlotsMap:timeSlotsMap])
-		}
-
 	}
 
 	def getLogin() {

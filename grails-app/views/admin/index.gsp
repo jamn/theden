@@ -10,8 +10,8 @@
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'bootstrap-3.2.0.min.css')}" >
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery.confirmon.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin-media.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}?v${grailsApplication.metadata.'app.version'}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin-media.css')}?v${grailsApplication.metadata.'app.version'}" />
 
 <link rel="apple-touch-icon" sizes="57x57" href="${resource(dir:'images', file:'apple-icon-57x57.png')}" />
 <link rel="apple-touch-icon" sizes="72x72" href="${resource(dir:'images', file:'apple-icon-72x72.png')}" />
@@ -78,6 +78,6 @@
 <script src="${resource(dir:'js', file:'bootstrap-3.2.0.min.js')}" type="text/javascript"></script>
 <script src="${resource(dir:'js', file:'jquery.confirmon.js')}"></script>
 <script src="${resource(dir:'js', file:'jquery-validate-min.js')}"></script>
-<script src="${resource(dir:'js', file:'a.min.js')}?v0.6" type="text/javascript"></script>
+<script src="${resource(dir:'js', file:'a.min.js')}?v${grailsApplication.metadata.'app.version'}" type="text/javascript"></script>
 
 </body></html>
