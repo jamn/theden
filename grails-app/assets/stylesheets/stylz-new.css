@@ -168,6 +168,11 @@ body {
 	box-shadow: 0px 2px 5px rgba(78, 82, 65, 0.69);
 }
 
+.server-error-message {
+	text-align: center;
+	padding: 144px 10px 0;
+}
+
 /* HOME PAGE */
 
 .building-front {
