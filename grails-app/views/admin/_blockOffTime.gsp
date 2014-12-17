@@ -1,10 +1,11 @@
 	<h1>Block Off Time</h1>
 	<label id="chooseDateToBlockOffText" for="chooseDateToBlockOff">Choose a date:</label>
-	</br>
+	<br />
 	<input id="chooseDateToBlockOff" name="chooseDateToBlockOff" type="text" class="date">
-	</br>
-	</br>
+	<br />
+	<br />
 	<label id="fromText" for="from">&nbsp;&nbsp;&nbsp;From:</label>
+	<br />
 	<select id="fromHour">
 		<option value="1">1</option>
 		<option value="2">2</option>
@@ -30,10 +31,10 @@
 		<option value="am">AM</option>
 		<option value="pm">PM</option>
 	</select>
-	</br>
-	</br>
+	<br />
+	<br />
 	<label id="toText" for="to">&nbsp;&nbsp;&nbsp;To:</label>
-	</br>
+	<br />
 	<select id="toHour">
 		<option value="1">1</option>
 		<option value="2">2</option>
@@ -59,17 +60,17 @@
 		<option value="am">AM</option>
 		<option value="pm">PM</option>
 	</select>
-	</br>
-	</br>
+	<br />
+	<br />
 	<div id="blockOffTimeButton" class="btn green-button">Block Off Time</div>
 
 	<hr>
 
 	<h1>Block Off Whole Day</h1>
-	<label id="fromText" for="fromWholeDay">&nbsp;&nbsp;&nbsp;From:</label>
-	<input id="fromWholeDay" name="fromWholeDay" type="text" class="date">
+	<label id="fromText" for="fromWholeDay">&nbsp;&nbsp;&nbsp;From:</label> <br />
+	<input id="fromWholeDay" name="fromWholeDay" type="text" class="date"><br />
 
-	<label id="toText" for="toWholeDay">&nbsp;&nbsp;&nbsp;To:</label>
+	<label id="toText" for="toWholeDay">&nbsp;&nbsp;&nbsp;To:</label> <br />
 	<input id="toWholeDay" name="toWholeDay" type="text" class="date">
 
 	<div id="blockOffDaysButton" class="btn green-button">Block Off Days</div>

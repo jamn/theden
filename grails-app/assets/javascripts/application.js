@@ -1,43 +1,5 @@
-var weekday=new Array(7);
-weekday[0]="Sunday";
-weekday[1]="Monday";
-weekday[2]="Tuesday";
-weekday[3]="Wednesday";
-weekday[4]="Thursday";
-weekday[5]="Friday";
-weekday[6]="Saturday";
-
 $(document).on("tap", ".home-link", function() {
 	window.location.href = "./site";
-});
-
-$(document).ready(function(){
-	$('#chooseDate').datepicker( {
-		onSelect: function(date) {
-			var date = $('#chooseDate').val();
-			var baseUrl = $('body').attr('baseUrl');
-			$.ajax({
-				type: "POST",
-				url: baseUrl+"site/getAvailableTimes",
-				data: {d: date}
-			}).done(function(timeSlots) {
-				var success = timeSlots.search('"success":false');
-				if (success === -1){
-					var d = new Date(date);
-					$('#dateText').empty();
-					$('#dateText').append(weekday[d.getDay()]);
-					$('#timeSlots').empty();
-					$('#timeSlots').append(timeSlots);
-				}
-			});
-		},
-		minDate: 0,
-		beforeShowDay: function(date) {
-		 	var day = date.getDay();
-		 	return [(day != 6 && day != 0)];
-		}
-	});
-	$('#chooseDate').datepicker("setDate", new Date());
 });
 
 $(document).on("tap", "#newAddress", function() {
@@ -49,15 +11,6 @@ $(document).on("tap", "#newAddress", function() {
 	}
 	else{
 		$(".google-map").slideDown();
-	}
-});
-
-$(document).on("tap", "#recurringAppointment", function() {
-	var opts = $("#recurringAppointmentOptions");
-	if ($(opts).is(":visible")){
-		$(opts).slideUp();
-	}else{
-		$(opts).slideDown();
 	}
 });
 
@@ -81,7 +34,7 @@ $(document).on("tap", "#bookNowButton", function() {
 	if (disabled != "disabled") {
 		disableButton(this);
 		var data = { u: "kp" }
-		var nextPage = "services"
+		var nextPage = "services";
 		getPageContent(this, data, nextPage);
 	}
 });
@@ -93,7 +46,7 @@ $(document).on("tap", ".service", function() {
 		var service = this.getAttribute("service");
 		var date = $('#chooseDate').val();
 		var data = {s: service, d: date}
-		var nextPage = "timeSlots"
+		var nextPage = "timeSlots";
 		getPageContent(this, data, nextPage);
 	}
 });
@@ -103,18 +56,18 @@ $(document).on("tap", ".time-slot", function() {
 	if (disabled != "disabled") {
 		disableButton(this);
 		var date = this.getAttribute("starttime");
-		var recurringAppointment = $('#recurringAppointment').is(':checked');
+		var recurringAppointment = $('#recurringAppointmentCheckbox').is(':checked');
 		var repeatDuration = $('#repeatDuration').val();
 		var repeatNumberOfAppointments = $('#repeatNumberOfAppointments').val();
 		var data = {d: date, r: recurringAppointment, dur: repeatDuration, num: repeatNumberOfAppointments}
-		var nextPage = "login"
+		var nextPage = "loginForm";
 		getPageContent(this, data, nextPage);
 	}
 });
 
 $(document).on("tap", "#registerLink", function() {
 	$('.right-divider').show();
-	$('#password').show();
+	$('#password-Book').show();
 	$('#resetPassword').show();
 	$('#showLoginForm').show();
 
@@ -122,14 +75,13 @@ $(document).on("tap", "#registerLink", function() {
 	$('#registerLink').hide();
 
 	$('.new-user').slideDown();
-	$('.new-user').addClass('animated fadeIn');
 
 	$('.errorDetails').slideUp();
 
 	$('#loginButton').attr("sendPasswordResetEmail", false);
 	$('#loginButton').attr("attemptPasswordReset", false);
 
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('errorButton');
 	$('#loginButton .as-button-label').text("Register & Book");
 });
 
@@ -137,7 +89,7 @@ $(document).on("tap", "#resetPassword", function() {
 	$('.right-divider').hide();
 	$('.left-divider').show();
 
-	$('#password').hide();
+	$('#password-Book').hide();
 
 	$('#resetPassword').hide();
 
@@ -146,14 +98,13 @@ $(document).on("tap", "#resetPassword", function() {
 	$('#showLoginForm').show();
 
 	$('.new-user').slideUp();
-	$('.new-user').removeClass('animated fadeIn');
 	
 	$('.errorDetails').slideUp();
 	
 	$('#loginButton').attr("sendPasswordResetEmail", true);
 	$('#loginButton').attr("attemptPasswordReset", false);
 
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('errorButton');
 	$('#loginButton .as-button-label').text("Send Reset Email");
 });
 
@@ -161,7 +112,7 @@ $(document).on("tap", "#showLoginForm", function() {
 	$('.right-divider').hide();
 	$('.left-divider').show();
 
-	$('#password').show();
+	$('#password-Book').show();
 
 	$('#resetPassword').show();
 	
@@ -170,20 +121,19 @@ $(document).on("tap", "#showLoginForm", function() {
 	$('#showLoginForm').hide();
 	
 	$('.new-user').slideUp();
-	$('.new-user').removeClass('animated fadeIn');
 
 	$('.errorDetails').slideUp();
 	
 	$('#loginButton').attr("sendPasswordResetEmail", false);
 	$('#loginButton').attr("attemptPasswordReset", false);
 
-	$('#loginButton').removeClass('errorButton animated fadeIn');
+	$('#loginButton').removeClass('errorButton');
 	$('#loginButton .as-button-label').text("Book Appointment");
 });
 
 $(document).on("tap", "#loginButton", function() {
 	var disabled = $(this).attr("disabled");
-	$('#loginButton').removeClass('error-button animated fadeIn');
+	$('#loginButton').removeClass('error-button');
 
 	if (disabled != "disabled"){
 		$(this).attr("disabled", "disabled");
@@ -197,23 +147,32 @@ $(document).on("tap", "#loginButton", function() {
 	}
 });
 
-$(document).on("keypress", "#password", function() {
+$(document).on("tap", "#cancelAppointmentLoginButton", function() {
+	var disabled = $(this).attr("disabled");
+	$('#cancelAppointmentLoginButton').removeClass('error-button');
+	if (disabled != "disabled"){
+		$(this).attr("disabled", "disabled");
+		cancelAppointment();
+	}
+});
+
+$(document).on("keypress", "#password-Book", function() {
 	if (event.keyCode === 13) {
-		$('#loginButton').removeClass('error-button animated fadeIn');
+		$('#loginButton').removeClass('error-button');
 		bookAppointment();
 	}
 });
 
-$(document).on("keypress", "#password2", function() {
+$(document).on("keypress", "#password-Cancel", function() {
 	if (event.keyCode === 13) {
-		$('#cancelAppointmentLoginButton').removeClass('error-button animated fadeIn');
+		$('#cancelAppointmentLoginButton').removeClass('error-button');
 		cancelAppointment();
 	}
 });
 
 $(document).on("keypress", "#verifyNewPassword", function() {
 	if (event.keyCode === 13) {
-		$('#loginButton').removeClass('error-button animated fadeIn');
+		$('#loginButton').removeClass('error-button');
 		attemptPasswordReset();
 	}
 });
@@ -251,7 +210,7 @@ function attemptPasswordReset(){
 function bookAppointment(){
 	var email = $('#email').val();
 	var email2 = $('#email2').val();
-	var password = $('#password').val();
+	var password = $('#password-Book').val();
 	var firstName = $('#firstName').val();
 	var lastName = $('#lastName').val();
 	var phoneNumber = $('#phoneNumber').val();
@@ -274,22 +233,13 @@ function processResults(confirmation){
 		$('#loginButton .spinner').hide();
 		$('#loginButton .as-button-label').show();
 		$('#loginButton').attr("disabled", false);
-		$('#loginButton').addClass('error-button animated fadeIn');
+		$('#loginButton').addClass('error-button').fadeIn();
 
 		$('.errorDetails').html(results.errorMessage);
 		$('.errorDetails').slideDown();
 	}
 	else{
-		$('.login').removeClass('animated fadeInRightBig');
-		$('.login').addClass('animated fadeOut');
-		$('.login').slideUp();
-		$('.main-content-area').removeClass('animated fadeInRightBig');
-		$('.main-content-area').addClass('animated fadeOut');
-		$('.main-content-area').slideUp();
-		$('.confirmation').append(confirmation);
-		$('.confirmation').slideDown();
-		$('.confirmation').removeClass('animated fadeOut');
-		$('.confirmation').addClass('animated fadeInRightBig');
+		loadPageContent("loginForm", "confirmation", confirmation);
 	}
 }
 
@@ -300,34 +250,25 @@ function processCancelAppointmentResults(confirmation){
 		$('#cancelAppointmentLoginButton .spinner').hide();
 		$('#cancelAppointmentLoginButton .as-button-label').show();
 		$('#cancelAppointmentLoginButton').attr("disabled", false);
-		$('#cancelAppointmentLoginButton').addClass('error-button animated fadeIn');
+		$('#cancelAppointmentLoginButton').addClass('error-button');
 
 		$('.errorDetails').html(results.errorMessage);
 		$('.errorDetails').slideDown();
 	}
 	else{
-		$('.login').removeClass('animated fadeInRightBig');
-		$('.login').addClass('animated fadeOut');
-		$('.login').slideUp();
-		$('.main-content-area').removeClass('animated fadeInRightBig');
-		$('.main-content-area').addClass('animated fadeOut');
-		$('.main-content-area').slideUp();
-		$('.confirmation').append(confirmation);
-		$('.confirmation').slideDown();
-		$('.confirmation').removeClass('animated fadeOut');
-		$('.confirmation').addClass('animated fadeInRightBig');
+		loadPageContent("loginForm", "confirmation", confirmation);
 	}
 }
 
 function cancelAppointment(){
 	var cancelAppointmentLoginButton = $('#cancelAppointmentLoginButton');
 	var disabled = cancelAppointmentLoginButton.attr("disabled");
-	cancelAppointmentLoginButton.removeClass('error-button animated fadeIn');
+	cancelAppointmentLoginButton.removeClass('error-button');
 	if (disabled != "disabled"){
 		cancelAppointmentLoginButton.attr("disabled", "disabled");
 		console.log('called cancel appointment.');
 		var email = $('#email').val();
-		var password = $('#password2').val();
+		var password = $('#password-Cancel').val();
 		$('#cancelAppointmentLoginButton .as-button-label').hide();
 		$('#cancelAppointmentLoginButton .spinner').show();
 		var baseUrl = $('body').attr('baseUrl');
@@ -357,18 +298,18 @@ function getPageContent(button, data, nextPage){
 			url: baseUrl+"site/"+action,
 			data: data
 		}).done(function(response) {
-			$('.main-content').css("background-color", "white");
-			$('.main-content .page[page="'+currentPage+'"]').removeClass('fadeIn');
-			$('.main-content .page[page="'+currentPage+'"]').addClass('animated fadeOut');
-			$('.main-content .page[page="'+currentPage+'"]').slideUp();
-
-			$('.main-content .page[page="'+nextPage+'"]').html(response);
-			$('.main-content .page[page="'+nextPage+'"]').slideDown();
-			$('.main-content .page[page="'+nextPage+'"]').removeClass('animated fadeOut');
-			$('.main-content .page[page="'+nextPage+'"]').addClass('animated fadeInRightBig');
+			loadPageContent(currentPage, nextPage, response);
 		}).fail(function(){
 			$(button).html("Error");
-			$(button).addClass('error-button animated fadeIn');
+			$(button).addClass('error-button');
 		});
 	}
+}
+
+function loadPageContent(currentPage, nextPage, pageContent){
+	$('.main-content').css("background-color", "white");
+	$('.main-content .page[page="'+currentPage+'"]').slideUp();
+
+	$('.main-content .page[page="'+nextPage+'"]').append(pageContent);
+	$('.main-content .page[page="'+nextPage+'"]').slideDown();
 }

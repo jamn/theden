@@ -26,6 +26,9 @@
 		background-color: #f5f5f5;
 		border-right: 1px solid #eee;
 	}
+	#clientDetails > h2 {
+		font-size: 4em;
+	}
 }
 
 /* Medium devices (desktops, 992px and up) */

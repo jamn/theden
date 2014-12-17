@@ -79,7 +79,7 @@ class AdminController {
 
     private Map getHomepageText(){
     	def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "ERROR: HOMEPAGE_MESSAGE record not found in the database. Tell Ben. He's good at fixing that stuff."
-	    homepageText = homepageText.replace("<br>","\r")
+	    homepageText = homepageText.replace("<br />","\r")
 	    return [homepageText:homepageText]
     }
 
@@ -134,7 +134,7 @@ class AdminController {
     private Map getLog(){
 		String log = ''
 		try {
-			log = new File('/var/log/tomcat7/catalina.out').text.replace('\n', '</br>').replace('\r', '</br>')
+			log = new File('/var/log/tomcat7/catalina.out').text.replace('\n', '<br />').replace('\r', '<br />')
 		}
 		catch(Exception e) {
 			println "ERROR: " + e
@@ -154,7 +154,7 @@ class AdminController {
 		println "params: " + params
 		if (session.adminUser){
 			def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")
-			homepageText.value = params.m.replace("\r", "<br>").replace("\n", "<br>")
+			homepageText.value = params.m.replace("\r", "<br />").replace("\n", "<br />")
 			homepageText.save(flush:true)
 			if (homepageText.hasErrors()){
 				println "ERROR: new message not saved."

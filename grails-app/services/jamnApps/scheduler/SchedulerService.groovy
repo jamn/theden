@@ -12,29 +12,7 @@ class SchedulerService {
 	def dateService
 	def emailService
 
-	SimpleDateFormat dateFormatter3 = new SimpleDateFormat("MM/dd/yyyy")
-
-	public deleteAppointment(id, sql = null){
-		println "Deleting appointment: " + id
-		if (!sql){
-			def session = sessionFactory.currentSession
-  			sql = new Sql(session.connection())
-		}
-		def query1 = "DELETE FROM appointment WHERE id = ${id};"
-		def query2 = "DELETE FROM core_object WHERE id = ${id};"
-		try {
-			sql.executeUpdate(query1)
-		}
-		catch(Exception e) {
-			println "ERROR: " + e
-		}
-		try {
-			sql.executeUpdate(query2)
-		}
-		catch(Exception e) {
-			println "ERROR: " + e
-		}
-	}
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy")
 
 	public Map getTimeSlotsAvailableMap(Date requestedDate, User stylist, Service service){
 		def timeSlotsMap = [:]
@@ -169,7 +147,7 @@ class SchedulerService {
 			hour = hour + 12
 		}
 		Calendar tempDate = new GregorianCalendar()
-		tempDate.setTime(dateFormatter3.parse(params.aDate))
+		tempDate.setTime(dateFormatter.parse(params.aDate))
 		tempDate.set(Calendar.HOUR_OF_DAY, hour.intValue())
 		tempDate.set(Calendar.MINUTE, minute.intValue())
 		tempDate.set(Calendar.SECOND, 0)

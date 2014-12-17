@@ -40,6 +40,7 @@ body {
 	text-align: center;
 	padding: 20px;
 	margin: 0 auto;
+	width: 100%;
 }
 
 .error-button{
@@ -70,6 +71,13 @@ body {
 .header .logo {
 	margin: 0 auto;
 	padding: 18px 0 4px;
+	transform: scale(0.9, 0.9);
+	-ms-transform: scale(0.9, 0.9);
+	-webkit-transform: scale(0.9, 0.9);
+}
+
+.address {
+	padding: 10px 0;
 }
 
 .header .address {
@@ -99,10 +107,7 @@ body {
 }
 
 .message-board-backing,
-.message-board/*,
-.book-now-button,
-.service,
-.time-slot*/{
+.message-board{
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
 	border-radius: 8px;
@@ -129,6 +134,11 @@ body {
 	margin-bottom: 24px;
 }
 
+.main-content .page {
+	display: none;
+	min-height: 300px;
+}
+
 .footer .address {
 	text-align: center;
 	font-size: 1.3em;
@@ -139,6 +149,24 @@ body {
 	background-color: #8D8800;
 }
 
+.google-map {
+	display: none;
+}
+
+.existingAppointmentInfo{
+	width: 100%;
+	text-align: center;
+	font-size: 1.1em;
+	padding: 20px 0;
+	background-color: #858117;
+	z-index: 10000;
+	position: fixed;
+	clear: both;
+	color: #E4E4E4;
+	letter-spacing: 1px;
+	border-bottom: 1px solid #707555;
+	box-shadow: 0px 2px 5px rgba(78, 82, 65, 0.69);
+}
 
 /* HOME PAGE */
 
@@ -181,8 +209,102 @@ body {
 
 /* TIME SLOTS */
 
-#recurringAppointmentOptions {
+#recurringAppointmentOptions ul li {
+	display: inline-block;
+}
+
+#recurringAppointmentOptions ul {
+	padding: 0;
+}
+
+#recurringAppointmentCheckbox {
+	height: 20px;
+	width: 20px;
+}
+
+.time-slots {
+	margin-left: 0px; 
+	margin-right: 0px;
+}
+
+.time-slots h2,
+.noTimesAvailableMessage {
+	text-align: center;
+}
+
+.noTimesAvailableMessage {
+	background-color: #ccc;
+	padding: 16px 0;
+}
+
+.noTimesAvailableMessage p {
+	margin: 0;
+}
+
+
+/* LOGIN */
+
+.login-box,
+.reset-password-box{
+	border: 1px solid #A2A2A2;
+	margin-top: 50px;
+	border-radius: 4px;
+	padding: 20px; 
+}
+
+.login-box input {
+	margin: 5px
+}
+
+.login-box ul li {
+	list-style-type: none;
+	display: inline;
+	padding-right: 6px;
+}
+
+.errorDetails{
+	width: 304px;
+	padding: 6px;
 	display: none;
+	color: red;
+	font-style: .8em;
+	margin: auto;
+	text-align: center;
+	margin-top: 8px;
+}
+
+#showLoginForm{
+	display: none;
+}
+
+#registerLink,
+#resetPassword,
+#showLoginForm{
+	position: relative;
+	text-decoration: underline;
+	color: blue;
+	cursor: pointer;
+	text-align: center;
+}
+
+.reset-password-links {
+	margin: 16px 4px;
+}
+
+.right-divider{
+	display: none;
+}
+
+/* CONFIRMATION */
+
+.confirmation {
+	text-align: center;
+	padding: 150px 0 100px;
+}
+
+.confirmation h2 {
+	font-size: 1.2em;
+	font-weight: bold;
 }
 
 

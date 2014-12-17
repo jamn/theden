@@ -18,14 +18,17 @@ class SiteController {
 	def emailService
 	def schedulerService
 	def userService
+	def sessionFactory
 
 	def index() {
-		//resetSession()
 		def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
 		return [message:message]
 	}
 
 	def getServices(){
+		deleteStaleAppointments()
+		session.invalidate()
+		
 		println "\n---- GET SERVICES ----"
 		println new Date()
 		println "params.u: " + params.u
@@ -54,6 +57,9 @@ class SiteController {
 		def service
 		def stylist
 		Boolean dontRenderTemplate = false
+		Boolean renderDatePicker = false
+
+		println 'session: ' + session
 
 		if (params?.d){
 			requestedDate = dateFormatter3.parse(params?.d)
@@ -63,6 +69,7 @@ class SiteController {
 			dontRenderTemplate = true
 		}
 		else{
+			renderDatePicker = true
 			requestedDate =  new Date()
 		}
 		println "requestedDate: " + requestedDate
@@ -87,7 +94,10 @@ class SiteController {
 				return timeSlotsMap
 			}
 			else{
-				render (template: "timeSlots", model: [timeSlotsMap:timeSlotsMap])
+				def datePickerHTML = g.render(template: "datePicker")
+				def timeSlotsHTML = g.render(template: "timeSlots", model: [timeSlotsMap:timeSlotsMap])
+				def returnHTML = renderDatePicker ? (datePickerHTML + "\n" + timeSlotsHTML) : timeSlotsHTML
+				render (returnHTML)
 			}
 		}
 		else {
@@ -96,12 +106,14 @@ class SiteController {
 		}
 	}
 
-	def getLogin() {
+	def getLoginForm() {
+		println "\n---- GET LOGIN FORM ----"
+		println new Date()
 		saveDate(params)
 		render (template: "login")
 	}
 
-	private saveDate(){
+	private saveDate(Map params = [:]){
 		println "\n---- SAVE DATE ----"
 		println new Date()
 
@@ -309,7 +321,7 @@ class SiteController {
 						if (appointment.hasErrors() || appointment.booked == false){
 							println "ERROR: " + appointment?.errors
 							errorOccurred = true
-							errorMessage = "A really weird error occured trying to save your appointment. We'll get to the bottom of it. In the meantime please try booking again from the start. Sorry about that."
+							errorMessage = "An error occured trying to save your appointment. Sorry about that, we'll get to the bottom of it. In the meantime please try booking again from the start."
 						}
 						else{
 							println "saved appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
@@ -321,7 +333,8 @@ class SiteController {
 						def existingAppointment = Appointment.get(session.existingAppointmentId)
 						if (existingAppointment.client == client){
 							println "Deleting existing appointment..."
-							schedulerService.deleteAppointment(existingAppointment.id)
+							existingAppointment.delete()
+							session.existingAppointmentId = null
 							emailService.sendCancellationNotices(existingAppointment)
 						}
 					}
@@ -355,7 +368,7 @@ class SiteController {
 				if (appointment?.client?.code?.toUpperCase() == params.cc.toString().toUpperCase().trim()){
 					session.existingAppointmentId = appointment.id
 					println "session: " + session
-					def timeSlotsMap = getAvailableTimes()
+					def timeSlotsMap = getTimeSlots()
 					def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
 					render (template: "modifyAppointment", model: [timeSlotsMap:timeSlotsMap, message:message, appointment:appointment])
 				}
@@ -378,12 +391,14 @@ class SiteController {
 		def appointment
 		Boolean showLoginForm = false
 		if (params?.c){ // params.c = appointment.code
-			showLoginForm = true
 			appointment = Appointment.findByCode(params.c.trim())
 			if (appointment){
+				showLoginForm = true
 				session.appointmentToDelete = appointment
+			}else{
+				redirect(action:"index")
 			}
-			println "appointment(${appointment.id}): " + appointment?.client?.getFullName() + " | " + appointment?.service?.description + " on " + appointment?.appointmentDate?.format('MM/dd/yy @ hh:mm a [E]')
+			println "appointment(${appointment?.id}): " + appointment?.client?.getFullName() + " | " + appointment?.service?.description + " on " + appointment?.appointmentDate?.format('MM/dd/yy @ hh:mm a [E]')
 	
 		}
 		else if (session.appointmentToDelete){
@@ -438,35 +453,23 @@ class SiteController {
 		else{
 			render(template: "confirmation", model: [appointmentDeleted:true])
 		}
-
-
 	}
 
 	private deleteStaleAppointments(){
 		println "\n---- DELETING STALE APPOINTMENTS ----"
 		println new Date()
-  		def sql = new Sql(session.connection())
-		Calendar now = new GregorianCalendar()
-		now.add(Calendar.MINUTE, -10)
-		def tenMinutesAgo = now.getTime().format('yyyy-MM-dd HH:mm:ss')
-		List idsToDelete = []
-		def query1 = [
-			"SELECT id FROM appointment WHERE booked = 0 AND id IN (",
-				"SELECT id FROM core_object WHERE date_created < '"+tenMinutesAgo+"'",
-			");"
-		].join('\n')
-		try {
-			sql.eachRow(query1){ row ->
-				idsToDelete.add(row.id)
-			}
+		def numberOfTimeSlotsFreed = 0
+		def lastAppointmentUserAttemptedToBook = Appointment.get(session?.appointmentId)
+		if (lastAppointmentUserAttemptedToBook && lastAppointmentUserAttemptedToBook.booked == false){
+			lastAppointmentUserAttemptedToBook.delete()
+			numberOfTimeSlotsFreed++
 		}
-		catch(Exception e) {
-			println "ERROR: " + e
-		}
-		idsToDelete.each(){
-			schedulerService.deleteAppointment(it, sql)
-		}
-		
+		Calendar calendarObject = new GregorianCalendar()
+		calendarObject.add(Calendar.MINUTE, -1)
+		def fiveMinutesAgo = calendarObject.getTime()
+		numberOfTimeSlotsFreed += Appointment.executeUpdate("delete Appointment a where a.booked = false and a.dateCreated < :fiveMinutesAgo", [fiveMinutesAgo:fiveMinutesAgo])	
+		sessionFactory.currentSession.flush()
+		println "Deleted ${numberOfTimeSlotsFreed} stale appointments"
 	}
 
 	private getServicesForStylist(User stylist){
@@ -481,15 +484,4 @@ class SiteController {
 		return serviceList
 	}
 
-
-	private resetSession(){
-		def appointment = Appointment.get(session?.appointmentId)
-		if (appointment && !appointment?.booked){
-			appointment.delete()
-		}
-		deleteStaleAppointments()
-		session.invalidate()
-		def now = new Date()
-		println "** SESSION RESET ${now} **"
-	}
 }

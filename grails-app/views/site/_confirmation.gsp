@@ -11,9 +11,9 @@
 		Your appointment has been cancelled.
 	</p>
 <%}else{%>
-	<p>
+	<h2>
 		Your appointment(s) have been booked for:
-	</p>
+	</h2>
 	<ul style='list-style: none;margin-left: -38px;'>
 		<g:each in='${appointments}'>
 			<li>- ${it.appointmentDate.format('EEEE, MMMM dd @ hh:mm a')}</li>
