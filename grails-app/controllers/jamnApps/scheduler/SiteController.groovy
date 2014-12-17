@@ -1,5 +1,6 @@
 package jamnApps.scheduler
 
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.apache.commons.lang.RandomStringUtils
 import java.text.SimpleDateFormat
 import grails.converters.JSON
@@ -28,7 +29,8 @@ class SiteController {
 	def getServices(){
 		deleteStaleAppointments()
 		session.invalidate()
-		
+		GrailsWebRequest.lookup(request).session = null
+
 		println "\n---- GET SERVICES ----"
 		println new Date()
 		println "params.u: " + params.u
