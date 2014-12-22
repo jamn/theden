@@ -4,9 +4,9 @@
 <div class="row">
 	<table class="appointments">
 		<tr>
-			<td width="140px"><h2>Name:</h2></td>
-			<td><h2>Service:</h2></td>
-			<td width="180px"><h2>Date:</h2></td>
+			<td><h2>Name:</h2></td>
+			<td width="210px"><h2>Service:</h2></td>
+			<td width="210px"><h2>Date:</h2></td>
 		</tr>
 		<g:each in="${appointments}">
 			<%if (it.service.description != 'Blocked Off Time'){%>

@@ -26,6 +26,10 @@
 		background-color: #f5f5f5;
 		border-right: 1px solid #eee;
 	}
+
+	.main {
+		padding: 20px 40px;
+	}
 	#clientDetails > h2 {
 		font-size: 4em;
 	}

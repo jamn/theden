@@ -119,7 +119,7 @@ background-color: #6F6F6F;
  */
 
 .main {
-  padding: 20px 40px;
+  padding: 20px;
 }
 
 .main .page-header {
@@ -289,7 +289,8 @@ select{
 	margin: 10px 0;
 }
 
-.error-button{
+.error-button,
+.deleted {
 	background: rgb(196,3,3) !important; /* Old browsers */
 	background: -moz-linear-gradient(top,  rgba(196,3,3,1) 0%, rgba(160,3,3,1) 44%, rgba(132,0,0,1) 100%) !important; /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(196,3,3,1)), color-stop(44%,rgba(160,3,3,1)), color-stop(100%,rgba(132,0,0,1))) !important; /* Chrome,Safari4+ */
@@ -550,6 +551,32 @@ select{
 
 .blocked-off{
 	background-color: #505050;
+}
+
+.blocked-timeslots-table {
+	width: 100%;
+}
+
+.blocked-timeslots-table thead {
+	font-size: 1.3em;
+	background-color: #EDEDED;
+}
+
+.blocked-timeslots-table thead td{
+	padding: 10px 0;
+}
+
+.blocked-timeslots-table tbody {
+	font-size: 1.1em;
+}
+
+.blocked-timeslots-table tbody td {
+	vertical-align: middle;
+}
+
+.blocked-timeslots-table input {
+	height: 30px;
+	width: 30px;
 }
 
 .appointments{

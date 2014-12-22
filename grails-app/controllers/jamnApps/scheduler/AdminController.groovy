@@ -64,6 +64,9 @@ class AdminController {
 		else if (template == "bookAppointment"){
 			model = getClients() + getServices()
 		}
+		else if (template == "blockOffTime"){
+			model = getBlockedOffTimes()
+		}
 		else if (template == "log"){
 			model = getLog()
 		}
@@ -101,12 +104,12 @@ class AdminController {
     }
 
     private Map getUpcomingAppointments(){
-		Calendar now = new GregorianCalendar()
-		now.set(Calendar.HOUR_OF_DAY, 0)
-		now.set(Calendar.MINUTE, 0)
-		now.set(Calendar.SECOND, 0)
-		now.set(Calendar.MILLISECOND, 0)
-		def appointments = Appointment.findAllWhere(booked:true)?.findAll{it.appointmentDate > now.getTime()}?.sort{it.appointmentDate}
+		Calendar today = new GregorianCalendar()
+		today.set(Calendar.HOUR_OF_DAY, 0)
+		today.set(Calendar.MINUTE, 0)
+		today.set(Calendar.SECOND, 0)
+		today.set(Calendar.MILLISECOND, 0)
+		def appointments = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.booked = true", [today:today.getTime()])?.sort{it.appointmentDate}
 		return [appointments:appointments]
     }
 
@@ -129,6 +132,17 @@ class AdminController {
 		endTime.set(Calendar.MILLISECOND, 0)
 
 		return [startTime:startTime, endTime:endTime]
+    }
+
+    private Map getBlockedOffTimes(){
+    	Calendar today = new GregorianCalendar()
+		today.set(Calendar.HOUR_OF_DAY, 0)
+		today.set(Calendar.MINUTE, 0)
+		today.set(Calendar.SECOND, 0)
+		today.set(Calendar.MILLISECOND, 0)
+		def service = Service.findByDescription("Blocked Off Time")
+		def blockedOffTimes = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.service = :service", [today:today.getTime(), service:service])?.sort{it.appointmentDate}
+    	return [blockedOffTimes:blockedOffTimes]
     }
 
     private Map getLog(){
@@ -318,6 +332,33 @@ class AdminController {
 				render ('{"success":false}') as JSON
 			}
 		}
+	}
+
+	def clearBlockedTime(){
+		println "\n" + new Date()
+		println "params: " + params
+		Boolean success = false
+		def deletedTimeslots = []
+		if (session.adminUser){
+			def timeSlotsToDelete = params?.blockedOffTime ?: []
+			if (timeSlotsToDelete instanceof String) {
+				timeSlotsToDelete = [timeSlotsToDelete]
+			}
+			timeSlotsToDelete?.each(){
+				def appointment = Appointment.get(it.toLong())
+				appointment.delete(flush:true)
+				if (appointment.hasErrors()){
+					success = false
+					println "        ERROR: " + appointment.errors
+				}
+				else {
+					println "    - deleted blocked timeslot: " + appointment.appointmentDate.format('E MMM dd, yyyy @ hh:mm a')
+					deletedTimeslots.add(appointment.id)
+					success = true
+				}
+			}
+		}
+		render ('{"success":'+success+', "deletedTimeslots":'+deletedTimeslots+'}') as JSON
 	}
 
 	def bookForClient(){

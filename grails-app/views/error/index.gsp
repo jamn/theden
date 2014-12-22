@@ -65,7 +65,7 @@
 		</div>
 		<div class="row main-content">
 			<div class="page" page="home">
-				<div class="server-error-message">An error has occured. Click <g:link controller="site" action="index">here</g:link> to start over.</div>
+				<div class="server-error-message">An error has occured. Click <a href="http://www.thedenbarbershop-kc.com">here</a> to start over.</div>
 			</div>
 		</div>
 		

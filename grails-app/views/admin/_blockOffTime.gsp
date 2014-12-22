@@ -64,7 +64,7 @@
 	<br />
 	<div id="blockOffTimeButton" class="btn green-button">Block Off Time</div>
 
-	<hr>
+	<hr />
 
 	<h1>Block Off Whole Day</h1>
 	<label id="fromText" for="fromWholeDay">&nbsp;&nbsp;&nbsp;From:</label> <br />
@@ -74,6 +74,33 @@
 	<input id="toWholeDay" name="toWholeDay" type="text" class="date">
 
 	<div id="blockOffDaysButton" class="btn green-button">Block Off Days</div>
+
+
+
+	<hr />
+
+	<h1>Blocked Timeslots</h1>
+	<form id="blockedTimesForm">
+		<table class="blocked-timeslots-table">
+			<thead>
+				<tr>
+					<td></td>
+					<td>Date/Time:</td>
+				</tr>
+			</thead>
+			<tbody>
+				<g:each in="${blockedOffTimes}">
+					<tr class="blocked-time" id="blockedTime${it.id}">
+						<td style="text-align:center;"><input type="checkbox" name="blockedOffTime" value="${it.id}" /></td>
+						<td>${it.appointmentDate.format('MMM dd, yyyy | hh:mm a (E)')}</td>
+					</tr>
+				</g:each>
+			</tbody>
+		</table>
+
+		<div id="deleteBlockedTimeslotsButton" class="btn green-button">Delete Blocked Timeslots</div>
+	</form>
+
 
 <script type="text/javascript">
 	

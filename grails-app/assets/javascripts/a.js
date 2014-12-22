@@ -9,11 +9,11 @@ function getTimeSlotOptions(){
 	}).done(function(response) {
 		if (response.indexOf("ERROR") > -1){
 			$('#bookForClientButton').html("Error");
-			$('#bookForClientButton').addClass('error-button animated fadeIn');
+			$('#bookForClientButton').addClass('error-button');
 		}else{
 			$('#timeSlots').html(response);
 			$('#bookForClientButton').html("Book Appointment");
-			$('#bookForClientButton').removeClass('error-button animated fadeIn');
+			$('#bookForClientButton').removeClass('error-button');
 		}
 	});
 }
@@ -106,7 +106,6 @@ $(document).on('tap', '.last-name-filter', function(e) {
 	var lastNameStartsWith = $(e.currentTarget).attr('value');
 	$("#clientsDetailsSelector").slideDown();
 	if (lastNameStartsWith === "Reset"){
-		console.log("here");
 		getClientSelectMenuData();
 		$('.reset-search').fadeOut();
 	}
@@ -118,7 +117,6 @@ $(document).on('tap', '.last-name-filter', function(e) {
 });
 
 function getClientSelectMenuData(lastNameStartsWith){
-	console.log("resetting clients drop down");
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
@@ -251,11 +249,11 @@ $(document).on('tap', '#blockOffTimeButton', function(e) {
 		var jsonResponse = JSON.parse(response);
 		if (jsonResponse.success === true){
 			$('#blockOffTimeButton').html("Success");
-			$('#blockOffTimeButton').removeClass('error-button animated fadeIn');
+			$('#blockOffTimeButton').removeClass('error-button');
 		}
 		else{
 			$('#blockOffTimeButton').html("Error");
-			$('#blockOffTimeButton').addClass('error-button animated fadeIn');
+			$('#blockOffTimeButton').addClass('error-button');
 		}
 	});
 });
@@ -266,7 +264,7 @@ $(document).on('tap', '#blockOffDaysButton', function(e) {
 	var from = $('#fromWholeDay').val();
 	var to = $('#toWholeDay').val();
 
-	$('#blockOffDaysButton').html($('#waitingSpinner').html());
+	$(this).html($('#waitingSpinner').html());
 
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
@@ -277,15 +275,57 @@ $(document).on('tap', '#blockOffDaysButton', function(e) {
 		var jsonResponse = JSON.parse(response);
 		if (jsonResponse.success === true){
 			$('#blockOffDaysButton').html("Success");
-			$('#blockOffDaysButton').removeClass('error-button animated fadeIn');
+			$('#blockOffDaysButton').removeClass('error-button');
 		}
 		else{
 			$('#blockOffDaysButton').html("Error");
-			$('#blockOffDaysButton').addClass('error-button animated fadeIn');
+			$('#blockOffDaysButton').addClass('error-button');
 		}
 	});
 });
 
+$(document).on('tap', '.blocked-time', function(e) {
+	var checkbox = $(this).find('input:checkbox');
+	var tableRow = $(this);
+	if (e.target.type !== 'checkbox') {
+      $(checkbox).trigger('click');
+    }
+	var isChecked = $(checkbox).is(':checked');
+	if (isChecked === true) {
+		$(tableRow).addClass('deleted');
+	}
+	else {
+		$(tableRow).removeClass('deleted');
+	}
+});
+
+
+$(document).on('tap', '#deleteBlockedTimeslotsButton', function(e) {
+	var button = $('#deleteBlockedTimeslotsButton');
+	$(button).html($('#waitingSpinner').html());
+	var baseUrl = $('body').attr('baseUrl');
+	$('.blocked-timeslots-table tr:hidden').remove();
+	$.ajax({
+		type: "POST",
+		url: baseUrl + "/clearBlockedTime",
+		data: $('#blockedTimesForm').serialize()
+	}).done(function(response) {
+		var jsonResponse = JSON.parse(response);
+		if (jsonResponse.success === true){
+			$(button).html("Success");
+			$(button).removeClass('error-button');
+			var deletedTimeslots = jsonResponse.deletedTimeslots;
+			var arrayLength = deletedTimeslots.length;
+			for (var i = 0; i < arrayLength; i++) {
+				$('#blockedTime'+deletedTimeslots[i]).fadeOut('slow');
+			}
+		}
+		else{
+			$(button).html("Error");
+			$(button).addClass('error-button');
+		}
+	});
+});
 
 $(document).on('tap', '#recurringAppointment', function() {
 	var opts = $(".recurringAppointmentAdminOptions");
@@ -338,11 +378,11 @@ $(document).on('tap', '.appointment-data', function(e) {
 					var jsonResponse = JSON.parse(response);
 					if (jsonResponse.success === true){
 						$('#rescheduleButton-'+aId).html('Success');
-						$('#rescheduleButton-'+aId).removeClass('error-button animated fadeIn');
+						$('#rescheduleButton-'+aId).removeClass('error-button');
 						setTimeout(function() {window.location.href = "./";},1250);
 					}else{
 						$('#rescheduleButton-'+aId).html('Error');
-						$('#rescheduleButton-'+aId).addClass('error-button animated fadeIn');
+						$('#rescheduleButton-'+aId).addClass('error-button');
 					}
 				});
 			});
