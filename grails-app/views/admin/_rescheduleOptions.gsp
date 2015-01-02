@@ -7,4 +7,4 @@
 	</g:each>
 </select>
 <select id="timeSlotsForRescheduledAppointment-${appointment.id}" class="form-control"></select>
-<button class="btn green-button reschedule-button" id="rescheduleButton-${appointment.id}">Reschedule</button>
+<button type="button" class="btn green-button reschedule-button" id="rescheduleButton-${appointment.id}">Reschedule</button>

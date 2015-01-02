@@ -1,38 +1,46 @@
+$( document ).ready(function() {
+	getSection('upcomingAppointments');
+});
+
 function getTimeSlotOptions(){
 	var sId = $('#services').val();
 	var aDate = $('#dateOfAppointment').val();
 	var baseUrl = $('body').attr('baseUrl');
-	$.ajax({
-		type: "POST",
-		url: baseUrl + "/getTimeSlotOptions",
-		data: { sId:sId, aDate:aDate}
-	}).done(function(response) {
-		if (response.indexOf("ERROR") > -1){
-			$('#bookForClientButton').html("Error");
-			$('#bookForClientButton').addClass('error-button');
-		}else{
-			$('#timeSlots').html(response);
-			$('#bookForClientButton').html("Book Appointment");
-			$('#bookForClientButton').removeClass('error-button');
-		}
-	});
+	if (sId != 'Choose a service...'){
+		$.ajax({
+			type: "POST",
+			url: baseUrl + "/getTimeSlotOptions",
+			data: { sId:sId, aDate:aDate}
+		}).done(function(response) {
+			if (response.indexOf("ERROR") > -1){
+				$('#bookForClientButton').html("Error");
+				$('#bookForClientButton').addClass('error-button');
+			}else{
+				$('#timeSlots').html(response);
+				$('#bookForClientButton').html("Book Appointment");
+				$('#bookForClientButton').removeClass('error-button');
+			}
+		});
+	}
 }
 
 function getTimeSlotOptionsForRescheduledAppointment(aId){
 	var sId = $('#servicesForRescheduledAppointment-'+aId).val();
 	var aDate = $('#dateOfRescheduledAppointment-'+aId).val();
 	var baseUrl = $('body').attr('baseUrl');
-	$.ajax({
-		type: "POST",
-		url: baseUrl + "/getTimeSlotOptions",
-		data: { sId:sId, aDate:aDate}
-	}).done(function(response) {
-		if (response.indexOf("ERROR") > -1){
-			$('#timeSlotsForRescheduledAppointment-'+aId).html("<option>No times available</option>");
-		}else{
-			$('#timeSlotsForRescheduledAppointment-'+aId).html(response);
-		}
-	});
+	if (sId != 'Choose a service...'){
+		$.ajax({
+			type: "POST",
+			url: baseUrl + "/getTimeSlotOptions",
+			data: { sId:sId, aDate:aDate}
+		}).done(function(response) {
+			if (response.indexOf("ERROR") > -1){
+				$('#timeSlotsForRescheduledAppointment-'+aId).html("<option>No times available</option>");
+			}else{
+				$('#timeSlotsForRescheduledAppointment-'+aId).html(response);
+			}
+		});
+	}
 }
 
 $(document).on("tap", ".main", function() {
@@ -44,25 +52,29 @@ $(document).on("tap", ".main", function() {
 
 $(document).on('tap', '.nav a', function(e) {
 	var section = $(this).attr("href");
-	var baseUrl = $('body').attr('baseUrl');
 	if (section === "#logout") {
 		window.location.href = "./access/logout";
 	}
 	else {
-		$('#mask').fadeIn();
-		$.ajax({
-			type: "POST",
-			url: baseUrl + "/getSection",
-			data: {section:section}
-		}).done(function(response) {
-			$('.active').removeClass("active");
-			$('a[href="'+section+'"]').parent().addClass("active");
-			$('.main').html(response);
-			$(".navbar-toggle").click();
-			$('#mask').fadeOut();
-		});
+		getSection(section);
+		$(".navbar-toggle").click();
 	}
 });
+
+function getSection(section){
+	$('#mask').fadeIn();
+	var baseUrl = $('body').attr('baseUrl');
+	$.ajax({
+		type: "POST",
+		url: baseUrl + "/getSection",
+		data: {section:section}
+	}).done(function(response) {
+		$('.active').removeClass("active");
+		$('a[href="'+section+'"]').parent().addClass("active");
+		$('.main').html(response);
+		$('#mask').fadeOut();
+	});
+}
 
 $(document).on('tap', '#addClient', function(e) {
 	var baseUrl = $('body').attr('baseUrl');
@@ -168,25 +180,6 @@ function hideClientRegistrationForm(){
 	$('#clientDetails').slideDown();
 	$('#addClient').fadeIn();
 }
-
-$(document).on('tap', '.cancel-appointment-button', function(e) {
-	var c = $(this).attr('c');
-	var baseUrl = $('body').attr('baseUrl');
-	$.ajax({
-		type: "POST",
-		url: baseUrl + "/cancelAppointment",
-		data: { c: c }
-	}).done(function(response) {
-		var success = response.search('"success":false');
-		if (success === -1){
-			alert('*Appointment Deleted*');
-			location.reload();
-		}
-		else{
-			alert('That didn\'t work. Dang.');
-		}
-	});
-});
 
 $(document).on('change', '#clientsDetailsSelector', function() {
 	$(this).slideUp();
@@ -345,49 +338,68 @@ $(document).on('change', '#dateOfAppointment', function() {
 });
 
 $(document).on('tap', '.appointment-data', function(e) {
-	$(".edit-appointment").slideUp();
-	var aId = e.currentTarget.id;
+	var appoinmentRow = e.currentTarget;
+	if (!$(appoinmentRow).hasClass('selected')){
+		hideAppointmentData();
+		$(appoinmentRow).addClass('selected');
+		var aId = appoinmentRow.id;
+		$(".edit-appointment-"+aId).fadeIn();
+		getRescheduleOptions(aId);
+	}
+	else {
+		hideAppointmentData();
+	}
+});
+
+function hideAppointmentData(){
+	$(".edit-appointment").fadeOut();
+	$('.appointment-data.selected').removeClass('selected');
+}
+
+function getRescheduleOptions(appointmentId){
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
 		url: baseUrl + "/getRescheduleOptions",
-		data: { aId:aId }
+		data: { aId:appointmentId }
 	}).done(function(response) {
 		if (response.indexOf("ERROR") === -1){
-			$("#edit-appointment-options-"+aId).html(response);
-			$('#dateOfRescheduledAppointment-'+aId).datepicker( {
+			$("#edit-appointment-options").html(response);
+			$('#dateOfRescheduledAppointment-'+appointmentId).datepicker( {
 				minDate: 0
 			});
-			$('#dateOfRescheduledAppointment-'+aId).datepicker("setDate", new Date());
-			$('#servicesForRescheduledAppointment-'+aId).on('change', function() {
-				getTimeSlotOptionsForRescheduledAppointment(aId);
+			$('#dateOfRescheduledAppointment-'+appointmentId).datepicker("setDate", new Date());
+			$('#servicesForRescheduledAppointment-'+appointmentId).on('change', function() {
+				getTimeSlotOptionsForRescheduledAppointment(appointmentId);
 			});
-			$('#dateOfRescheduledAppointment-'+aId).on('change', function() {
-				getTimeSlotOptionsForRescheduledAppointment(aId);
+			$('#dateOfRescheduledAppointment-'+appointmentId).on('change', function() {
+				getTimeSlotOptionsForRescheduledAppointment(appointmentId);
 			});
-			$('#rescheduleButton-'+aId).on('tap', function() {
-				var sId = $('#servicesForRescheduledAppointment-'+aId).val();
-				var aDate = $('#dateOfRescheduledAppointment-'+aId).val();
-				var sTime = $('#timeSlotsForRescheduledAppointment-'+aId).val();
-				$('.spinner-'+aId).fadeIn();
+			$('#rescheduleButton-'+appointmentId).on('tap', function() {
+				var sId = $('#servicesForRescheduledAppointment-'+appointmentId).val();
+				var aDate = $('#dateOfRescheduledAppointment-'+appointmentId).val();
+				var sTime = $('#timeSlotsForRescheduledAppointment-'+appointmentId).val();
+				$('#rescheduleButton-'+appointmentId).html($('.spinner').html());
 				$.ajax({
 					type: "POST",
 					url: baseUrl + "/rescheduleAppointment",
-					data: { aId:aId, sId:sId, aDate:aDate, sTime:sTime }
+					data: { aId:appointmentId, sId:sId, aDate:aDate, sTime:sTime }
 				}).done(function(response) {
 					var jsonResponse = JSON.parse(response);
 					if (jsonResponse.success === true){
-						$('#rescheduleButton-'+aId).html('Success');
-						$('#rescheduleButton-'+aId).removeClass('error-button');
-						setTimeout(function() {window.location.href = "./";},1250);
+						$('#rescheduleButton-'+appointmentId).html('Success');
+						$('#rescheduleButton-'+appointmentId).removeClass('error-button');
+						setTimeout(function() {$('#rescheduleAppointmentModal').modal('toggle');},400);
+						setTimeout(function() {window.location.href = "./admin";},1250);
 					}else{
-						$('#rescheduleButton-'+aId).html('Error');
-						$('#rescheduleButton-'+aId).addClass('error-button');
+						$('#rescheduleButton-'+appointmentId).html('Error');
+						$('#rescheduleButton-'+appointmentId).addClass('error-button');
 					}
 				});
 			});
 		}
 	});
-	$(".edit-appointment-"+aId).slideDown();
-});
+}
+
+
 

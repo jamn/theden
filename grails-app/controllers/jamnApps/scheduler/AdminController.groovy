@@ -387,7 +387,11 @@ class AdminController {
 				params["rescheduledAppointment"] = "TRUE"
 				success = schedulerService.bookForClient(params)
 				if (success){
-					schedulerService.deleteAppointment(existingApointment.id)
+					existingApointment.delete(flush:true)
+					if (existingApointment.hasErrors()){
+						success = false
+						println "ERROR: " + existingApointment.errors
+					}
 				}
 			}
 			catch(Exception e) {
@@ -396,11 +400,11 @@ class AdminController {
 		}
 		if (success){
 			println "SUCCESS!"
-			render ('{"success":true}') as JSON
+			render ('{"success":'+success+'}') as JSON
 		}
 		else{
 			println "ERROR!"
-			render ('{"success":false}') as JSON
+			render ('{"success":'+success+'}') as JSON
 		}
 	}
 
@@ -471,6 +475,16 @@ class AdminController {
 					success = true
 				}
 			}
+		}
+		render ('{"success":'+success+'}') as JSON
+	}
+
+	def emailClient(){
+		println "\n" + new Date()
+		println "params: " + params
+		Boolean success = false
+		if (params?.e?.size() > 0 && params.m?.size() > 0){
+			success = emailService.sendEmail(params.e, params.m)
 		}
 		render ('{"success":'+success+'}') as JSON
 	}

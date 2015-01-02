@@ -177,4 +177,29 @@ class EmailService {
 			println e
 		}
 	}
+
+	public Boolean sendEmail(clientEmail, message){
+		println "EMAILING: " + clientEmail
+		println "-------------------------------------------------------------------"
+		println message
+		println "-------------------------------------------------------------------"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>${message}</p>"
+		Boolean success = false
+		try {
+			sendMail {
+				async true
+				to "${clientEmail}"
+				from "info@thedenbarbershop-kc.com"  
+				subject "Message from Kalin @ The Den Barbershop"     
+				html emailBody
+			}
+			success = true
+		}
+		catch(Exception e) {
+			println "ERROR"
+			println e
+			success = false
+		}
+		return success
+	}
 }

@@ -14,6 +14,7 @@ body {
 
 .confirmon-box {
 	top: 240px;
+	width: 210px;
 }
 
 /* Remove the blue halo jquery mobile adds */
@@ -24,6 +25,10 @@ body {
 	-webkit-box-shadow: none !important;
 	box-shadow: none !important;
 	outline: none 0px;
+}
+
+.center {
+	text-align: center;
 }
 
 /*
@@ -302,11 +307,6 @@ select{
 	border-color: #630000 !important;
 	box-shadow: 1px 1px 2px #E2466C inset !important;
 	color: #fff;
-}
-
-.reschedule-button{
-	font-size: 1em;
-	padding: 6px;
 }
 
 #mask {
@@ -588,6 +588,7 @@ select{
 }
 
 .appointment-data:hover,
+.appointment-data.selected,
 .appointment-data:hover.a,
 .appointment-data:hover.a:visited{
 	background-color: #9B9605;
@@ -595,10 +596,39 @@ select{
 	color: #fff;
 }
 
+.modal-header .close {
+	border: 1px solid #CCC;
+	border-radius: 40px;
+	margin-top: 0px;
+	margin-right: 5px;
+	padding: 2px 8px 10px;
+	width: 30px;
+	height: 30px;
+}
+
+.modal-header .modal-title {
+	font-size: 1.3em;
+}
+
+.modal-body .client-phone {
+	font-size: 1.4em;
+}
+
 .edit-appointment{
 	display: none;
 	background-color: #E9E9E9;
 	color: #494949;
+}
+
+.edit-appointment button {
+	padding: 20px;
+}
+
+.edit-appointment .glyphicon-class {
+	display: block;
+	text-align: center;
+	word-wrap: break-word;
+	font-size: 0.4em;
 }
 
 .edit-appointment input,
@@ -611,17 +641,6 @@ select{
 	padding: 10px;
 	font-size: 1.3em;
 }
-
-.edit-appointment .cancel-appointment-button {
-	display: block;
-	margin: 24px;
-	padding: 44px 0;
-	position: relative;
-	top: 46px;
-}
-
-
-
 
 
 
