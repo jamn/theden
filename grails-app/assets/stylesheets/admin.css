@@ -350,7 +350,7 @@ select{
 	top: 10px;
 	left: 204px;
 	font-size: 1.4em;
-	border-radius: 30px;
+	border-radius: 100%;
 	padding: 6px 0 10px 0;
 	line-height: .5em;
 	width: 28px !important;
@@ -407,7 +407,7 @@ select{
 	z-index: 100;
 	border: 1px solid #999;
 	padding: 0px 13px;
-	border-radius: 40px;
+	border-radius: 100%;
 	color: #888;
 }
 
@@ -587,18 +587,18 @@ select{
 	font-size: 1.2em;
 }
 
-.appointment-data:hover,
+/*.appointment-data:hover,
 .appointment-data.selected,
 .appointment-data:hover.a,
 .appointment-data:hover.a:visited{
 	background-color: #9B9605;
 	cursor: pointer;
 	color: #fff;
-}
+}*/
 
 .modal-header .close {
 	border: 1px solid #CCC;
-	border-radius: 40px;
+	border-radius: 100%;
 	margin-top: 0px;
 	margin-right: 5px;
 	padding: 2px 8px 10px;
@@ -614,10 +614,14 @@ select{
 	font-size: 1.4em;
 }
 
+.appointment-data h4 {
+	font-weight: 100;
+}
+
 .edit-appointment{
-	display: none;
+	/*display: none;
 	background-color: #E9E9E9;
-	color: #494949;
+	color: #494949;*/
 }
 
 .edit-appointment button {
@@ -625,7 +629,7 @@ select{
 }
 
 .edit-appointment .glyphicon-class {
-	display: block;
+	display: none;
 	text-align: center;
 	word-wrap: break-word;
 	font-size: 0.4em;

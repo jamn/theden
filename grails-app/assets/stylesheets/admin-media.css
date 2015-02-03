@@ -53,6 +53,9 @@
 
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
+	.edit-appointment .glyphicon-class {
+		display: block;
+	}
 }
 
 /* Large devices (large desktops, 1200px and up) */

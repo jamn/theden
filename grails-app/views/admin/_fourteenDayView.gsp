@@ -1,5 +1,3 @@
-<h1>Upcoming Appointments</h1>
-
 <%
 Calendar dayOne = new GregorianCalendar()
 dayOne.setTime(startTime.getTime())

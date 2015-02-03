@@ -23,15 +23,15 @@ class AccessController {
 		if (loggedInCookieId){
 			loggedIn = true
 			def loginLog = LoginLog.findByLoggedInCookieId(loggedInCookieId)
-			def thirtyDaysAgo = dateService.getDateThirtyDaysAgo()
-			println "thirtyDaysAgo: " + thirtyDaysAgo
-			if (loginLog?.dateCreated > thirtyDaysAgo){
-				println "last login was less than 30 days ago"
+			def fourMonthsAgo = dateService.getDateFourMonthsAgo()
+			println "Four Months Ago: " + fourMonthsAgo
+			if (loginLog?.dateCreated > fourMonthsAgo){
+				println "last login was less than four months ago"
 				user = loginLog.user
 			}else if (!loginLog){
 				response.deleteCookie('den1')
 			}else{
-				println "last login was more than 30 days ago"
+				println "last login was more than four months ago"
 			}
 		}
 		if (!user){

@@ -1,34 +1,25 @@
-<div class="row">
-	<g:render template="fourteenDayView" />
-</div>
+<h1>Upcoming Appointments</h1>
+<hr />
 <div class="row">
 	<table class="appointments">
-		<tr>
-			<td>
-				<div class="col-xs-3 col-md-4"><h2>Name:</h2></div>
-				<div class="col-xs-3 col-md-4"><h2>Service:</h2></div>
-				<div class="col-xs-6 col-md-4"><h2>Date:</h2></div>
-			</td>
-		</tr>
 		<g:each in="${appointments}">
 			<%if (it.service.description != 'Blocked Off Time'){%>
 				<tr class="appointment-data appointment-data-${it.id}" id="${it.id}">
 					<td>
-						<div class="col-xs-3 col-md-4">${it.client.fullName}</div>
-						<div class="col-xs-3 col-md-4">${it.service.description}</div>
-						<div class="col-xs-6 col-md-4">${it.appointmentDate.format('MM/dd @ hh:mm a [E]')}</div>
-					</td>
-				</tr>
-				<tr class="edit-appointment edit-appointment-${it.id}">
-					<td>
-						<div class="col-xs-4 center">
-							<button type="button" class="btn white-button" data-toggle="modal" data-target="#rescheduleAppointmentModal"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span><span class="glyphicon-class">Reschedule</span></button>
+						<div class="col-xs-4">
+							<h2>${it.client.fullName}</h2>
+							<h4><b>${it.service.description}:</b> ${it.appointmentDate.format('MM/dd @ hh:mm a [E]')}</h4>
 						</div>
-						<div class="col-xs-4 center">
-							<button type="button" class="btn white-button" data-toggle="modal" data-target="#clientDetailsModal" data-name="${it.client.fullName}" data-email="${it.client.email}" data-phone="${it.client.phone}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="glyphicon-class">Contact</span></button>
-						</div>
-						<div class="col-xs-4 center">
-							<button type="button" c="${it.code}" class="btn white-button error-button cancelAppointmentButton"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span class="glyphicon-class">Cancel</span></button>
+						<div class="col-xs-8 edit-appointment edit-appointment-${it.id}">
+							<div class="col-xs-4 center">
+								<button type="button" class="btn white-button" data-toggle="modal" data-target="#rescheduleAppointmentModal" onclick="getRescheduleOptions(${it.id});"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span><span class="glyphicon-class">Reschedule</span></button>
+							</div>
+							<div class="col-xs-4 center">
+								<button type="button" class="btn white-button" data-toggle="modal" data-target="#clientDetailsModal" data-name="${it.client.fullName}" data-email="${it.client.email}" data-phone="${it.client.phone}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><span class="glyphicon-class">Contact</span></button>
+							</div>
+							<div class="col-xs-4 center">
+								<button type="button" c="${it.code}" class="btn white-button error-button cancelAppointmentButton"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span><span class="glyphicon-class">Cancel</span></button>
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -93,12 +84,10 @@
 	var baseUrl = $('body').attr('baseUrl');
 
 	$('#clientDetailsModal').on('show.bs.modal', function (event) {
-		var button = $(event.relatedTarget); // Button that triggered the modal
+		var button = $(event.relatedTarget);
 		var clientName = button.data('name');
 		var clientEmail = button.data('email');
 		var clientPhone = button.data('phone');
-		// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-		// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 		var modal = $(this);
 		modal.find('.modal-header .client-name').html(clientName);
 		modal.find('.modal-body input').val(clientName + " (" + clientEmail + ")");

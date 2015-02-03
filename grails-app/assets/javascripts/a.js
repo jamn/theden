@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-	getSection('upcomingAppointments');
+	getSection('fourteenDayView');
 });
 
 function getTimeSlotOptions(){
@@ -70,7 +70,7 @@ function getSection(section){
 		data: {section:section}
 	}).done(function(response) {
 		$('.active').removeClass("active");
-		$('a[href="'+section+'"]').parent().addClass("active");
+		$('a[href="#'+section+'"]').parent().addClass("active");
 		$('.main').html(response);
 		$('#mask').fadeOut();
 	});
@@ -336,25 +336,6 @@ $(document).on('change', '#services', function() {
 $(document).on('change', '#dateOfAppointment', function() {
 	getTimeSlotOptions();
 });
-
-$(document).on('tap', '.appointment-data', function(e) {
-	var appoinmentRow = e.currentTarget;
-	if (!$(appoinmentRow).hasClass('selected')){
-		hideAppointmentData();
-		$(appoinmentRow).addClass('selected');
-		var aId = appoinmentRow.id;
-		$(".edit-appointment-"+aId).fadeIn();
-		getRescheduleOptions(aId);
-	}
-	else {
-		hideAppointmentData();
-	}
-});
-
-function hideAppointmentData(){
-	$(".edit-appointment").fadeOut();
-	$('.appointment-data.selected').removeClass('selected');
-}
 
 function getRescheduleOptions(appointmentId){
 	var baseUrl = $('body').attr('baseUrl');
