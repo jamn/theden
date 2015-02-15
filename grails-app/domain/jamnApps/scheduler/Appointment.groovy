@@ -16,6 +16,10 @@ class Appointment extends CoreObject {
     	notes(nullable:true)
     }
 
+    static mapping = {
+    	sort appointmentDate: "desc"
+    }
+
 }
 
 /*

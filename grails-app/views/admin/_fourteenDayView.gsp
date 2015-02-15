@@ -612,3 +612,7 @@ dayFourteen.add(Calendar.DAY_OF_WEEK, 13)
 	<%dayFourteen.add(Calendar.MINUTE, 15)%>
 <%}%>
 </table>
+
+<br />
+<br />
+<g:render template="upcomingAppointments" />

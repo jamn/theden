@@ -15,6 +15,7 @@ body {
 .confirmon-box {
 	top: 240px;
 	width: 210px;
+	position: fixed;
 }
 
 /* Remove the blue halo jquery mobile adds */

@@ -161,6 +161,10 @@ class AdminController {
 		return [log:log]
 	}
 
+	private List getAppointmentsForClient(User client){
+		return Appointment.findAllWhere(client:client, booked:true)?.sort{it.appointmentDate}?.reverse()
+	}
+
 
 
 	/*********************************
@@ -199,7 +203,7 @@ class AdminController {
 		if (params?.cId){
 			def client = User.get(params.cId)
 			session.editClient = client
-			def appointments = Appointment.findAllWhere(client:client, booked:true)?.sort{it.appointmentDate}?.sort{it.appointmentDate}
+			def appointments = getAppointmentsForClient(client)
 			if (client){
 				render (template: "client", model: [client:client, appointments:appointments])
 			}
@@ -491,6 +495,17 @@ class AdminController {
 			success = emailService.sendEmail(params.e, params.m)
 		}
 		render ('{"success":'+success+'}') as JSON
+	}
+
+	def getClientHistory(){
+		println "\n" + new Date()
+		println "params: " + params
+		def appointments = []
+		if (session.adminUser && params?.cId){
+			def client = User.get(params.cId)
+			appointments = getAppointmentsForClient(client)
+		}
+		render (template: "clientHistory", model: [appointments:appointments])
 	}
 
 }
