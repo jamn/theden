@@ -230,6 +230,7 @@ body {
 .time-slots {
 	margin-left: 0px; 
 	margin-right: 0px;
+	width: 100%;
 }
 
 .time-slots h2,
