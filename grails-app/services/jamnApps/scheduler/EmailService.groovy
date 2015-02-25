@@ -17,7 +17,7 @@ class EmailService {
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></li>"
 		}
 		emailBody += "</ul><p>See you then!</p>"
-		emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a $20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
+		emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a \$20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
 
 		try {
 			sendMail {
@@ -114,7 +114,7 @@ class EmailService {
 	public sendRescheduledConfirmation(Appointment appointment){
 		println "Sending reschedule confirmation for appointment: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('E MM/dd @ hh:mm a')
 		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>${appointment.client.firstName},</p><p>Your appointment has been rescheduled. Your new appointment date is: <b>${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}</b>. If you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
-			emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a $20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
+			emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a \$20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
 		try {
 			sendMail {
 				async true
@@ -144,7 +144,7 @@ class EmailService {
 		if (appointment && appointment.reminderEmailSent == false){
 			println "Sending appointment reminder for: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('E MM/dd @ hh:mm a')
 			def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>Hey ${appointment.client.firstName},</p><p>Just a reminder that your appointment for a ${appointment.service.description} is tomorrow at <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
-				emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a $20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
+				emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a \$20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
 			try {
 				sendMail {
 					async true
