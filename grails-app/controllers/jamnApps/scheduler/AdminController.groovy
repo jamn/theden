@@ -1,5 +1,6 @@
 package jamnApps.scheduler
 
+import com.twilio.sdk.TwilioRestException
 import org.apache.commons.lang.RandomStringUtils
 import java.text.SimpleDateFormat
 import grails.converters.JSON
@@ -15,15 +16,22 @@ class AdminController {
 	def schedulerService
 	def emailService
 	def userService
+	def textMessageService
 
 	/*********************************
 				NAVIGATION
 	**********************************/
 
+	def sendReminders() {
+		def job = new SendAppointmentRemindersJob()
+		job.triggerNow()
+	}
+
     def index() { 
     	println "\n" + new Date()
 		println "params: " + params
-    	return [homepageText:getHomepageText().homepageText]
+		def model = getUpcomingAppointments() + getStylistInfo()
+    	return model
     }
 
     def getSection() {
@@ -33,6 +41,7 @@ class AdminController {
     	List allowedSections = [
     		"homepageMessage", 
     		"clients",
+    		"fourteenDayView",
     		"upcomingAppointments",
     		"bookAppointment",
     		"blockOffTime",
@@ -57,11 +66,17 @@ class AdminController {
     	else if (template == "clients"){
 			model = getClients()
 		}
+		else if (template == "fourteenDayView"){
+			model = getUpcomingAppointments() + getStylistInfo()
+		}
 		else if (template == "upcomingAppointments"){
 			model = getUpcomingAppointments() + getStylistInfo()
 		}
 		else if (template == "bookAppointment"){
 			model = getClients() + getServices()
+		}
+		else if (template == "blockOffTime"){
+			model = getBlockedOffTimes()
 		}
 		else if (template == "log"){
 			model = getLog()
@@ -78,14 +93,14 @@ class AdminController {
 
     private Map getHomepageText(){
     	def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "ERROR: HOMEPAGE_MESSAGE record not found in the database. Tell Ben. He's good at fixing that stuff."
-	    homepageText = homepageText.replace("<br>","\r")
+	    homepageText = homepageText.replace("<br />","\r")
 	    return [homepageText:homepageText]
     }
 
-    private Map getClients(){
+    private Map getClients(lastNameStartsWith = null){
 		def clients = []
 		User.list()?.each(){
-			if (it.hasPermission("client")){
+			if (it.hasPermission("client") && (!lastNameStartsWith || it.lastName.substring(0,1).toUpperCase() == lastNameStartsWith.toUpperCase()) ){
 				clients.add(it)
 			}
 		}
@@ -100,12 +115,12 @@ class AdminController {
     }
 
     private Map getUpcomingAppointments(){
-		Calendar now = new GregorianCalendar()
-		now.set(Calendar.HOUR_OF_DAY, 0)
-		now.set(Calendar.MINUTE, 0)
-		now.set(Calendar.SECOND, 0)
-		now.set(Calendar.MILLISECOND, 0)
-		def appointments = Appointment.findAllWhere(booked:true)?.findAll{it.appointmentDate > now.getTime()}?.sort{it.appointmentDate}
+		Calendar today = new GregorianCalendar()
+		today.set(Calendar.HOUR_OF_DAY, 0)
+		today.set(Calendar.MINUTE, 0)
+		today.set(Calendar.SECOND, 0)
+		today.set(Calendar.MILLISECOND, 0)
+		def appointments = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.booked = true", [today:today.getTime()])?.sort{it.appointmentDate}
 		return [appointments:appointments]
     }
 
@@ -130,16 +145,31 @@ class AdminController {
 		return [startTime:startTime, endTime:endTime]
     }
 
+    private Map getBlockedOffTimes(){
+    	Calendar today = new GregorianCalendar()
+		today.set(Calendar.HOUR_OF_DAY, 0)
+		today.set(Calendar.MINUTE, 0)
+		today.set(Calendar.SECOND, 0)
+		today.set(Calendar.MILLISECOND, 0)
+		def service = Service.findByDescription("Blocked Off Time")
+		def blockedOffTimes = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.service = :service", [today:today.getTime(), service:service])?.sort{it.appointmentDate}
+    	return [blockedOffTimes:blockedOffTimes]
+    }
+
     private Map getLog(){
 		String log = ''
 		try {
-			log = new File('/var/log/tomcat7/catalina.out').text.replace('\n', '</br>').replace('\r', '</br>')
+			log = new File('/var/log/tomcat7/catalina.out').text.replace('\n', '<br />').replace('\r', '<br />')
 		}
 		catch(Exception e) {
 			println "ERROR: " + e
 			log = 'No log to show.'
 		}
 		return [log:log]
+	}
+
+	private List getAppointmentsForClient(User client){
+		return Appointment.findAllWhere(client:client, booked:true)?.sort{it.appointmentDate}?.reverse()
 	}
 
 
@@ -153,7 +183,7 @@ class AdminController {
 		println "params: " + params
 		if (session.adminUser){
 			def homepageText = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")
-			homepageText.value = params.m.replace("\r", "<br>").replace("\n", "<br>")
+			homepageText.value = params.m.replace("\r", "<br />").replace("\n", "<br />")
 			homepageText.save(flush:true)
 			if (homepageText.hasErrors()){
 				println "ERROR: new message not saved."
@@ -169,18 +199,23 @@ class AdminController {
 		return true
 	}
 
+	def getClientsSelectMenu(){
+    	def clientData = getClients(params.lastNameStartsWith)
+    	render(template:"clientsSelectMenu", model:clientData)
+    }
+
 	def getClientDetails(){
 		println "\n" + new Date()
 		println "params: " + params
 		if (params?.cId){
 			def client = User.get(params.cId)
 			session.editClient = client
-			def appointments = Appointment.findAllWhere(client:client, booked:true)?.sort{it.appointmentDate}?.sort{it.appointmentDate}
+			def appointments = getAppointmentsForClient(client)
 			if (client){
 				render (template: "client", model: [client:client, appointments:appointments])
 			}
 		}
-		return true
+		return false
 	}
 
 	def getClientDataForm(){
@@ -234,7 +269,8 @@ class AdminController {
 					appointment.code = RandomStringUtils.random(14, true, true)
 					appointment.client = stylist
 					appointment.booked = true
-					appointment.reminderEmailSent = true
+					appointment.sendEmailReminder = false
+					appointment.sendTextReminder = false
 					appointment.save(flush:true)
 					if (appointment.hasErrors()){
 						appointmentFailedToSave = true
@@ -314,6 +350,33 @@ class AdminController {
 		}
 	}
 
+	def clearBlockedTime(){
+		println "\n" + new Date()
+		println "params: " + params
+		Boolean success = false
+		def deletedTimeslots = []
+		if (session.adminUser){
+			def timeSlotsToDelete = params?.blockedOffTime ?: []
+			if (timeSlotsToDelete instanceof String) {
+				timeSlotsToDelete = [timeSlotsToDelete]
+			}
+			timeSlotsToDelete?.each(){
+				def appointment = Appointment.get(it.toLong())
+				appointment.delete(flush:true)
+				if (appointment.hasErrors()){
+					success = false
+					println "        ERROR: " + appointment.errors
+				}
+				else {
+					println "    - deleted blocked timeslot: " + appointment.appointmentDate.format('E MMM dd, yyyy @ hh:mm a')
+					deletedTimeslots.add(appointment.id)
+					success = true
+				}
+			}
+		}
+		render ('{"success":'+success+', "deletedTimeslots":'+deletedTimeslots+'}') as JSON
+	}
+
 	def bookForClient(){
 		println "\n" + new Date()
 		println "params: " + params
@@ -340,7 +403,11 @@ class AdminController {
 				params["rescheduledAppointment"] = "TRUE"
 				success = schedulerService.bookForClient(params)
 				if (success){
-					schedulerService.deleteAppointment(existingApointment.id)
+					existingApointment.delete(flush:true)
+					if (existingApointment.hasErrors()){
+						success = false
+						println "ERROR: " + existingApointment.errors
+					}
 				}
 			}
 			catch(Exception e) {
@@ -349,11 +416,11 @@ class AdminController {
 		}
 		if (success){
 			println "SUCCESS!"
-			render ('{"success":true}') as JSON
+			render ('{"success":'+success+'}') as JSON
 		}
 		else{
 			println "ERROR!"
-			render ('{"success":false}') as JSON
+			render ('{"success":'+success+'}') as JSON
 		}
 	}
 
@@ -426,6 +493,27 @@ class AdminController {
 			}
 		}
 		render ('{"success":'+success+'}') as JSON
+	}
+
+	def emailClient(){
+		println "\n" + new Date()
+		println "params: " + params
+		Boolean success = false
+		if (params?.e?.size() > 0 && params.m?.size() > 0){
+			success = emailService.sendEmail(params.e, params.m)
+		}
+		render ('{"success":'+success+'}') as JSON
+	}
+
+	def getClientHistory(){
+		println "\n" + new Date()
+		println "params: " + params
+		def appointments = []
+		if (session.adminUser && params?.cId){
+			def client = User.get(params.cId)
+			appointments = getAppointmentsForClient(client)
+		}
+		render (template: "clientHistory", model: [appointments:appointments])
 	}
 
 }

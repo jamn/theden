@@ -98,9 +98,6 @@ environments {
 
 grails {
    mail {
-        //host = "smtp.gmail.com"
-        //username = "bjacobi@gmail.com"
-        //password = "pznsyddawtypbkhl"
         port = 465
         host = "smtpout.secureserver.net"
         username = "info@thedenbarbershop-kc.com"

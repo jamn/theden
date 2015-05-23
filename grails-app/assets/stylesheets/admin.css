@@ -14,6 +14,22 @@ body {
 
 .confirmon-box {
 	top: 240px;
+	width: 210px;
+	position: fixed;
+}
+
+/* Remove the blue halo jquery mobile adds */
+.ui-focus,
+.ui-page,
+body { 
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	outline: none 0px;
+}
+
+.center {
+	text-align: center;
 }
 
 /*
@@ -30,11 +46,12 @@ body {
 	text-align: center;
 	width: 100%;
 	position: absolute;
-	top: -10px;
+	top: -6px;
 }
 
 .navbar-inverse .navbar-toggle {
-	border-color: #818181;
+	width: 40px;
+	height: 40px;
 }
 
 .navbar-inverse .navbar-toggle:hover {
@@ -83,28 +100,6 @@ background-color: #6F6F6F;
 .logged-in-user {
 	display: none;
 }
-@media (min-width: 768px) {
-	.logged-in-user {
-		display: initial;
-	}
-	.navbar-nav {
-		display: none;
-	}
-	.sidebar {
-		position: fixed;
-		top: 51px;
-		bottom: 0;
-		left: 0;
-		z-index: 1000;
-		display: block;
-		padding: 20px;
-		overflow-x: hidden;
-		overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-		background-color: #f5f5f5;
-		border-right: 1px solid #eee;
-	}
-
-}
 
 /* Sidebar navigation */
 .nav-sidebar {
@@ -130,32 +125,17 @@ background-color: #6F6F6F;
  */
 
 .main {
-  padding: 20px 40px;
+  padding: 20px;
 }
-@media (min-width: 768px) {
-  .main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
-}
+
 .main .page-header {
   margin-top: 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.main .green-button,
+.main .white-button {
+	width: 100%
+}
 
 #log{
 	position: absolute;
@@ -194,7 +174,6 @@ background-color: #6F6F6F;
 	border: 1px solid #A2A2A2;
 	margin: auto;
 	margin-top: 40px;
-	width: 304px;
 	border-radius: 4px;
 	padding: 40px;
 	margin-bottom: 120px;
@@ -207,13 +186,13 @@ background-color: #6F6F6F;
 
 #loginButton{
 	margin: 10px 0;
-	width: 286px;
+	width: 100%;
 	font-size: 1.7em;
 }
 
 h1{
-	margin: 20px 0;
-	font-size: 1.8em;
+	margin: 24px 0;
+	font-size: 1.4em;
 	font-weight: bold;
 	color: #2E2E2E;
 }
@@ -316,7 +295,8 @@ select{
 	margin: 10px 0;
 }
 
-.error-button{
+.error-button,
+.deleted {
 	background: rgb(196,3,3) !important; /* Old browsers */
 	background: -moz-linear-gradient(top,  rgba(196,3,3,1) 0%, rgba(160,3,3,1) 44%, rgba(132,0,0,1) 100%) !important; /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(196,3,3,1)), color-stop(44%,rgba(160,3,3,1)), color-stop(100%,rgba(132,0,0,1))) !important; /* Chrome,Safari4+ */
@@ -330,11 +310,6 @@ select{
 	color: #fff;
 }
 
-.reschedule-button{
-	font-size: 1em;
-	padding: 6px;
-}
-
 #mask {
 	display: none;
 	position: fixed;
@@ -343,14 +318,13 @@ select{
 	left: 0;
 	right: 0;
 	background-color: rgba(0,0,0,.8);
-	z-index: 2;
+	z-index: 10000;
 	text-align: center;
 }
 
 #mask .loader {
-	top: 250px;
+	top: 180px;
 	position: relative;
-	left: 58px;
 }
 
 #addClient:hover {
@@ -358,9 +332,6 @@ select{
 }
 
 #editClient {
-	position: absolute;
-	right: 28px;
-	top: 128px;
 	color: #717171;
 	font-size: 1.4em;
 	cursor: pointer;
@@ -380,10 +351,10 @@ select{
 	top: 10px;
 	left: 204px;
 	font-size: 1.4em;
-	border-radius: 30px;
+	border-radius: 100%;
 	padding: 6px 0 10px 0;
 	line-height: .5em;
-	width: 28px;
+	width: 28px !important;
 }
 
 .add-client-label {
@@ -412,7 +383,7 @@ select{
 }
 
 #clientDetails > h2 {
-	font-size: 4em;
+	font-size: 3em;
 }
 
 #clientDetails > h3 {
@@ -437,7 +408,7 @@ select{
 	z-index: 100;
 	border: 1px solid #999;
 	padding: 0px 13px;
-	border-radius: 40px;
+	border-radius: 100%;
 	color: #888;
 }
 
@@ -452,18 +423,15 @@ select{
 }
 
 .last-name-filter {
-	font-size: 1.4em;
+	font-size: 1.7em;
 	color: #717171;
 	cursor: pointer;
-	margin-right: 6px; 
+	margin-right: 6px;
+	padding: 2px;
 }
 
 .last-name-filter.reset {
 	color: #B2B2B2;
-}
-
-#clientsDetailsSelector {
-	height: 160px;
 }
 
 #clientNotes {
@@ -487,6 +455,11 @@ select{
 #recurringAppointmentAdmin{
 	margin: 22px 0 26px -8px;
 	font-size: 1.2em;
+}
+
+#recurringAppointment {
+	height: 30px;
+	width: 30px;
 }
 
 #clients,
@@ -581,6 +554,32 @@ select{
 	background-color: #505050;
 }
 
+.blocked-timeslots-table {
+	width: 100%;
+}
+
+.blocked-timeslots-table thead {
+	font-size: 1.3em;
+	background-color: #EDEDED;
+}
+
+.blocked-timeslots-table thead td{
+	padding: 10px 0;
+}
+
+.blocked-timeslots-table tbody {
+	font-size: 1.1em;
+}
+
+.blocked-timeslots-table tbody td {
+	vertical-align: middle;
+}
+
+.blocked-timeslots-table input {
+	height: 30px;
+	width: 30px;
+}
+
 .appointments{
 	width: 100%
 }
@@ -589,18 +588,52 @@ select{
 	font-size: 1.2em;
 }
 
-.appointment-data:hover,
+/*.appointment-data:hover,
+.appointment-data.selected,
 .appointment-data:hover.a,
 .appointment-data:hover.a:visited{
 	background-color: #9B9605;
 	cursor: pointer;
 	color: #fff;
+}*/
+
+.modal-header .close {
+	border: 1px solid #CCC;
+	border-radius: 100%;
+	margin-top: 0px;
+	margin-right: 5px;
+	padding: 2px 8px 10px;
+	width: 30px;
+	height: 30px;
+}
+
+.modal-header .modal-title {
+	font-size: 1.3em;
+}
+
+.modal-body .client-phone {
+	font-size: 1.4em;
+}
+
+.appointment-data h4 {
+	font-weight: 100;
 }
 
 .edit-appointment{
-	display: none;
+	/*display: none;
 	background-color: #E9E9E9;
-	color: #494949;
+	color: #494949;*/
+}
+
+.edit-appointment button {
+	padding: 20px;
+}
+
+.edit-appointment .glyphicon-class {
+	display: none;
+	text-align: center;
+	word-wrap: break-word;
+	font-size: 0.4em;
 }
 
 .edit-appointment input,
@@ -613,17 +646,6 @@ select{
 	padding: 10px;
 	font-size: 1.3em;
 }
-
-.edit-appointment .cancel-appointment-button {
-	display: block;
-	margin: 24px;
-	padding: 44px 0;
-	position: relative;
-	top: 46px;
-}
-
-
-
 
 
 

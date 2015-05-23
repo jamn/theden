@@ -12,29 +12,7 @@ class SchedulerService {
 	def dateService
 	def emailService
 
-	SimpleDateFormat dateFormatter3 = new SimpleDateFormat("MM/dd/yyyy")
-
-	public deleteAppointment(id, sql = null){
-		println "Deleting appointment: " + id
-		if (!sql){
-			def session = sessionFactory.currentSession
-  			sql = new Sql(session.connection())
-		}
-		def query1 = "DELETE FROM appointment WHERE id = ${id};"
-		def query2 = "DELETE FROM core_object WHERE id = ${id};"
-		try {
-			sql.executeUpdate(query1)
-		}
-		catch(Exception e) {
-			println "ERROR: " + e
-		}
-		try {
-			sql.executeUpdate(query2)
-		}
-		catch(Exception e) {
-			println "ERROR: " + e
-		}
-	}
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy")
 
 	public Map getTimeSlotsAvailableMap(Date requestedDate, User stylist, Service service){
 		def timeSlotsMap = [:]
@@ -46,78 +24,82 @@ class SchedulerService {
 		
 		def stylistDayOfTheWeek = stylist?.daysOfTheWeek?.find{it.dayOfTheWeek == startDate.get(Calendar.DAY_OF_WEEK)}
 
-		def stylistStartTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.startTime)
-		def stylistEndTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.endTime)
+		def dayIsAvailableByDefault = stylistDayOfTheWeek?.available
+		def dayIsNotBlockedOff = DayOff.findWhere(stylist:stylist, dayOffDate:requestedDate) ? false : true
 
-		startDate.set(Calendar.HOUR_OF_DAY, stylistStartTime.hour.intValue())
-		startDate.set(Calendar.MINUTE, stylistStartTime.minute.intValue())
-		startDate.set(Calendar.SECOND, 0)
-		startDate.set(Calendar.MILLISECOND, 0)
+		if (dayIsAvailableByDefault && dayIsNotBlockedOff){
 
-		endDate.set(Calendar.HOUR_OF_DAY, stylistEndTime.hour.intValue())
-		endDate.set(Calendar.MINUTE, stylistEndTime.minute.intValue())
-		endDate.set(Calendar.SECOND, 0)
-		endDate.set(Calendar.MILLISECOND, 0)
+			def stylistStartTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.startTime)
+			def stylistEndTime = dateService.get24HourTimeValues(stylistDayOfTheWeek.endTime)
 
-		def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
+			startDate.set(Calendar.HOUR_OF_DAY, stylistStartTime.hour.intValue())
+			startDate.set(Calendar.MINUTE, stylistStartTime.minute.intValue())
+			startDate.set(Calendar.SECOND, 0)
+			startDate.set(Calendar.MILLISECOND, 0)
 
-		Calendar currentTimeMarker = new GregorianCalendar()
-		currentTimeMarker.setTime(startDate.getTime())
-		
-		def durationInMinutes = service.duration / MINUTE
-		println "durationInMinutes: " + durationInMinutes
-		
-		def count = 0
+			endDate.set(Calendar.HOUR_OF_DAY, stylistEndTime.hour.intValue())
+			endDate.set(Calendar.MINUTE, stylistEndTime.minute.intValue())
+			endDate.set(Calendar.SECOND, 0)
+			endDate.set(Calendar.MILLISECOND, 0)
 
-		while(currentTimeMarker < endDate) {
-			count++
-			Calendar timeSlotStart = new GregorianCalendar()
-			timeSlotStart.setTime(currentTimeMarker.getTime())
-			Calendar timeSlotEnd = new GregorianCalendar()
-			timeSlotEnd.setTime(timeSlotStart.getTime())
-			timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
+			def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
 
-			// DOES AN EXISTING APPOINTMENT FALL IN THIS TIME RANGE?
-			def existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
-			//println "timeSlotStart: " + timeSlotStart.getTime().format("yyyy-MM-dd HH:mm:ss")
-			//println "existingAppointment: " + existingAppointment?.appointmentDate?.format("yyyy-MM-dd HH:mm:ss")
-			while (existingAppointment){
-				timeSlotStart.setTime(existingAppointment.appointmentDate)
-				def existingAppointmentDurationInMinutes = existingAppointment.service.duration / MINUTE
-				timeSlotStart.add(Calendar.MINUTE, existingAppointmentDurationInMinutes.intValue())
+			Calendar currentTimeMarker = new GregorianCalendar()
+			currentTimeMarker.setTime(startDate.getTime())
+			
+			def durationInMinutes = service.duration / MINUTE
+			println "durationInMinutes: " + durationInMinutes
+			
+			def count = 0
+
+			while(currentTimeMarker < endDate) {
+				count++
+				Calendar timeSlotStart = new GregorianCalendar()
+				timeSlotStart.setTime(currentTimeMarker.getTime())
+				Calendar timeSlotEnd = new GregorianCalendar()
 				timeSlotEnd.setTime(timeSlotStart.getTime())
 				timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
-				existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
+
+				// DOES AN EXISTING APPOINTMENT FALL IN THIS TIME RANGE?
+				def existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
+				//println "timeSlotStart: " + timeSlotStart.getTime().format("yyyy-MM-dd HH:mm:ss")
+				//println "existingAppointment: " + existingAppointment?.appointmentDate?.format("yyyy-MM-dd HH:mm:ss")
+				while (existingAppointment){
+					timeSlotStart.setTime(existingAppointment.appointmentDate)
+					def existingAppointmentDurationInMinutes = existingAppointment.service.duration / MINUTE
+					timeSlotStart.add(Calendar.MINUTE, existingAppointmentDurationInMinutes.intValue())
+					timeSlotEnd.setTime(timeSlotStart.getTime())
+					timeSlotEnd.add(Calendar.MINUTE, durationInMinutes.intValue())
+					existingAppointment = appointments.find{ it.appointmentDate >= timeSlotStart.getTime() && it.appointmentDate < timeSlotEnd.getTime() }
+				}
+
+
+				def dayOfWeek = timeSlotEnd.get(Calendar.DAY_OF_WEEK)
+				Calendar anHourFromNow = new GregorianCalendar()
+				anHourFromNow.add(Calendar.MINUTE, 60)
+				
+				if (timeSlotEnd <= endDate && timeSlotStart.getTime() > anHourFromNow.getTime()){
+					def timeSlot = timeSlotStart.getTime().format('h:mma').replace(':00', '') + " / " + timeSlotEnd.getTime().format('h:mma').replace(':00', '')
+					if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 11){
+						List morning = timeSlotsMap.get("morning") ?: []
+						morning.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
+						timeSlotsMap.put("morning", morning)
+					}
+					else if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 14){
+						List lunch = timeSlotsMap.get("lunch") ?: []
+						lunch.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
+						timeSlotsMap.put("lunch", lunch)
+					}
+					else{
+						List afternoon = timeSlotsMap.get("afternoon") ?: []
+						afternoon.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
+						timeSlotsMap.put("afternoon", afternoon)
+					}
+				}
+
+				currentTimeMarker.setTime(timeSlotStart.getTime())
+				currentTimeMarker.add(Calendar.MINUTE, 15)
 			}
-
-
-			def dayOfWeek = timeSlotEnd.get(Calendar.DAY_OF_WEEK)
-			Calendar anHourFromNow = new GregorianCalendar()
-			anHourFromNow.add(Calendar.MINUTE, 60)
-			
-			if (timeSlotEnd <= endDate && stylistDayOfTheWeek.available && timeSlotStart.getTime() > anHourFromNow.getTime()){ // BLOCK OFF SATURDAY AND SUNDAY
-			//if (timeSlotEnd <= endDate && dayOfWeek != 1 && dayOfWeek != 7){ // BLOCK OFF SATURDAY AND SUNDAY
-			//if (timeSlotEnd <= endDate){
-				def timeSlot = timeSlotStart.getTime().format('h:mma').replace(':00', '') + " / " + timeSlotEnd.getTime().format('h:mma').replace(':00', '')
-				if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 11){
-					List morning = timeSlotsMap.get("morning") ?: []
-					morning.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
-					timeSlotsMap.put("morning", morning)
-				}
-				else if (timeSlotStart.get(Calendar.HOUR_OF_DAY) < 14){
-					List lunch = timeSlotsMap.get("lunch") ?: []
-					lunch.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
-					timeSlotsMap.put("lunch", lunch)
-				}
-				else{
-					List afternoon = timeSlotsMap.get("afternoon") ?: []
-					afternoon.add([startTime:timeSlotStart.getTime().format('MM/dd/yyyy HH:mm'), timeSlot: timeSlot, id:count])
-					timeSlotsMap.put("afternoon", afternoon)
-				}
-			}
-
-			currentTimeMarker.setTime(timeSlotStart.getTime())
-			currentTimeMarker.add(Calendar.MINUTE, 15)
 		}
 
 		return timeSlotsMap
@@ -169,7 +151,7 @@ class SchedulerService {
 			hour = hour + 12
 		}
 		Calendar tempDate = new GregorianCalendar()
-		tempDate.setTime(dateFormatter3.parse(params.aDate))
+		tempDate.setTime(dateFormatter.parse(params.aDate))
 		tempDate.set(Calendar.HOUR_OF_DAY, hour.intValue())
 		tempDate.set(Calendar.MINUTE, minute.intValue())
 		tempDate.set(Calendar.SECOND, 0)

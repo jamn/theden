@@ -4,13 +4,14 @@
 <html><head>
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>The Den Barbershop :: Admin</title>
 
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'bootstrap-3.2.0.min.css')}" >
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery.confirmon.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin.css')}?v${grailsApplication.metadata.'app.version'}" />
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'admin-media.css')}?v${grailsApplication.metadata.'app.version'}" />
 
 <link rel="apple-touch-icon" sizes="57x57" href="${resource(dir:'images', file:'apple-icon-57x57.png')}" />
 <link rel="apple-touch-icon" sizes="72x72" href="${resource(dir:'images', file:'apple-icon-72x72.png')}" />
@@ -23,13 +24,8 @@
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
 				<h1 class="brand">The Den Barbershop</h1>
+				<button type="button" class="navbar-toggle collapsed glyphicon glyphicon-th-large" data-toggle="collapse" data-target=".navbar-collapse" />
 				<!-- <g:img class="brand" dir="images" file="logo-large.png" /> -->
 				<div class="logged-in-user">Whaddup Ben | <a id="logout" href="${createLink(controller: 'access', action: 'logout')}">Logout</a></div>
 			</div>
@@ -52,14 +48,13 @@
 			<div class="col-sm-3 col-md-2 sidebar">
 				<ul class="nav nav-sidebar">
 					<g:render template="navigation" />
+					<li><a href="#logout">Logout</a></li>
 				</ul>
 			</div>
 
 			<!-- CONTENT -->
 
-			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-				<g:render template="homepageMessage" model="[homepageText: homepageText]" />
-			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
 
 		</div>
 	</div>
@@ -81,6 +76,6 @@
 <script src="${resource(dir:'js', file:'bootstrap-3.2.0.min.js')}" type="text/javascript"></script>
 <script src="${resource(dir:'js', file:'jquery.confirmon.js')}"></script>
 <script src="${resource(dir:'js', file:'jquery-validate-min.js')}"></script>
-<script src="${resource(dir:'js', file:'a.min.js')}?v0.6" type="text/javascript"></script>
+<script src="${resource(dir:'js', file:'a.min.js')}?v${grailsApplication.metadata.'app.version'}" type="text/javascript"></script>
 
 </body></html>

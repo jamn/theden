@@ -7,4 +7,12 @@ class DayOfTheWeek extends CoreObject {
 	Long startTime // 1 hour = 3,600,000
 	Long endTime
 
+	/*def getStartTime(){
+		return startTime * 3600000
+	}
+
+	def getEndTime(){
+		return endTime * 36000000
+	}*/
+
 }

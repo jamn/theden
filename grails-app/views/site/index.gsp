@@ -8,8 +8,8 @@
           |#' ,#|
           |' ,##|
           | ,###|		SHAVE AND A HAIRCUT,
-          |,###'|		AND SOME CONVERSATION,
-          |###' |		AND PROBABLY A BEER TOO.
+          |,###'|		AND A BEER TOO.
+          |###' |
           |##' ,|
           |#' ,#|
           |'_,##|
@@ -19,21 +19,23 @@
  -->
 
  <!-- Made by Ben Jacobi | benjacobi.com -->
- <!-- v0.3 -->
+ <!-- v${grailsApplication.metadata.'app.version'} -->
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <html><head>
 <meta charset="UTF-8">
-<title>:: The Den Barbershop ::</title>
+<title>The Den Barbershop</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'animate.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'reset.css')}" />
-<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz.css')}?v0.6" />
-<link media="handheld, only screen" href="${resource(dir:'css', file:'mobile.css')}" type="text/css" rel="stylesheet" />
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> -->
 
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'bootstrap-3.2.0.min.css')}" >
 <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery-ui-1.10.3.custom.min.css')}" />
+<!-- <link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'jquery.confirmon.css')}" /> -->
+
+<link rel="stylesheet" type="text/css" href="${resource(dir:'css', file:'stylz-new.css')}?v${grailsApplication.metadata.'app.version'}" />
+<link media="handheld, only screen" href="${resource(dir:'css', file:'media.css')}?v${grailsApplication.metadata.'app.version'}" type="text/css" rel="stylesheet" />
 
 <link rel="apple-touch-icon" sizes="57x57" href="${resource(dir:'images', file:'apple-icon-57x57.png')}" />
 <link rel="apple-touch-icon" sizes="72x72" href="${resource(dir:'images', file:'apple-icon-72x72.png')}" />
@@ -42,99 +44,59 @@
 
 </head><body baseUrl="${createLink()}">
 
-		<div class="header">
-			<img class="home" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}">
-			<div id="newAddress">1013 W 47th Street<br/>KCMO, 64112</div>
-		</div>
-		<div class="jackson">
-			<img class="pic" src="${resource(dir:'images',file:'jackson.jpg')}">
-		</div>
-		<div class="grey-box">
-			<ul>
-				<li>
-					<div class="message-board-backing">
-						<div class="message-board">${raw(message)}</div>
-					</div>
-				</li>
-				<li>
-					<img id="logoLarge" src="${resource(dir:'images',file:'logo-large.png')}">
-				</li>
-			</ul>
-		</div>
-		<div class="main-content-area">
-			<div class="pictures">
-				<img width="100%" src="${resource(dir:'images',file:'shop.jpg')}">
+
+
+	<div class="container-fluid">
+		<div class="row header">
+			<div class=".col-xs-12">
+				<img class="img-responsive logo link home-link" id="logoPlain" src="${resource(dir:'images',file:'logo-plain.png')}" />
+				<div class="link address" id="headerAddressLink">1013 W 47th Street<br/>KCMO, 64112</div>
 			</div>
-			<div class="green-button book-now-button"><div class="label">Book Now</div><img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner"></div>
 		</div>
-
-		<div class="select-a-service"></div>
-		<div class="choose-a-time">
-			<h1 id="dateText">Today</h1>
-			<label id="chooseDateText" for="chooseDate">Choose a date:</label>
-			<input id="chooseDate" name="chooseDate" type="text">
-			<label id="recurringAppointmentText" for="recurringAppointment">Recurring Appointment?</label>
-			<input type="checkbox" name="recurringAppointment" id="recurringAppointment">
-			<div id="recurringAppointmentOptions">
-				<ul>
-					<li>Repeat every</li>
-					<li>
-						<select id="repeatDuration">
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-							<option value="9">9</option>
-							<option value="10">10</option>
-						</select>
-					</li>
-					<li>
-						week(s) for
-					</li>
-					<li>
-						<select id="repeatNumberOfAppointments">
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-						</select>
-					</li>
-					<li>
-						appointments total.
-					</li>
-				</ul>
+		<div class="row grey-box">
+			<div class="col-xs-12 col-sm-offset-1 col-sm-6">
+				<div class="message-board-backing">
+					<div class="message-board">${raw(message)}</div>
+				</div>
 			</div>
-			<ul id="timeSlots">
-
-			</ul>
+			<div class="col-sm-4">
+				<img class="logo" src="${resource(dir:'images',file:'logo-large.png')}">
+			</div>
 		</div>
-
-		<div class="login"></div>
-
-		<div class="confirmation"></div>
-
-		<div id="address" class="address">1013 W 47th Street &bull; KCMO, 64112</div>
-		<div class="google-map" style="display:none;">
-			<img src="${resource(dir: 'images', file: 'map.png')}">
+		<div class="row main-content">
+			<div class="page" page="home">
+				<g:render template="home" />
+			</div>
+			<div class="page" page="services"></div>
+			<div class="page" page="timeSlots"></div>
+			<div class="page" page="loginForm"></div>
+			<div class="page" page="confirmation"></div>
 		</div>
-
-		<div class="footer">&nbsp;</div>
 		
+		<g:render template="footer" />
 
-    <script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
-	<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
+
+	</div>
+
+	<div id="mask"><img class="loader" src="${resource(dir:'images',file:'loading.gif')}" /></div>
+
+	<script src="${resource(dir:'js', file:'jquery-1.10.2.min.js')}" type="text/javascript"></script>
 	<script type="text/javascript">
-		$(document).bind('mobileinit',function(){
-			$.mobile.loadingMessage = false; 	// Hide the jquery mobile loading message.
-												// Must be done before loading jquery mobile.
-		});
-	</script>
+        $(document).bind('mobileinit',function(){
+            $.mobile.loadingMessage = false; 	// Hide the jquery mobile loading message.
+            									// Must be done before loading jquery mobile.
+        })
+    </script>
 	<script src="${resource(dir:'js', file:'jquery.mobile-1.3.2.min.js')}" type="text/javascript"></script>
-	<script src="${resource(dir:'js', file:'application.min.js')}?v0.6" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'jquery-ui-1.10.3.custom.min.js')}" type="text/javascript"></script>
+	<script src="${resource(dir:'js', file:'bootstrap-3.2.0.min.js')}" type="text/javascript"></script>
+	<!-- <script src="${resource(dir:'js', file:'jquery.confirmon.js')}"></script> -->
+	<!-- <script src="${resource(dir:'js', file:'jquery-validate-min.js')}"></script> -->
+	<script src="${resource(dir:'js', file:'application.min.js')}?v${grailsApplication.metadata.'app.version'}" type="text/javascript"></script>
+	<script type="text/javascript">
+		$('.main-content .page[page="home"]').fadeIn();
+	</script>
 	<script src="${resource(dir:'js', file:'masked-input-plugin.min.js')}" type="text/javascript"></script>
+
 
 </body></html>

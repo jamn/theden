@@ -2,8 +2,26 @@
 	<h1>Book for Client</h1>
 	<select class="form-control" id="clients">
 		<option selected="selected">Choose a client...</option>
-		<g:each in="${clients}">
-			<option value="${it?.id}">${it?.lastName}, ${it?.firstName}</option>
+		<g:each in="${clients}" var="client" status="i">
+			<g:set var="currentLastNameStartsWith" value="${client.lastName.substring(0,1)}" />
+			<g:if test="${(i == 0)}">
+				<g:set var="previousLastNameStartedWith" value="${client.lastName.substring(0,1)}" />
+				<optgroup label="${currentLastNameStartsWith}">
+					<option value="${client.id}">${client.lastName}, ${client.firstName}</option>
+			</g:if>
+			<g:elseif test="${(i == clients.size())}">
+				</optgroup>
+			</g:elseif>
+			<g:elseif test="${(currentLastNameStartsWith != previousLastNameStartedWith)}">
+				</optgroup>
+				<optgroup label="${currentLastNameStartsWith}">
+					<option value="${client.id}">${client.lastName}, ${client.firstName}</option>
+			</g:elseif>
+			<g:else>
+				<option value="${client.id}">${client.lastName}, ${client.firstName}</option>
+			</g:else>
+
+			<g:set var="previousLastNameStartedWith" value="${client.lastName.substring(0,1)}" />
 		</g:each>
 	</select>
 	<select class="form-control" id="services">

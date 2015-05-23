@@ -17,6 +17,7 @@ class EmailService {
 			emailBody += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></li>"
 		}
 		emailBody += "</ul><p>See you then!</p>"
+		emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a \$20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
 
 		try {
 			sendMail {
@@ -113,6 +114,7 @@ class EmailService {
 	public sendRescheduledConfirmation(Appointment appointment){
 		println "Sending reschedule confirmation for appointment: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('E MM/dd @ hh:mm a')
 		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>${appointment.client.firstName},</p><p>Your appointment has been rescheduled. Your new appointment date is: <b>${appointment.appointmentDate.format('E MM/dd @ hh:mm a')}</b>. If you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
+			emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a \$20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
 		try {
 			sendMail {
 				async true
@@ -128,20 +130,11 @@ class EmailService {
 		}
 	}
 
-	public sendReminderEmails(){
-		Calendar almostTwentyFourHoursFromNow = new GregorianCalendar()
-		almostTwentyFourHoursFromNow.add(Calendar.HOUR, 24)
-		almostTwentyFourHoursFromNow.add(Calendar.MINUTE, -5)
+	public sendReminder(Appointment appointment){
+		if (!appointment.reminderEmailSent){
 
-		Calendar aLittleMoreThanTwentyFourHoursFromNow = new GregorianCalendar()
-		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.HOUR, 24)
-		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.MINUTE, 5)
-
-		def appointment = Appointment.findByAppointmentDateBetween(almostTwentyFourHoursFromNow.getTime(), aLittleMoreThanTwentyFourHoursFromNow.getTime())
-
-		if (appointment && appointment.reminderEmailSent == false){
-			println "Sending appointment reminder for: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('E MM/dd @ hh:mm a')
-			def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>Hey ${appointment.client.firstName},</p><p>Just a reminder that your appointment for a ${appointment.service.description} is tomorrow at <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
+			def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>Hey ${appointment.client.firstName},</p><p>We have you booked tomorrow for a ${appointment.service.description} at <b>${appointment.appointmentDate.format('hh:mm a')}</b>. In the event you need to reschedule, please use this link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"'>http://www.thedenbarbershop-kc.com/site/modifyAppointment?a="+appointment.id+"&cc="+appointment.client.code+"</a></p><p>To cancel your appointment, please use the following link:</p><p><a href='http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"'>http://www.thedenbarbershop-kc.com/site/cancelAppointment?c="+appointment.code+"</a></p><p>Thanks!</p>"
+				emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a \$20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
 			try {
 				sendMail {
 					async true
@@ -150,6 +143,7 @@ class EmailService {
 					subject "Appointment Reminder :: The Den Barbershop"     
 					html emailBody
 				}
+				println "Reminder email sent."
 				appointment.reminderEmailSent = true
 				appointment.save()
 			}
@@ -161,6 +155,7 @@ class EmailService {
 	}
 
 	public sendPasswordResetLink(User client){
+		println "\n" + new Date()
 		println "Sending password reset link to: " + client.getFullName()
 		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>The following link can be used to reset your password:</p><ul><li><a href='http://www.thedenbarbershop-kc.com/site/resetPasswordForm?rc="+client.passwordResetCode+"&cc="+client.code+"'>http://www.thedenbarbershop-kc.com/site/resetPasswordForm?rc="+client.passwordResetCode+"&cc="+client.code+"</a></li></ul>"
 		try {
@@ -176,5 +171,31 @@ class EmailService {
 			println "ERROR"
 			println e
 		}
+	}
+
+	public Boolean sendEmail(clientEmail, message){
+		println "\n" + new Date()
+		println "EMAILING: " + clientEmail
+		println "-------------------------------------------------------------------"
+		println message
+		println "-------------------------------------------------------------------"
+		def emailBody = "<p><img style='height:120px;width:120px;' src='http://thedenbarbershop-kc.com/assets/logo.png'></p><p>${message}</p>"
+		Boolean success = false
+		try {
+			sendMail {
+				async true
+				to "${clientEmail}"
+				from "info@thedenbarbershop-kc.com"  
+				subject "Message from Kalin @ The Den Barbershop"     
+				html emailBody
+			}
+			success = true
+		}
+		catch(Exception e) {
+			println "ERROR"
+			println e
+			success = false
+		}
+		return success
 	}
 }

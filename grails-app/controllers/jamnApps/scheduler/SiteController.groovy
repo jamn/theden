@@ -1,5 +1,6 @@
 package jamnApps.scheduler
 
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.apache.commons.lang.RandomStringUtils
 import java.text.SimpleDateFormat
 import grails.converters.JSON
@@ -18,16 +19,18 @@ class SiteController {
 	def emailService
 	def schedulerService
 	def userService
+	def sessionFactory
 
 	def index() {
-		//resetSession()
 		def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
 		return [message:message]
 	}
 
-	
-
 	def getServices(){
+		deleteStaleAppointments()
+		session.invalidate()
+		GrailsWebRequest.lookup(request).session = null
+
 		println "\n---- GET SERVICES ----"
 		println new Date()
 		println "params.u: " + params.u
@@ -48,7 +51,7 @@ class SiteController {
 		}
 	}
 
-	def getAvailableTimes() {
+	def getTimeSlots() {
 		println "\n---- GET AVAILABLE TIMES ----"
 		println new Date()
 		def timeSlotsMap = [:]
@@ -56,54 +59,70 @@ class SiteController {
 		def service
 		def stylist
 		Boolean dontRenderTemplate = false
-		try {
-			if (params?.d){
-				requestedDate = dateFormatter3.parse(params?.d)
-			}
-			else if (session?.requestedDate){
-				requestedDate = session.requestedDate
-				dontRenderTemplate = true
-			}
-			else{
-				requestedDate =  new Date()
-			}
-			println "requestedDate: " + requestedDate
-			if (params?.stylist){
-				stylist = params.stylist
-			}else{
-				stylist = User.get(session.stylistId)
-			}
-			println "stylist: " + stylist?.getFullName()
-			if (params?.s){
-				service = Service.findWhere(stylist:stylist, description:params?.s)
-				session.serviceId = service.id
-			}
-			else{
-				service = Service.get(session?.serviceId)
-			}
-			println "service: " + service?.description
+		Boolean renderDatePicker = false
+
+		println 'session: ' + session
+
+		if (params?.d){
+			requestedDate = dateFormatter3.parse(params?.d)
 		}
-		catch(Exception e) {
-			println "ERROR: " + e
+		else if (session?.requestedDate){
+			requestedDate = session.requestedDate
+			dontRenderTemplate = true
 		}
+		else{
+			renderDatePicker = true
+			requestedDate =  new Date()
+		}
+		println "requestedDate: " + requestedDate
+		if (params?.stylist){
+			stylist = params.stylist
+		}else{
+			stylist = User.get(session.stylistId)
+		}
+		println "stylist: " + stylist?.getFullName()
+		if (params?.s){
+			service = Service.findWhere(stylist:stylist, description:params?.s)
+			session.serviceId = service.id
+		}
+		else{
+			service = Service.get(session?.serviceId)
+		}
+		println "service: " + service?.description
 
 		if (requestedDate && stylist && service){
 			timeSlotsMap = schedulerService.getTimeSlotsAvailableMap(requestedDate, stylist, service)
+			if (dontRenderTemplate){
+				return timeSlotsMap
+			}
+			else{
+				def datePickerHTML = g.render(template: "datePicker")
+				def timeSlotsHTML = g.render(template: "timeSlots", model: [timeSlotsMap:timeSlotsMap])
+				def returnHTML = renderDatePicker ? (datePickerHTML + "\n" + timeSlotsHTML) : timeSlotsHTML
+				render (returnHTML)
+			}
 		}
 		else {
 			println "ERROR: unable to process params -> " + params
+			return false
 		}
-
-		if (dontRenderTemplate){
-			return timeSlotsMap
-		}
-		else{
-			render (template: "timeSlots", model: [timeSlotsMap:timeSlotsMap])
-		}
-
 	}
 
-	def saveDate(){
+	def getLoginForm() {
+		println "\n---- GET LOGIN FORM ----"
+		println new Date()
+		saveDate(params)
+		def loggedInCookieId = request.getCookie('den2')
+		def loginResults = userService.loginClient([loggedInCookieId:loggedInCookieId])
+		println "loginResults: " + loginResults
+		if (!loginResults.error){
+			session.client = loginResults.client
+		}
+		render(template: "login")
+		
+	}
+
+	private saveDate(Map params = [:]){
 		println "\n---- SAVE DATE ----"
 		println new Date()
 
@@ -120,6 +139,7 @@ class SiteController {
 		startDate.setTime(appointmentDate)
 		def count = 1
 		List existingAppointments = []
+		List bookedAppointments = []
 		def nextAppointment
 		while (count <= repeatNumberOfAppointments){
 			def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
@@ -141,6 +161,7 @@ class SiteController {
 				appointment.service = service
 				appointment.code = RandomStringUtils.random(14, true, true)
 				appointment.save(flush:true)
+				bookedAppointments.add(appointment)
 				if (count == 1){
 					nextAppointment = appointment
 				}else{
@@ -155,7 +176,7 @@ class SiteController {
 		println "existingAppointments: " + existingAppointments
 		session.appointmentId = nextAppointment.id
 		session.existingAppointments = existingAppointments
-		render (template: "login", model: [appointment:nextAppointment])
+		session.bookedAppointments = bookedAppointments
 	}
 
 	def sendPasswordResetEmail(){
@@ -266,74 +287,95 @@ class SiteController {
 		Boolean errorOccurred = false
 		def errorMessage = ''
 		def appointments = []
-		if (params?.hp?.size() > 0){ // HONEYPOT -- check value of hidden field to see if a spambot is submitting the form
-			errorOccurred = true
-			errorMessage = "bear found the honey"
+
+		if (params?.loggedIn != "logged-in") {
+			session.client = null
 		}
-		else{
-			def loginResults = userService.loginClient(params)
-			println "loginResults: " + loginResults
-			if (loginResults.error == true){
-				errorOccurred = true
-				errorMessage = loginResults.errorDetails
+
+		def loginResults = session?.client ? [client:session.client] : userService.loginClient(params)
+		println "*** loginResults: " + loginResults
+		if (loginResults.error == true || !loginResults.client){
+			errorOccurred = true
+			errorMessage = loginResults.errorDetails ?: "Unable to login. Please try resetting your password."
+		}else{
+
+			def client = loginResults.client
+			def service = Service.get(session.serviceId)
+			def stylist = User.get(session.stylistId)
+			
+			println "client: " + client?.getFullName()
+			println "service: " + service?.description
+			println "stylist: " + stylist?.getFullName()
+
+			if (params?.remember == "true") {
+				def loggedInCookieId = RandomStringUtils.random(20, true, true)
+				println "NEW loggedInCookieId: " + loggedInCookieId
+				new LoginLog(
+					user:client,
+					loggedInCookieId: loggedInCookieId
+				).save(flush:true)
+				response.setCookie('den2', loggedInCookieId)
+			}
+
+			println "session: " + session
+
+			def phone = params?.ph?.replaceAll("-","")?.replaceAll(" ","")?.replaceAll("___-___-____","")
+			if (params?.tRmndr && phone?.size() == 10 && !phone?.contains('0000000000')){
+				println "saving client phone number: " + phone
+				client.phone = phone
+				client.save()
+			}
+
+			def tempAppointment = Appointment.get(session.appointmentId)
+			
+			if (session.multipleAppointmentsScheduled && tempAppointment){
+				println "...multiple appointments scheduled and appointment in session..."
+				def now = new Date()
+				Appointment.findAllWhere(client:tempAppointment.client)?.each(){
+					if (it.booked == false && it.appointmentDate > now){
+						println "adding appointment."
+						appointments.add(it)
+					}
+				}
+			}else if (tempAppointment){
+				appointments.add(tempAppointment)
+			}
+
+			println "appointments: " + appointments
+
+			if (client && service && stylist && appointments.size() > 0){
+				appointments.each(){ appointment ->
+					appointment.client = client
+					appointment.sendEmailReminder = params?.eRmndr == "true" ? true : false
+					appointment.sendTextReminder = params?.tRmndr == "true" ? true : false
+					appointment.booked = true
+					appointment.save(flush:true)
+					if (appointment.hasErrors() || appointment.booked == false){
+						println "ERROR: " + appointment?.errors
+						errorOccurred = true
+						errorMessage = "An error occured trying to save your appointment. Sorry about that, we'll get to the bottom of it. In the meantime please try booking again from the start."
+					}
+					else{
+						println "saved appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
+					}
+				}
+				emailService.sendEmailConfirmation(appointments)
+
+				if (session.existingAppointmentId){
+					def existingAppointment = Appointment.get(session.existingAppointmentId)
+					if (existingAppointment.client == client){
+						println "Deleting existing appointment..."
+						existingAppointment.delete()
+						session.existingAppointmentId = null
+						emailService.sendCancellationNotices(existingAppointment)
+					}
+				}
 			}else{
-				def client = loginResults.client
-				def service = Service.get(session.serviceId)
-				def stylist = User.get(session.stylistId)
-				
-				println "client: " + client?.getFullName()
-				println "service: " + service?.description
-				println "stylist: " + stylist?.getFullName()
-
-				println "session: " + session
-
-				def tempAppointment = Appointment.get(session.appointmentId)
-				
-				if (session.multipleAppointmentsScheduled && tempAppointment){
-					println "here"
-					def now = new Date()
-					Appointment.findAllWhere(client:tempAppointment.client)?.each(){
-						if (it.booked == false && it.appointmentDate > now){
-							println "adding appointment"
-							appointments.add(it)
-						}
-					}
-				}else if (tempAppointment){
-					appointments.add(tempAppointment)
-				}
-
-				println "appointments: " + appointments
-
-				if (client && service && stylist && appointments.size() > 0){
-					appointments.each(){ appointment ->
-						appointment.client = client
-						appointment.booked = true
-						appointment.save(flush:true)
-						if (appointment.hasErrors() || appointment.booked == false){
-							println "ERROR: " + appointment?.errors
-							errorOccurred = true
-							errorMessage = "A really weird error occured trying to save your appointment. We'll get to the bottom of it. In the meantime please try booking again from the start. Sorry about that."
-						}
-						else{
-							println "saved appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a')
-						}
-					}
-					emailService.sendEmailConfirmation(appointments)
-
-					if (session.existingAppointmentId){
-						def existingAppointment = Appointment.get(session.existingAppointmentId)
-						if (existingAppointment.client == client){
-							println "Deleting existing appointment..."
-							schedulerService.deleteAppointment(existingAppointment.id)
-							emailService.sendCancellationNotices(existingAppointment)
-						}
-					}
-				}else{
-					errorOccurred = true
-					errorMessage = "Email address not recognized."
-				}
+				errorOccurred = true
+				errorMessage = "Email address not recognized."
 			}
 		}
+
 		if (errorOccurred){
 			println "AN ERROR OCCURRED: " + errorMessage
 			def jsonString = '{"success":false,"errorMessage":"'+errorMessage+'"}'
@@ -358,7 +400,7 @@ class SiteController {
 				if (appointment?.client?.code?.toUpperCase() == params.cc.toString().toUpperCase().trim()){
 					session.existingAppointmentId = appointment.id
 					println "session: " + session
-					def timeSlotsMap = getAvailableTimes()
+					def timeSlotsMap = getTimeSlots()
 					def message = ApplicationProperty.findByName("HOMEPAGE_MESSAGE")?.value ?: "No messages found."
 					render (template: "modifyAppointment", model: [timeSlotsMap:timeSlotsMap, message:message, appointment:appointment])
 				}
@@ -381,12 +423,14 @@ class SiteController {
 		def appointment
 		Boolean showLoginForm = false
 		if (params?.c){ // params.c = appointment.code
-			showLoginForm = true
 			appointment = Appointment.findByCode(params.c.trim())
 			if (appointment){
+				showLoginForm = true
 				session.appointmentToDelete = appointment
+			}else{
+				redirect(action:"index")
 			}
-			println "appointment(${appointment.id}): " + appointment?.client?.getFullName() + " | " + appointment?.service?.description + " on " + appointment?.appointmentDate?.format('MM/dd/yy @ hh:mm a [E]')
+			println "appointment(${appointment?.id}): " + appointment?.client?.getFullName() + " | " + appointment?.service?.description + " on " + appointment?.appointmentDate?.format('MM/dd/yy @ hh:mm a [E]')
 	
 		}
 		else if (session.appointmentToDelete){
@@ -441,35 +485,23 @@ class SiteController {
 		else{
 			render(template: "confirmation", model: [appointmentDeleted:true])
 		}
-
-
 	}
 
 	private deleteStaleAppointments(){
 		println "\n---- DELETING STALE APPOINTMENTS ----"
 		println new Date()
-  		def sql = new Sql(session.connection())
-		Calendar now = new GregorianCalendar()
-		now.add(Calendar.MINUTE, -10)
-		def tenMinutesAgo = now.getTime().format('yyyy-MM-dd HH:mm:ss')
-		List idsToDelete = []
-		def query1 = [
-			"SELECT id FROM appointment WHERE booked = 0 AND id IN (",
-				"SELECT id FROM core_object WHERE date_created < '"+tenMinutesAgo+"'",
-			");"
-		].join('\n')
-		try {
-			sql.eachRow(query1){ row ->
-				idsToDelete.add(row.id)
-			}
+		def numberOfTimeSlotsFreed = 0
+		def lastAppointmentUserAttemptedToBook = Appointment.get(session?.appointmentId)
+		if (lastAppointmentUserAttemptedToBook && lastAppointmentUserAttemptedToBook.booked == false){
+			lastAppointmentUserAttemptedToBook.delete()
+			numberOfTimeSlotsFreed++
 		}
-		catch(Exception e) {
-			println "ERROR: " + e
-		}
-		idsToDelete.each(){
-			schedulerService.deleteAppointment(it, sql)
-		}
-		
+		Calendar calendarObject = new GregorianCalendar()
+		calendarObject.add(Calendar.MINUTE, -1)
+		def fiveMinutesAgo = calendarObject.getTime()
+		numberOfTimeSlotsFreed += Appointment.executeUpdate("delete Appointment a where a.booked = false and a.dateCreated < :fiveMinutesAgo", [fiveMinutesAgo:fiveMinutesAgo])	
+		sessionFactory.currentSession.flush()
+		println "Deleted ${numberOfTimeSlotsFreed} stale appointments"
 	}
 
 	private getServicesForStylist(User stylist){
@@ -484,15 +516,4 @@ class SiteController {
 		return serviceList
 	}
 
-
-	private resetSession(){
-		def appointment = Appointment.get(session?.appointmentId)
-		if (appointment && !appointment?.booked){
-			appointment.delete()
-		}
-		deleteStaleAppointments()
-		session.invalidate()
-		def now = new Date()
-		println "** SESSION RESET ${now} **"
-	}
 }
