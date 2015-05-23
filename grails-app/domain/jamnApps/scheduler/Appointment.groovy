@@ -9,7 +9,10 @@ class Appointment extends CoreObject {
 	String notes
 	String code
 	Boolean booked = false
+	Boolean sendEmailReminder = true
 	Boolean reminderEmailSent = false
+	Boolean sendTextReminder = true
+	Boolean reminderTextSent = false
 
 	static constraints = {
     	client(nullable:true)

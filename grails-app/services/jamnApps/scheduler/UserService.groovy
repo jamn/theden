@@ -8,9 +8,27 @@ class UserService {
 			'errorDetails': null,
 			'client': null
 		]
-		if (params.size() > 0){
-			if (params?.e?.size() > 1 && params?.p?.size() > 1){
-				def existingUser = User.findByEmail(params.e.toLowerCase())
+		//if (params.size() > 0){
+
+			def existingUser
+			def loggedInCookieId = params?.loggedInCookieId
+			println "EXISTING loggedInCookieId: " + loggedInCookieId
+
+			if (loggedInCookieId) {
+				def loginLog = LoginLog.findByLoggedInCookieId(loggedInCookieId)
+				//def fourMonthsAgo = dateService.getDateFourMonthsAgo()
+				//println "Four Months Ago: " + fourMonthsAgo
+				//if (loginLog?.dateCreated > fourMonthsAgo){
+					//println "last login was less than four months ago"
+				if (loginLog.user){
+					existingUser = loginLog.user
+				}else{
+					println "last login was more than four months ago"
+				}
+			}
+
+			if (!existingUser && params?.e?.size() > 1 && params?.p?.size() > 1){
+				existingUser = User.findByEmail(params.e.toLowerCase())
 				/*if (params?.f?.size() > 1 && params?.l?.size() > 1){
 					if (!existingUser){
 						println "CREATING NEW USER"
@@ -33,7 +51,7 @@ class UserService {
 				}
 				else */
 				if (existingUser && existingUser.password == params.p){
-					println "2) USER LOGGED IN CORRECTLY"
+					println "2b) USER LOGGED IN CORRECTLY"
 					results['client'] = existingUser
 				}
 				else if (existingUser && existingUser.password != params.p){
@@ -46,17 +64,22 @@ class UserService {
 					results['error'] = true
 					results['errorDetails'] = "Email/password not found."
 				}
-			}else{
+			}
+			else if (existingUser) {
+				println "2a) USER LOGGED IN CORRECTLY"
+				results['client'] = existingUser
+			}
+			else{
 				println "1) USERNAME AND PASSWORD REQUIRED"
 				results['error'] = true
 				results['errorDetails'] = "Username and password are required."
 			}
-		}
-		else{
-			println "2) USERNAME AND PASSWORD REQUIRED"
-			results['error'] = true
-			results['errorDetails'] = "Username and password are required."
-		}
+		//}
+		//else{
+		//	println "2) USERNAME AND PASSWORD REQUIRED"
+		//	results['error'] = true
+		//	results['errorDetails'] = "Username and password are required."
+		//}
 		return results
 	}
 

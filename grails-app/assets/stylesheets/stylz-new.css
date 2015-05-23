@@ -239,7 +239,7 @@ body {
 }
 
 .noTimesAvailableMessage {
-	background-color: #ccc;
+	background-color: #DBDBDB;
 	padding: 16px 0;
 }
 
@@ -262,10 +262,8 @@ body {
 	margin: 5px
 }
 
-.login-box ul li {
-	list-style-type: none;
-	display: inline;
-	padding-right: 6px;
+.login-box .logged-in {
+	display: none;
 }
 
 .errorDetails{
@@ -281,6 +279,24 @@ body {
 
 #showLoginForm{
 	display: none;
+}
+
+.no-show-policy {
+	background-color: #DBDBDB;
+	padding: 10px;
+	margin-bottom: 14px;
+	margin-left: 5px;
+	margin-right: -5px;
+	font-size: .8em;
+}
+
+.reminders-note {
+	margin-left: 28px;
+	font-size: .8em;
+	color: #767676;
+	margin-bottom: 10px;
+	position: relative;
+	top: -5px;
 }
 
 #registerLink,

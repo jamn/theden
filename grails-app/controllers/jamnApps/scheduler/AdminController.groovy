@@ -1,5 +1,6 @@
 package jamnApps.scheduler
 
+import com.twilio.sdk.TwilioRestException
 import org.apache.commons.lang.RandomStringUtils
 import java.text.SimpleDateFormat
 import grails.converters.JSON
@@ -15,10 +16,16 @@ class AdminController {
 	def schedulerService
 	def emailService
 	def userService
+	def textMessageService
 
 	/*********************************
 				NAVIGATION
 	**********************************/
+
+	def sendReminders() {
+		def job = new SendAppointmentRemindersJob()
+		job.triggerNow()
+	}
 
     def index() { 
     	println "\n" + new Date()
@@ -262,7 +269,8 @@ class AdminController {
 					appointment.code = RandomStringUtils.random(14, true, true)
 					appointment.client = stylist
 					appointment.booked = true
-					appointment.reminderEmailSent = true
+					appointment.sendEmailReminder = false
+					appointment.sendTextReminder = false
 					appointment.save(flush:true)
 					if (appointment.hasErrors()){
 						appointmentFailedToSave = true

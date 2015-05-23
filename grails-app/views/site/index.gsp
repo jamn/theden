@@ -70,7 +70,7 @@
 			<div class="page" page="services"></div>
 			<div class="page" page="timeSlots"></div>
 			<div class="page" page="loginForm"></div>
-			<div class="page confirmation" page="confirmation"></div>
+			<div class="page" page="confirmation"></div>
 		</div>
 		
 		<g:render template="footer" />

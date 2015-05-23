@@ -208,19 +208,22 @@ function attemptPasswordReset(){
 }
 
 function bookAppointment(){
+	var loggedIn = $('#loggedIn').val();
 	var email = $('#email').val();
-	var email2 = $('#email2').val();
 	var password = $('#password-Book').val();
 	var firstName = $('#firstName').val();
 	var lastName = $('#lastName').val();
 	var phoneNumber = $('#phoneNumber').val();
+	var emailReminder = $('#emailReminder').is(':checked');
+	var textMessageReminder = $('#textMessageReminder').is(':checked');
+	var rememberMe = $('#rememberMe').is(':checked');
 	$('#loginButton .as-button-label').hide();
 	$('#loginButton .spinner').show();
 	var baseUrl = $('body').attr('baseUrl');
 	$.ajax({
 		type: "POST",
 		url: baseUrl+"site/bookAppointment",
-		data: {e:email, hp:email2, p:password, f:firstName, l:lastName, ph:phoneNumber}
+		data: {loggedIn:loggedIn, e:email, p:password, f:firstName, l:lastName, ph:phoneNumber, eRmndr:emailReminder, tRmndr:textMessageReminder, remember:rememberMe}
 	}).done(function(confirmation) {
 		processResults(confirmation);
 	});
