@@ -262,6 +262,10 @@ body {
 	margin: 5px
 }
 
+.login-box ul {
+	margin: 30px 0;
+}
+
 .login-box .logged-in {
 	display: none;
 }

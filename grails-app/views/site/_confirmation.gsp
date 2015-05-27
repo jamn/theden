@@ -16,8 +16,9 @@
 	</g:elseif>
 	<g:else>
 		<g:if test="${appointments?.size() > 0}">
+			<g:set var="plural" value="${appointments.size() == 1 ? 'appointment has' : 'appointments have'}" />
 			<h2>
-				Your appointment(s) have been booked for:
+				Thank you. Your ${plural} been booked for:
 			</h2>
 			<ul style='list-style: none;margin-left: -38px;'>
 				<g:each in='${appointments}'>
