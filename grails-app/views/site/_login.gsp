@@ -11,34 +11,35 @@
 		</g:if>
 
 		<g:set var="plural" value="${session?.bookedAppointments?.size() == 1 ? '' : 's'}" />
-		<g:if test="${!cancelAppointment && session?.bookedAppointments?.size() > 0}">
-			<h2>Confirm ${session?.bookedAppointments[0]?.service?.description}${plural}:</h2>
-			<ul>
-				<g:each in='${session.bookedAppointments}'>
-					<li>${it.appointmentDate.format('EEEE, MMMM dd @ hh:mm a')}</li>
-				</g:each>
-			</ul>
-		</g:if>
 
-		<g:if test="${session.appointmentToDelete}">
-			<h2>Confirm Cancellation:</h2>
-			<ul>
-				<li> ${session.appointmentToDelete.service.description}: ${session.appointmentToDelete.appointmentDate.format('EEEE, MMMM dd @ hh:mm a')}</li>
-			</ul>
-		</g:if>
+		<div class="reminders">
+			<g:if test="${!cancelAppointment && session?.bookedAppointments?.size() > 0}">
+				<h2>Confirm ${session?.bookedAppointments[0]?.service?.description}${plural}:</h2>
+				<ul>
+					<g:each in='${session.bookedAppointments}'>
+						<li>${it.appointmentDate.format('EEEE, MMMM dd @ hh:mm a')}</li>
+					</g:each>
+				</ul>
+			</g:if>
+			<g:if test="${session.appointmentToDelete}">
+				<h2>Confirm Cancellation:</h2>
+				<ul>
+					<li> ${session.appointmentToDelete.service.description}: ${session.appointmentToDelete.appointmentDate.format('EEEE, MMMM dd @ hh:mm a')}</li>
+				</ul>
+			</g:if>
+			<g:if test="${!cancelAppointment}">
+				<label>
+					<input type="checkbox" name="emailReminder" id="emailReminder" checked> Send email reminder${plural}?
+				</label>
+				<label>
+					<input type="checkbox" name="textMessageReminder" id="textMessageReminder" checked> Send text message reminder${plural}?
+				</label>
+				<div class="reminders-note">Reminders are sent 24 hours before your appontment.</div>
+			</g:if>
 
-		<g:if test="${!cancelAppointment}">
-			<label>
-				<input type="checkbox" name="emailReminder" id="emailReminder" checked> Send email reminder${plural}?
-			</label>
-			<label>
-				<input type="checkbox" name="textMessageReminder" id="textMessageReminder" checked> Send text message reminder${plural}?
-			</label>
-			<div class="reminders-note">Reminders are sent 24 hours before your appontment.</div>
-		</g:if>
+			<div class="no-show-policy">There will be a $20 charge at your following visit if you cancel within 4 hours of your appointment. Unless previous arrangements have been made, anything past 10 minutes late will be considered a no show and you will need to reschedule.</div>
+		</div>
 
-
-		<div class="no-show-policy">There will be a $20 charge at your following visit if you cancel within 4 hours of your appointment. Unless previous arrangements have been made, anything past 10 minutes late will be considered a no show and you will need to reschedule.</div>
 
 		<g:set var="loggedIn" value="${(!cancelAppointment && session?.client) ? 'logged-in' : ''}" />
 		
@@ -52,13 +53,21 @@
 
 		<input class="form-control ${loggedIn}" placeholder="Password" type="password" name="password" id="password-${formAction}" value="${client?.password}" />
 
+		<input placeholder="First Name" type="text" name="first-name" id="firstName" class="form-control new-user ${loggedIn}">
+
+		<input placeholder="Last Name" type="text" name="last-name" id="lastName" class="form-control new-user ${loggedIn}"><br>
+
+	
+
 		<g:if test="${!cancelAppointment}">
-			<label class="${loggedIn}">		
+			<label class="reminders ${loggedIn}">		
 				<input type="checkbox" name="rememberMe" id="rememberMe" checked> Remember Me
 			</label>
 		</g:if>
 
 		<div class="reset-password-links ${loggedIn}">
+			<span id="registerLink">New Client?</span>
+			<span class="left-divider"> | </span>
 			<span id="resetPassword">Reset Password</span>
 			<span class="right-divider"> | </span>
 			<span id="showLoginForm">Login Form</span>
@@ -77,22 +86,13 @@
 
 <script type="text/javascript">
 
-	function logout() {
-		$(".user-details").slideUp();
-		$(".logged-in").slideDown();
-		$("#loggedIn").val("false");
-	}
+	$('#textMessageReminder').click(function() {
+		togglePhoneNumber();
+	});
 
 	$('#email').bind('keyup', function(){
 		var value = $(this).val()
 		$(this).val(value.replace(/\s+/g, ''));
-	});
-	$('#textMessageReminder').click(function() {
-		if( $(this).is(':checked')) {
-			$("#phoneNumber").slideDown();
-		} else {
-			$("#phoneNumber").slideUp();
-		}
 	});
 	$(document).ready(function(){
 		$("#phoneNumber").mask("999-999-9999");

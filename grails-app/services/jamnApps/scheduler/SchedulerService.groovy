@@ -203,4 +203,19 @@ class SchedulerService {
 		return success
 	}
 
+	public getCalendarClass(appointment,day){
+		def cssClass = "available"
+		if(day == 1 || day == 7) {
+			cssClass = "unavailable"
+		}else if(appointment?.service?.description == "Blocked Off Time"){
+			cssClass = "blocked-off"
+		}else if(appointment){
+			cssClass = "booked"
+			if (appointment.client.isNewUser()){
+				cssClass += " new-user"
+			}
+		}
+		return cssClass
+	}
+
 }

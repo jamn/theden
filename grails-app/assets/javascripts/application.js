@@ -83,6 +83,9 @@ $(document).on("tap", "#registerLink", function() {
 
 	$('#loginButton').removeClass('errorButton');
 	$('#loginButton .as-button-label').text("Register & Book");
+
+	$('.reminders').slideDown();
+	togglePhoneNumber();
 });
 
 $(document).on("tap", "#resetPassword", function() {
@@ -100,6 +103,10 @@ $(document).on("tap", "#resetPassword", function() {
 	$('.new-user').slideUp();
 	
 	$('.errorDetails').slideUp();
+
+	$('#phoneNumber').slideUp();
+
+	$('.reminders').slideUp();
 	
 	$('#loginButton').attr("sendPasswordResetEmail", true);
 	$('#loginButton').attr("attemptPasswordReset", false);
@@ -129,7 +136,24 @@ $(document).on("tap", "#showLoginForm", function() {
 
 	$('#loginButton').removeClass('errorButton');
 	$('#loginButton .as-button-label').text("Book Appointment");
+
+	$('.reminders').slideDown();
+	togglePhoneNumber();
 });
+
+function logout() {
+	$(".user-details").slideUp();
+	$(".logged-in").slideDown();
+	$("#loggedIn").val("false");
+}
+
+function togglePhoneNumber(){
+	if( $('#textMessageReminder').is(':checked')) {
+		$("#phoneNumber").slideDown();
+	} else {
+		$("#phoneNumber").slideUp();
+	}
+}
 
 $(document).on("tap", "#loginButton", function() {
 	var disabled = $(this).attr("disabled");

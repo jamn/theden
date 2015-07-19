@@ -5,7 +5,7 @@
 		<g:each in="${appointments}">
 			<%if (it.service.description != 'Blocked Off Time'){%>
 				<tr class="appointment-data appointment-data-${it.id}" id="${it.id}">
-					<td>
+					<td<%if(it.client.isNewUser()){%> class="new-user"<%}%>>
 						<div class="col-xs-4">
 							<h2>${it.client.fullName}</h2>
 							<h4><b>${it.service.description}:</b> ${it.appointmentDate.format('MM/dd @ hh:mm a [E]')}</h4>

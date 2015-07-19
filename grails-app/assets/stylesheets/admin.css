@@ -550,6 +550,14 @@ select{
 	border-right: 1px solid #ccc;
 }
 
+.booked.new-user {
+	background-color: #28A1CD;
+}
+
+.appointment-data .new-user {
+	background-color: #E1F4FA;
+}
+
 .blocked-off{
 	background-color: #505050;
 }

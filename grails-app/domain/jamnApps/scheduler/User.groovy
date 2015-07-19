@@ -1,5 +1,7 @@
 package jamnApps.scheduler
 
+import java.text.SimpleDateFormat
+
 class User extends CoreObject {
 
 	String username
@@ -57,6 +59,13 @@ class User extends CoreObject {
 
     String getFullName(){
     	return firstName + " " + lastName
+    }
+
+    Boolean isNewUser(){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
+        Date dateNewUsersWereEnabled = sdf.parse("07/19/2015")
+        Date now = new Date()
+        return now > dateNewUsersWereEnabled
     }
 
 }	
