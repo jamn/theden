@@ -63,7 +63,7 @@ class User extends CoreObject {
 
     Boolean isNewUser(){
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy")
-        Date dateNewUsersWereEnabled = sdf.parse("07/19/2015")
+        Date dateNewUsersWereEnabled = sdf.parse("07/16/2015")
         return dateCreated > dateNewUsersWereEnabled
     }
 
