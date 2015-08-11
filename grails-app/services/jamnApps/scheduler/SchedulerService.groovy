@@ -42,7 +42,7 @@ class SchedulerService {
 			endDate.set(Calendar.SECOND, 0)
 			endDate.set(Calendar.MILLISECOND, 0)
 
-			def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
+			def appointments = Appointment.executeQuery("FROM Appointment a WHERE a.stylist = :stylist AND a.appointmentDate >= :startDate AND a.appointmentDate <= :endDate AND a.deleted = false ORDER BY appointmentDate", [stylist:stylist, startDate:startDate.getTime(), endDate:endDate.getTime()])
 
 			Calendar currentTimeMarker = new GregorianCalendar()
 			currentTimeMarker.setTime(startDate.getTime())
@@ -163,7 +163,7 @@ class SchedulerService {
 
 		while (count <= repeatNumberOfAppointments){
 			if (client && stylist && service && appointmentDate){
-				def existingAppointment = Appointment.findByAppointmentDate(appointmentDate)
+				def existingAppointment = Appointment.findWhere(appointmentDate:appointment, deleted:false)
 				if (!existingAppointment){
 					def appointment = new Appointment()
 					appointment.appointmentDate = appointmentDate

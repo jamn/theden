@@ -144,6 +144,7 @@ $(document).on("tap", "#showLoginForm", function() {
 function logout() {
 	$(".user-details").slideUp();
 	$(".logged-in").slideDown();
+	$('.new-user').slideUp();
 	$("#loggedIn").val("false");
 }
 

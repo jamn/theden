@@ -120,7 +120,7 @@ class AdminController {
 		today.set(Calendar.MINUTE, 0)
 		today.set(Calendar.SECOND, 0)
 		today.set(Calendar.MILLISECOND, 0)
-		def appointments = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.booked = true", [today:today.getTime()])?.sort{it.appointmentDate}
+		def appointments = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.booked = true and a.deleted = false", [today:today.getTime()])?.sort{it.appointmentDate}
 		return [appointments:appointments]
     }
 
@@ -152,7 +152,7 @@ class AdminController {
 		today.set(Calendar.SECOND, 0)
 		today.set(Calendar.MILLISECOND, 0)
 		def service = Service.findByDescription("Blocked Off Time")
-		def blockedOffTimes = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.service = :service", [today:today.getTime(), service:service])?.sort{it.appointmentDate}
+		def blockedOffTimes = Appointment.executeQuery("from Appointment a where a.appointmentDate >= :today and a.service = :service and a.deleted = false", [today:today.getTime(), service:service])?.sort{it.appointmentDate}
     	return [blockedOffTimes:blockedOffTimes]
     }
 
@@ -169,7 +169,7 @@ class AdminController {
 	}
 
 	private List getAppointmentsForClient(User client){
-		return Appointment.findAllWhere(client:client, booked:true)?.sort{it.appointmentDate}?.reverse()
+		return Appointment.findAllWhere(client:client, booked:true, deleted:false)?.sort{it.appointmentDate}?.reverse()
 	}
 
 
@@ -362,7 +362,8 @@ class AdminController {
 			}
 			timeSlotsToDelete?.each(){
 				def appointment = Appointment.get(it.toLong())
-				appointment.delete(flush:true)
+				appointment.deleted = true
+				appointment.save(flush:true)
 				if (appointment.hasErrors()){
 					success = false
 					println "        ERROR: " + appointment.errors
@@ -403,7 +404,8 @@ class AdminController {
 				params["rescheduledAppointment"] = "TRUE"
 				success = schedulerService.bookForClient(params)
 				if (success){
-					existingApointment.delete(flush:true)
+					existingApointment.deleted = true
+					existingApointment.save(flush:true)
 					if (existingApointment.hasErrors()){
 						success = false
 						println "ERROR: " + existingApointment.errors
@@ -485,7 +487,8 @@ class AdminController {
 			def appointment = Appointment.findByCode(params.c.trim())
 			println "appointment(${appointment.id}): " + appointment.client?.getFullName() + " | " + appointment.service?.description + " on " + appointment.appointmentDate.format('MM/dd/yy @ hh:mm a [E]')
 			if (appointment){
-				appointment.delete()
+				appointment.deleted = true
+				appointment.save(flush:true)
 				if (!appointment.hasErrors()){
 					emailService.sendCancellationNotices(appointment)
 					success = true

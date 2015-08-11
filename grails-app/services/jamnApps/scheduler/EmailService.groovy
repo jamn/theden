@@ -18,7 +18,6 @@ class EmailService {
 		}
 		emailBody += "</ul><p>See you then!</p>"
 		emailBody += "<p><b>Please Note:</b> <i>I am having an issue with last minute cancelations. Starting 3/1/15 I will be implementing a cancelation policy. I need 4 hours notice for a cancelation/rescheduled appointment. This gives me time to potentially fill that gap. There will be a \$20 charge at your following appointment if you cancel within 4 hours of your appointment. Thank you for understanding.</i></p>"
-
 		try {
 			sendMail {
 				async true

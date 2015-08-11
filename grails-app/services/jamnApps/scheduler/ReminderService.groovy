@@ -14,29 +14,31 @@ class ReminderService {
 		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.HOUR, 24)
 		aLittleMoreThanTwentyFourHoursFromNow.add(Calendar.MINUTE, 5)
 
-		def appointment = Appointment.findByAppointmentDateBetween(almostTwentyFourHoursFromNow.getTime(), aLittleMoreThanTwentyFourHoursFromNow.getTime())
+		def appointments = Appointment.findAllByAppointmentDateBetween(almostTwentyFourHoursFromNow.getTime(), aLittleMoreThanTwentyFourHoursFromNow.getTime())
 		
-		if (appointment){
-			println "\n" + new Date()
-			println "Attempting to send reminders: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('E MM/dd @ hh:mm a')
-			try {
-				if (appointment.sendEmailReminder){
-					emailService.sendReminder(appointment)
+		appointments.each() { appointment ->
+			if (appointment.deleted == false){
+				println "\n" + new Date()
+				println "Attempting to send reminders: " + appointment.client.getFullName() + " | " + appointment.service.description + " on " + appointment.appointmentDate.format('E MM/dd @ hh:mm a')
+				try {
+					if (appointment.sendEmailReminder){
+						emailService.sendReminder(appointment)
+					}
+					else {
+						println "  -- email reminder disabled"
+					}
+					if (appointment.sendTextReminder){
+						textMessageService.sendReminder(appointment)
+					}
+					else {
+						println "  -- text reminder disabled"
+					}
 				}
-				else {
-					println "  -- email reminder disabled"
+				catch(Exception e) {
+					println "ERROR: " + e
 				}
-				if (appointment.sendTextReminder){
-					textMessageService.sendReminder(appointment)
-				}
-				else {
-					println "  -- text reminder disabled"
-				}
+				
 			}
-			catch(Exception e) {
-				println "ERROR: " + e
-			}
-			
 		}
 	}
 }

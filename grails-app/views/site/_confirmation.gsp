@@ -9,11 +9,6 @@
 			A link to reset your password has been sent to your email.
 		</p>
 	</g:elseif>
-	<g:elseif test="${appointmentDeleted}">
-		<p>
-			Your appointment has been cancelled.
-		</p>
-	</g:elseif>
 	<g:else>
 		<g:if test="${appointments?.size() > 0}">
 			<g:set var="plural" value="${appointments.size() == 1 ? 'appointment has' : 'appointments have'}" />
