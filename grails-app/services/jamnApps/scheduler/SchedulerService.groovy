@@ -163,7 +163,7 @@ class SchedulerService {
 
 		while (count <= repeatNumberOfAppointments){
 			if (client && stylist && service && appointmentDate){
-				def existingAppointment = Appointment.findWhere(appointmentDate:appointment, deleted:false)
+				def existingAppointment = Appointment.findWhere(appointmentDate:appointmentDate, deleted:false)
 				if (!existingAppointment){
 					def appointment = new Appointment()
 					appointment.appointmentDate = appointmentDate
