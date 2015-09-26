@@ -61,8 +61,6 @@ class SiteController {
 		Boolean dontRenderTemplate = false
 		Boolean renderDatePicker = false
 
-		println 'session: ' + session
-
 		if (params?.d){
 			requestedDate = dateFormatter3.parse(params?.d)
 		}
@@ -276,6 +274,8 @@ class SiteController {
 			def jsonString = '{"success":false,"errorMessage":"'+errorMessage+'"}'
 			render(jsonString)
 		}else{
+			freeHeldTimeslots()
+			resetSessionVariables()
 			render(template: "confirmation", model: [passwordReset:true, success:true])
 		}
 	}
@@ -475,6 +475,16 @@ class SiteController {
 		println "Deleted ${numberOfTimeSlotsFreed} stale appointments"
 	}
 
+	private freeHeldTimeslots(){
+		session?.bookedAppointments?.each(){
+			def appointment = Appointment.get(it.id)
+			if (appointment && appointment.booked == false){
+				appointment.deleted = true
+				appointment.save(flush:true)
+			}
+		}
+	}
+
 	private getServicesForStylist(User stylist){
 		def services = Service.executeQuery("FROM Service s WHERE s.stylist = :stylist AND display = true ORDER BY s.displayOrder", [stylist:stylist])
 		def serviceList = []
@@ -485,6 +495,15 @@ class SiteController {
 			serviceList.add([price:price, description:description, id:it.id])
 		}
 		return serviceList
+	}
+
+	private resetSessionVariables() {
+		session?.bookedAppointments = null
+		session?.stylistId = null
+		session?.serviceId = null
+		session?.userUpdatingPassword = null
+		session?.existingAppointments = null
+		session?.appointmentId = null
 	}
 
 }

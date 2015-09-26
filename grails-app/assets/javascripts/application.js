@@ -228,7 +228,7 @@ function attemptPasswordReset(){
 		url: baseUrl+"site/attemptPasswordReset",
 		data: {p1:p1, p2:p2}
 	}).done(function(confirmation) {
-		processResults(confirmation);
+		processResults(confirmation)
 	});
 }
 
@@ -294,7 +294,6 @@ function cancelAppointment(){
 	cancelAppointmentLoginButton.removeClass('error-button');
 	if (disabled != "disabled"){
 		cancelAppointmentLoginButton.attr("disabled", "disabled");
-		console.log('called cancel appointment.');
 		var email = $('#email').val();
 		var password = $('#password-Cancel').val();
 		$('#cancelAppointmentLoginButton .as-button-label').hide();
@@ -336,6 +335,7 @@ function getPageContent(button, data, nextPage){
 
 function loadPageContent(currentPage, nextPage, pageContent){
 	$('.main-content').css("background-color", "white");
+	$('.main-content .page[page="'+currentPage+'"]').empty();
 	$('.main-content .page[page="'+currentPage+'"]').slideUp();
 
 	$('.main-content .page[page="'+nextPage+'"]').append(pageContent);

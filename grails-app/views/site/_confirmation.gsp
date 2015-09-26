@@ -1,8 +1,14 @@
 <div class="confirmation">
 	<g:if test="${passwordReset && success}">
-		<p>
-			Your password has been reset. <span class="home">Book Now</span>
-		</p>
+		<div class="col-xs-12 col-sm-offset-3 col-sm-6">
+			<p>
+				Your password has been reset.
+			</p>
+			<div class="as-button green-button" id="bookNowButton">
+				<div class="as-button-label">Book Now</div>
+				<img width='20px' height'20px' src="${resource(dir:'images', file:'spinner.gif')}" style="display:none;" class="spinner">
+			</div>
+		</div>
 	</g:if>
 	<g:elseif test="${passwordReset}">
 		<p>

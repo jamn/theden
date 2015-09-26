@@ -249,6 +249,9 @@ body {
 
 
 /* LOGIN */
+#loginButton {
+	cursor: pointer;
+}
 
 .login-box,
 .reset-password-box{
@@ -258,8 +261,13 @@ body {
 	padding: 20px; 
 }
 
-.login-box input {
+.login-box input,
+.reset-password-box input {
 	margin: 5px
+}
+
+.reset-password-box {
+	margin-bottom: 8px;
 }
 
 .login-box ul {
